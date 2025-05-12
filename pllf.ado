@@ -1,4 +1,6 @@
-*! version 1.1.1 PR 01mar2023
+*! version 1.1.2 PR/IW 12may2025
+* version 1.1.2 IW 12may2025	fix to make it work with perfect prediction
+* version 1.1.1 PR 01mar2023
 program define pllf, rclass sortpreserve
 version 9.0
 /*
@@ -113,6 +115,10 @@ if "`range'"!="" {
 	}
 }
 if "`weight'" != "" local wt [`weight'`exp']
+
+*** END OF PARSING
+
+
 if "`profile'" != "" { // ------------ begin linear profiling --------
 	// Fit model and get level% ci. Program terminates if invalid cmd attempted.
 	if "`eq'"==""  & "`constant'"!="noconstant" & "`rmcoll'"!="normcoll" {
@@ -149,6 +155,8 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 				noi di as err "could not select range for `profile' (could not estimate MLE). try supplying range()"
 				exit 198
 			}
+			local llci .
+			local ulci .
 		}
 		if "`range'"=="" {
 			// previously used default range as Wald-based `level' CI; now using +/-(z*1.2)SE for this.

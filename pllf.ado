@@ -1,4 +1,4 @@
-*! version 1.0.1 PR 17jul2007
+*! version 1.0.4 PR 08jul2011
 program define pllf, rclass sortpreserve
 version 9.0
 /*
@@ -15,7 +15,7 @@ else if ("`cmd'"=="fit") | ("`cmd'"=="reg") | (substr("`cmd'",1,4)=="regr") loca
 syntax anything [if] [in] [aweight fweight pweight iweight], ///
  [DEViance FORMula(string) gen(string) DIFFerence LEVel(cilevel) ///
  PLaceholder(string) PROfile(string) range(string) ///
- MAXCost(int -1) n(integer 100) noci noDOTs nograph gropt(string asis)		///
+ MAXCost(int -1) n(integer 100) noci noDOTs nograph noCONStant gropt(string asis)		///
  LEVLINe(string asis) CILINes(string asis) *]
 
 if `maxcost'<0 local maxcost = int(`n'/2)
@@ -96,18 +96,16 @@ if "`range'"!="" {
 		local temp
 	}
 }
-
-if "`profile'"!="" { // ------------ begin linear profiling --------
-	marksample touse
-	local wt [`weight'`exp']
+if "`weight'" != "" local wt [`weight'`exp']
+if "`profile'" != "" { // ------------ begin linear profiling --------
 
 	// Fit model and get level% ci. Program terminates if invalid cmd attempted.
-	if "`eq'"=="" {
+	if "`eq'"==""  & "`constant'"!="noconstant" {
 		qui _rmcoll `varlist' `profile'	// strips `profile' if already mentioned in `varlist'
 		local tempvl `r(varlist)'
 	}
 	else local tempvl `varlist'
-	capture noisily `cmd' `tempvl' if `touse' `wt', `options'
+	capture noisily `cmd' `tempvl' `if' `in' `wt', `options' `constant'
 	local ytitle `e(depvar)'
 	quietly {
 		// Check that alleged parameter exists. One or both of `eqxb' or `eq' will always be null.
@@ -115,7 +113,6 @@ if "`profile'"!="" { // ------------ begin linear profiling --------
 		if "`b0'"=="" local b0 .
 		if "`cmd'"=="regress" local z = invttail(e(df_r), (100-`level')/200)
 		else local z = -invnorm((100-`level')/200)
-	
 		local nobs = e(N)
 		local ll0  = e(ll)
 		capture local se = `eq'`eqxb'_se[`profile']
@@ -163,7 +160,7 @@ if "`profile'"!="" { // ------------ begin linear profiling --------
 			if "`eq'"!="" {
 				// Use constrained regression
 				constraint define `cuse' `eq'`profile'=`b'
-				`cmd' `varlist' if `touse' `wt', `options' constraint(`cuse')
+				`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant'
 			}
 			else {
 				if `i'==1 {
@@ -172,11 +169,11 @@ if "`profile'"!="" { // ------------ begin linear profiling --------
 				}
 				if "`cmd'"=="regress" {
 					replace `offset' = `yvar'-`b'*`profile'
-					regress `offset' `varlist' if `touse' `wt', `options'
+					regress `offset' `varlist' `if' `in' `wt', `options'
 				}
 				else {
 					replace `offset' = `b'*`profile'
-					`cmd' `varlist' if `touse' `wt', `options' offset(`offset')
+					`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
 				}
 			}
 			sort `order'
@@ -219,16 +216,16 @@ if "`profile'"!="" { // ------------ begin linear profiling --------
 					if "`eq'"!="" {
 						// Use constrained regression
 						constraint define `cuse' `eq'`profile'=`b'
-						`cmd' `varlist' if `touse' `wt', `options' constraint(`cuse')
+						`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant'
 					}
 					else {
 						if "`cmd'"=="regress" {
 							replace `offset' = `yvar'-`b'*`profile'
-							regress `offset' `varlist' if `touse' `wt', `options'
+							regress `offset' `varlist' `if' `in' `wt', `options'
 						}
 						else {
 							replace `offset' = `b'*`profile'
-							`cmd' `varlist' if `touse' `wt', `options' offset(`offset')
+							`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
 						}
 					}
 					local Ynew = e(ll)
@@ -258,16 +255,16 @@ if "`profile'"!="" { // ------------ begin linear profiling --------
 					if "`eq'"!="" {
 						// Use constrained regression
 						constraint define `cuse' `eq'`profile'=`b'
-						`cmd' `varlist' if `touse' `wt', `options' constraint(`cuse')
+						`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant'
 					}
 					else {
 						if "`cmd'"=="regress" {
 							replace `offset' = `yvar'-`b'*`profile'
-							regress `offset' `varlist' if `touse' `wt', `options'
+							regress `offset' `varlist' `if' `in' `wt', `options'
 						}
 						else {
 							replace `offset' = `b'*`profile'
-							`cmd' `varlist' if `touse' `wt', `options' offset(`offset')
+							`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
 						}
 					}
 					local Ynew = e(ll)
@@ -298,14 +295,18 @@ if "`profile'"!="" { // ------------ begin linear profiling --------
 	}
 }
 else {	// --------------- begin non-linear profiling ---------------
-	marksample touse, novarlist
-	local wt [`weight'`exp']
 	tempvar xx
 	qui gen `xx' = .
 	// Trial fit of model with central value of param. Program terminates if invalid cmd attempted.
 	local A = (`to'-`from')/2
-	parsat `"`anything'"' if `touse', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
-	cap `cmd' `r(result)' if `touse' `wt', `options'
+	parsat `"`anything'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+	local result `r(result)'
+	CheckCollin `result'
+	if ("`s(result)'" == "") {
+		local A = `A' * 1.05 // adjust a bit
+		parsat `"`anything'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+	}
+	cap `cmd' `result' `if' `in' `wt', `options' `constant'
 	local rc = _rc
 	if `rc' error `rc'
 
@@ -321,7 +322,6 @@ else {	// --------------- begin non-linear profiling ---------------
 		else local z = -invnorm((100-`level')/200)
 
 		local nobs = e(N)
-		replace `touse' = e(sample)
 
 		if `n'>_N {
 			di as txt "[Increasing the dataset size to `n'] " _cont
@@ -341,8 +341,16 @@ else {	// --------------- begin non-linear profiling ---------------
 		forvalues i=1/`n' {
 			local A = `from'+(`i'-1)*`stepsize'
 			// Substitute A in `formula' and fit model
-			parsat `"`anything'"' if `touse', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
-			cap `cmd' `r(result)' if `touse' `wt', `options'
+			parsat `"`anything'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+			// Search for collinearity in expression, e.g. caused by x and x^p with p = 1.
+			local result `r(result)'
+			CheckCollin `result'
+			if "`s(result)'" == "" {
+				noi di as err "collinearity detected with parameter value = " `A'
+				noi di as err "recommend you exclude this value from the parameter range"
+				exit 198
+			}
+			cap `cmd' `result' `if' `in' `wt', `options' `constant'
 			if _rc {
 				noi di as err "model fit failed at parameter = " `A'
 				exit 198
@@ -420,8 +428,8 @@ else {	// --------------- begin non-linear profiling ---------------
 				while missing(`left_limit') & `i'<=`maxcost' {
 					local A = `from'-`i'*`stepsize'
 					// evaluate pll
-					parsat `"`anything'"' if `touse', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
-					cap `cmd' `r(result)' if `touse' `wt', `options'
+					parsat `"`anything'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+					cap `cmd' `r(result)' `if' `in' `wt', `options' `constant'
 					if _rc {
 						noi di as err "model fit failed at parameter = " `A'
 						exit 198
@@ -450,8 +458,8 @@ else {	// --------------- begin non-linear profiling ---------------
 				while missing(`right_limit') & `i'<=`maxcost' {
 					local A = `to'+`i'*`stepsize'
 					// evaluate pll
-					parsat `"`anything'"' if `touse', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
-					cap `cmd' `r(result)' if `touse' `wt', `options'
+					parsat `"`anything'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+					cap `cmd' `r(result)' `if' `in' `wt', `options' `constant'
 					if _rc {
 						noi di as err "model fit failed at parameter = " `A'
 						exit 198
@@ -492,13 +500,13 @@ capture drop `gen1'
 capture drop `gen2'
 rename `X' `gen1'
 rename `Y' `gen2'
-lab var `gen2' "profile log-likelihood function"
+lab var `gen2' "profile log likelihood function"
 local ll_limit = `ll0'-`z'^2/2
 local limit `ll_limit'
 if "`difference'"!="" {
 	// compute difference, subtract ll0
 	qui replace `gen2' = `gen2'-`ll0'
-	lab var `gen2' "profile log-likelihood difference function"
+	lab var `gen2' "profile log likelihood difference function"
 	local limit = -`z'^2/2
 }
 if "`deviance'"!="" {
@@ -581,4 +589,13 @@ local f = subinstr(`"`formula'"', `"`placeholder'"' , "`value'", .)
 quietly replace `var' = `f' `if'
 return local result `result'
 end
- 
+
+program define CheckCollin, sclass
+version 9.0
+local l1 : word count `*'
+quietly _rmcoll `*'
+local result `r(varlist)'
+local l2 : word count `result'
+if (`l2' < `l1') sreturn local result ""
+else sreturn local result `result'
+end

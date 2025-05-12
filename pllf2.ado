@@ -1,5 +1,5 @@
 *! version 1.1.1 PR 01mar2023
-program define pllf, rclass sortpreserve
+program define pllf2, rclass sortpreserve
 version 9.0
 /*
 	Currently supported commands include at least the following:
@@ -128,10 +128,20 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		if "`cmd'"=="regress" local z = invttail(e(df_r), (100-`level')/200)
 		else local z = -invnorm((100-`level')/200)
 		local nobs = e(N)
-		capture local ll0  = e(ll)
-		if _rc != 0 {
-			di as err "valid log likelihood not returned in e(ll)"
-			exit 198
+		local ll0  = e(ll)
+		local use_deviance 0
+		if missing(`ll0') {
+			noi di as res "note: valid log likelihood not returned in e(ll);"
+			noi di as res "if available, trying e(deviance) instead"
+			local dev0 = e(deviance)
+			if missing(`dev0') {
+				di as err "valid deviance not returned in e(deviance)"
+				exit 198
+			}
+			else {
+				local use_deviance 1
+				local ll0 = -`dev0'/2
+			}
 		}
 		capture local se = `eq'`eqxb'_se[`profile']
 		if _rc==0 {
@@ -196,7 +206,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 			}
 			sort `order'
 			replace `X' = `b' in `i'
-			replace `Y' = e(ll) in `i'
+			replace `Y' = cond(`use_deviance', -e(deviance)/2, e(ll)) in `i'
 			if "`dots'"!="nodots" noi di "." _c
 		}
 		local cost 0	// "cost": number of extra evaluations of pll needed to find likelihood based CI
@@ -246,7 +256,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 							`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
 						}
 					}
-					local Ynew = e(ll)
+					local Ynew = cond(`use_deviance', -e(deviance)/2, e(ll))
 					if `Ynew'<`target' {	// now bracketing target
 						local left_limit = `bold'-`stepsize'*(`target'-`Yold')/(`Ynew'-`Yold')
 					}
@@ -285,7 +295,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 							`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
 						}
 					}
-					local Ynew = e(ll)
+					local Ynew = cond(`use_deviance', -e(deviance)/2, e(ll))
 					if `Ynew'<`target' {	// now bracketing target
 						local right_limit = `bold'+`stepsize'*(`target'-`Yold')/(`Ynew'-`Yold')
 					}
@@ -329,12 +339,7 @@ else {	// --------------- begin non-linear profiling ---------------
 	if `rc' error `rc'
 
 	local ytitle `e(depvar)'
-	cap local ll = e(ll)
-	if _rc | ("`ll'"==".") {
-		di as err "valid log likelihood not returned in e(ll)"
-		exit 198
-	}
-
+	local ll = cond(`use_deviance', -e(deviance)/2, e(ll))
 	quietly {
 		if "`cmd'"=="regress" local z = invttail(e(df_r), (100-`level')/200)
 		else local z = -invnorm((100-`level')/200)
@@ -365,7 +370,7 @@ else {	// --------------- begin non-linear profiling ---------------
 			CheckCollin `result'
 			if "`s(result)'" == "" {
 				noi di as err "collinearity detected with parameter value = " `A'
-				noi di as err "recommend you exclude this value from the parameter range"
+				noi di as err "we recommend you exclude this value from the parameter range"
 				exit 198
 			}
 			cap `cmd' `result' `if' `in' `wt', `options' `constant' `useroffset'
@@ -373,7 +378,7 @@ else {	// --------------- begin non-linear profiling ---------------
 				noi di as err "model fit failed at parameter = " `A'
 				exit 198
 			}
-			local y3 = e(ll)
+			local y3 = cond(`use_deviance', -e(deviance)/2, e(ll))
 			if !missing(`y1') & !missing(`y2') {
 				if `y1'<`y2' & `y2'>`y3' {
 					// Solve quadratic y = a + b*x + c*x^2 through 3 points to get MLE b0 and ll at MLE ll0
@@ -389,7 +394,7 @@ else {	// --------------- begin non-linear profiling ---------------
 			local y2 `y3'
 			sort `order'
 			replace `X' = `A' in `i'
-			replace `Y' = e(ll) in `i'
+			replace `Y' = cond(`use_deviance', -e(deviance)/2, e(ll)) in `i'
 			if "`dots'"!="nodots" noi di "." _c
 		}
 		if !`done' {
@@ -452,7 +457,7 @@ else {	// --------------- begin non-linear profiling ---------------
 						noi di as err "model fit failed at parameter = " `A'
 						exit 198
 					}
-					local Ynew = e(ll)
+					local Ynew = cond(`use_deviance', -e(deviance)/2, e(ll))
 					if `Ynew'<`target' {	// now bracketing target
 						local left_limit = `bold'-`stepsize'*(`target'-`Yold')/(`Ynew'-`Yold')
 					}
@@ -482,7 +487,7 @@ else {	// --------------- begin non-linear profiling ---------------
 						noi di as err "model fit failed at parameter = " `A'
 						exit 198
 					}
-					local Ynew = e(ll)
+					local Ynew = cond(`use_deviance', -e(deviance)/2, e(ll))
 					if `Ynew'<`target' {	// now bracketing target
 						local right_limit = `bold'+`stepsize'*(`target'-`Yold')/(`Ynew'-`Yold')
 					}

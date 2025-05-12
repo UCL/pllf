@@ -18,7 +18,9 @@ syntax anything [if] [in] [aweight fweight pweight iweight], ///
  [DEViance FORMula(string) gen(string) DIFFerence LEVel(cilevel) ///
  PLaceholder(string) OFFset(varname) PROfile(string) range(string) ///
  MAXCost(int -1) n(integer 100) noci noDOTs nograph noCONStant gropt(string asis) ///
- LEVLINe(string asis) CILINes(string asis) *]
+ LEVLINe(string asis) CILINes(string asis) * ///
+ debug noRMcoll /// undocumented
+ ]
 
 // Process user offset, if specified
 if "`offset'"!="" {
@@ -112,13 +114,15 @@ if "`range'"!="" {
 }
 if "`weight'" != "" local wt [`weight'`exp']
 if "`profile'" != "" { // ------------ begin linear profiling --------
-
 	// Fit model and get level% ci. Program terminates if invalid cmd attempted.
-	if "`eq'"==""  & "`constant'"!="noconstant" {
+	if "`eq'"==""  & "`constant'"!="noconstant" & "`rmcoll'"!="normcoll" {
 		qui _rmcoll `varlist' `profile'	// strips `profile' if already mentioned in `varlist'
 		local tempvl `r(varlist)'
+		if "`tempvl'"!="`varlist'" di as text "Removing collinearity: reducing -`varlist'- to -`tempvl'-"
 	}
 	else local tempvl `varlist'
+
+	if !mi("`debug'") di as input `"capture noisily `cmd' `tempvl' `if' `in' `wt', `options' `constant' `useroffset'"'
 	capture noisily `cmd' `tempvl' `if' `in' `wt', `options' `constant' `useroffset'
 	local ytitle `e(depvar)'
 	quietly {
@@ -129,6 +133,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		else local z = -invnorm((100-`level')/200)
 		local nobs = e(N)
 		capture local ll0  = e(ll)
+		if !mi("`debug'") di as input "--> ll0=`e(ll)'"
 		if _rc != 0 {
 			di as err "valid log likelihood not returned in e(ll)"
 			exit 198
@@ -548,8 +553,10 @@ if "`graph'"!="nograph" {
 	if !missing(`right_limit') local rrr `right_limit'
 	if ("`lll'`rrr'"!="")					///
 		local xl xline(`lll' `rrr', lstyle(ci) `cilines')
-	graph twoway line `gen2' `gen1', `gropt' `title' ///
+	local graphcmd graph twoway line `gen2' `gen1', `gropt' `title' ///
 	    `xl' yline(`limit', lstyle(refline) `levline')
+	if !mi("`debug'") di as input `"--> `graphcmd'"'
+	`graphcmd'
 }
 if "`dots'"!="nodots" di
 local tt "Coef."

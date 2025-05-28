@@ -5,7 +5,7 @@ Added commands from help file 12may2025
 REvised for the colon command 28may2025
 */
 
-local filename test_pllf_colon
+local filename test_pllf
 
 prog drop _all
 cd c:\ian\git\pllf\testing

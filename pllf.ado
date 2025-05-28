@@ -582,7 +582,7 @@ else {	// --------------- begin non-linear profiling ---------------
 
 *** FINAL CODE COMMON TO BOTH PROFILE AND FORMULA
 
-if !mi("`list'") l `gen1' `gen2' if !mi(`gen1')
+if !mi("`list'") l `X' `Y' if !mi(`X')
 
 // Pseudo-SE
 local pse = (`right_limit'-`left_limit')/(2*`z')

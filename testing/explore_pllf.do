@@ -22,7 +22,7 @@ forvalues i=1/3 {
 	local b`i'=_b[z]
 	local se`i'=_se[z]
 	est store d`i'
-	pllf poisson d`i' z, offset(lpy`i') irr profile(z) range(-3 1.5) gen(beta`i' pll`i') nograph normcoll debug difference
+	pllf, profile(z) range(-3 1.5) gen(beta`i' pll`i') nograph normcoll debug difference: poisson d`i' z, offset(lpy`i') irr 
 	local d0 = d`i'[1]
 	local d1 = d`i'[2]
 	local py0 = py`i'[1]

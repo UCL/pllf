@@ -32,7 +32,7 @@ syntax [, ///
  PLaceholder(string) PROfile(string) range(string) ///
  MAXCost(int -1) n(integer 100) noci noDOTs nograph gropt(string asis) ///
  LEVLINe(string asis) CILINes(string asis) ///
- debug noRMcoll /// undocumented
+ debug noRMcoll list /// undocumented
  ]
 
 if `maxcost'<0 local maxcost = int(`n'/2)
@@ -581,6 +581,8 @@ else {	// --------------- begin non-linear profiling ---------------
 *** END OF CODE FOR NON-LINEAR PROFILING
 
 *** FINAL CODE COMMON TO BOTH PROFILE AND FORMULA
+
+if !mi("`list'") l `gen1' `gen2' if !mi(`gen1')
 
 // Pseudo-SE
 local pse = (`right_limit'-`left_limit')/(2*`z')

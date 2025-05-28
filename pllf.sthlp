@@ -1,5 +1,5 @@
 {smcl}
-{* 08feb2014}{...}
+{* 12may2025}{...}
 {hline}
 help for {hi:pllf}{right:Patrick Royston}
 {hline}
@@ -23,7 +23,7 @@ help for {hi:pllf}{right:Patrick Royston}
 {syntab :{it:Syntax 1}}
 {synopt :{opt pro:file(xvarname)}}PLL is required for variable {it:xvarname}, or{p_end}
 {synopt :{opt pro:file([eqname]paramname)}}PLL is required for parameter
-{it:paramname} or [{opt [}{it:eqname}{opt ]}]{it:paramname}{p_end}
+{it:paramname} or {opt [}{it:eqname}{opt ]}{it:paramname}{p_end}
 {syntab :{it:Syntax 2}}
 {synopt :{opt form:ula(formula)}}defines a transformation involving at least
 one variable in the dataset{p_end}
@@ -38,9 +38,9 @@ one variable in the dataset{p_end}
 {synopt :{opt lev:el(#)}}sets the confidence level to {it:#}{p_end}
 {synopt :{opt levlin:e(cline_options)}}specifies rendition of horizontal line{p_end}
 {synopt :{opt maxc:ost(#)}}sets an upper limit of 2 * {it:#} on the additional evaluations of the PLL{p_end}
-{synopt :{opt n(#)}}evaluates PLL at {it:#} equally spaced points{p_end}
+{synopt :{opt n_eval(#)}}evaluates PLL at {it:#} equally spaced {it:X} values{p_end}
 {synopt :{opt noci}}suppresses calculation of PLL-based CI{p_end}
-{synopt :{opt nodot:s}}suppresses dots{p_end}
+{synopt :{opt nodot:s}}suppresses (supposedly entertaining) dots{p_end}
 {synopt :{opt nograph}}suppresses the line plot of the results{p_end}
 {synopt :{opt pl:aceholder(string)}}sets the placeholder in Syntax 2 to {it:string}{p_end}
 {synopt :{it:regression_cmd_options}}options appropriate to {it:regression_cmd}{p_end}
@@ -66,8 +66,8 @@ by maximum likelihood may be used. This includes
 {help reg3},
 {help stcox},
 {help streg}
-and
-{help stpm}, and probably others.
+{help stpm}
+{help stpm2}, and probably others.
 
 {pstd}
 All weight types supported by {it:regression_cmd} are allowed; see help
@@ -210,7 +210,8 @@ confidence limits in pathological cases (see
 {opt difference}. Default {it:#} is {cmd:n()}/2.
 
 {phang}
-{opt n(#)} evaluates the PLL function at {it:#} equally spaced points; default is 100.
+{opt n_eval(#)} evaluates the PLL function at {it:#} equally spaced X values;
+default is 100.
 
 {phang}
 {cmd:noci} suppresses calculation of the PLL-based confidence limits.
@@ -250,7 +251,8 @@ the PLL function is approximately quadratic with a single maximum.
 
 {phang}
 {it:regression_cmd_options} may be any of the options appropriate to
-{it:regression_cmd}.
+{it:regression_cmd}. If supported by {it:regression_cmd}, this could
+include {opt offset(varname)}.
 
 
 {title:Remarks}
@@ -261,7 +263,7 @@ confidence intervals for parameters, and (2) to study the behaviour of the
 likelihood function in pathological situations, i.e. when there is no
 unique maximum or no maximum at all. Departure of the shape of the
 PLL function from that of a quadratic indicates non-normality in the 
-distribution of the estimate.
+distribution of the parameter estimate of interest.
 
 {pstd}
 Note that sometimes, the MLE cannot be found at some values of the parameter
@@ -273,18 +275,29 @@ option).
 
 {pstd}
 The pseudo standard error of beta or {cmd:X} is computed as
-upper PLL confidence limit minus lower PLL confience limit,
+upper PLL confidence limit minus lower PLL confidence limit,
 divided by twice t, where t is the appropriate quantile
 of the t or normal distribution used in calculating normal
 based confidence limits. When the sampling distribution of
 the parameter of interest is close to normal, the usual standard
-error and the pseudo standard error will be approximately equal.
+error and the PLL-based standard error will be approximately equal.
 
 {pstd}
 To get a profile likelihood for the regression constant ({hi:_b[_cons]}),
 you should create a new variable equal to 1 for all observations
 and include that in the model together with the {opt noconstant} option
 (see example below).
+
+{pstd}
+Some estimation commands do not return a log likelihood, that is, after
+running the command, {cmd:e(ll)} is missing. Such programs may
+return a log pseudo-likelihood in the form of a deviance, which is
+defined as minus twice the log likelihood. When {cmd:e(ll)} is
+missing and {cmd:e(deviance)} is non-missing, {cmd:pllf} utilizes the
+log pseudo-likelihood, defined as -0.5*{cmd:e(deviance)}, for
+estimating confidence intervals. An example is {cmd:binreg}; if
+the {opt ml} option is not specified, it returns {cmd:e(deviance)}
+but not {cmd:e(ll)}.
 
     {bf:{ul:Handling 'equations' correctly}}
 
@@ -330,9 +343,12 @@ Unfortunately, there is no simple way around this naming requirement.
 
 {phang}Syntax 1
 
+{phang}{cmd:. webuse brcancer, clear}{p_end}
+{phang}{cmd:. stset rectime, failure(censrec) scale(365.24)}
+
 {phang}{cmd:. pllf stcox x1 x4a x5e x6 hormon, profile(x5e) range(-3 -1)}
 
-{phang}{cmd:. pllf stpm x1 x4a x5e x6 hormon, df(2) scale(h) gen(X Y) profile(x1)}
+{phang}{cmd:. pllf stpm2 x1 x4a x5e x6 hormon, df(2) scale(hazard) gen(X Y) profile(x1)}
 
 {phang}{cmd:. pllf streg x1 x4a x5e x6 hormon, distribution(weibull) profile([ln_p]_cons) n(50)}
 

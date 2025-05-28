@@ -1,40 +1,39 @@
-*! version 1.1.2 PR/IW 12may2025
-* version 1.1.2 IW 12may2025	fix to make it work with perfect prediction
-* version 1.1.1 PR 01mar2023
-program define pllf, rclass sortpreserve
-version 9.0
 /*
-	Currently supported commands include at least the following:
+*! v1.2.0 PR 04mar2023 / IW 28may2025
+v1.2.0 PR 04mar2023 / IW 28may2025	
+	reworked as a prefix command
+	fixed to work for prefect prediction
 
-	clogit cnreg cox ereg fit glm gnbreg heckman logistic logit	///
-		   mlogit nbreg ologit oprobit poisson probit regress reg3	///
-		   streg stcox stpm weibull
-
-	17jun2014: version 1.1.0 supports offset() option if cmd allows it.
+Code structure:
+	parse pre-colon part
+	parse post-colon part
+	make checks across the parts
+	run with profile() option (~200 lines)
+	run with formula() option (~200 lines; calls parsat)
+	compute pseudo SE, draw graph, print results, return results (~100 lines)
 */
-gettoken cmd 0 : 0
-if "`cmd'"=="stpm" local eqxb [xb]
-else if ("`cmd'"=="fit") | ("`cmd'"=="reg") | (substr("`cmd'",1,4)=="regr") local cmd regress
+program define pllf, rclass sortpreserve	
+version 11.0
 
-syntax anything [if] [in] [aweight fweight pweight iweight], ///
- [DEViance FORMula(string) gen(string) DIFFerence LEVel(cilevel) ///
- PLaceholder(string) OFFset(varname) PROfile(string) range(string) ///
- MAXCost(int -1) n(integer 100) noci noDOTs nograph noCONStant gropt(string asis) ///
- LEVLINe(string asis) CILINes(string asis) * ///
- debug noRMcoll /// undocumented
- ]
+// SEPARATE PLLF/PREFIX PART FROM STATA COMMAND
 
-// Process user offset, if specified
-if "`offset'"!="" {
-	if "`cmd'"=="regress" {
-		di as err "option offset() not allowed"
-		di as err "try first subtracting the offset `offset' from the outcome variable"
+	local cmdline : copy local 0
+	mata: _parse_colon("hascolon", "statacmd")
+	if !`hascolon' {
+		di as error "pllf is now a prefix command, with syntax:"
+		di as error "    pllf<, options>: <regcmd>"
 		exit 198
 	}
-	local plusoffset +`offset'
-	local useroffset offset(`offset')
-	local offset
-}
+
+// PARSE PLLF OPTIONS FROM FIRST ARGUMENT
+
+syntax [, ///
+ DEViance FORMula(string) gen(string) DIFFerence LEVel(cilevel) ///
+ PLaceholder(string) PROfile(string) range(string) ///
+ MAXCost(int -1) n(integer 100) noci noDOTs nograph gropt(string asis) ///
+ LEVLINe(string asis) CILINes(string asis) ///
+ debug noRMcoll /// undocumented
+ ]
 
 if `maxcost'<0 local maxcost = int(`n'/2)
 
@@ -46,6 +45,68 @@ if "`placeholder'"!="" {
 }
 else local placeholder X
 
+if "`gen'"=="" {
+	local gen1 _beta
+	local gen2 _pll
+}
+else gettoken gen1 gen2: gen
+if "`gen2'"=="" local gen2 _pll
+
+if "`range'"!="" {
+	gettoken from to: range
+	confirm num `from'
+	confirm num `to'
+	if `from' > `to' {
+		local temp `from'
+		local from `to'
+		local to `temp'
+		local temp
+	}
+}
+
+*** END OF PARSING PLLF OPTIONS
+
+*** PARSE REGRESSION COMMAND
+
+gettoken cmd statacmd: statacmd
+
+if substr("`cmd'", -1, .) == "," {
+	local cmd = substr("`cmd'", 1, length("`cmd'") - 1)
+	local statacmd ,`statacmd'
+}
+
+/*
+	Currently supported commands include at least the following:
+
+	clogit cnreg cox ereg fit glm gnbreg heckman logistic logit	///
+	mlogit nbreg ologit oprobit poisson probit regress reg3	///
+	streg stcox stpm stpm2 weibull
+*/
+
+if "`cmd'"=="stpm" local eqxb [xb]
+else if ("`cmd'"=="fit") | ("`cmd'"=="reg") | (substr("`cmd'",1,4)=="regr") local cmd regress
+
+local 0 `statacmd'
+syntax [varlist] [if] [in] [using] [fweight pweight aweight iweight], [offset(varname) *]
+
+// Process user offset, if specified
+if "`offset'"!="" {
+	if "`cmd'"=="regress" {
+		di as err "option offset() not allowed with regress"
+		di as err "try first subtracting the offset `offset' from the outcome variable"
+		exit 198
+	}
+	local plusoffset + `offset'
+	local useroffset offset(`offset')
+	local offset
+}
+
+if "`weight'" != "" local wt [`weight'`exp']
+
+*** END OF PARSING REGRESSION COMMAND
+
+*** MIXED PARSING
+
 if "`formula'"!="" {
 	if "`profile'"!="" {
 		di as txt "[profile() ignored]"
@@ -55,15 +116,14 @@ if "`formula'"!="" {
 		di as err "range() required"
 		exit 198
 	}
-	// Check for `placeholder' in `anything'
-	local result: subinstr local anything "`placeholder'" "", count(local nat)
+	// Check for `placeholder' in `varlist'
+	local result: subinstr local varlist "`placeholder'" "", count(local nat)
 	if `nat'==0 {
-		di as err `"`placeholder' not found in regression_cmd_stuff ( `anything' )"'
+		di as err `"`placeholder' not found in regression_cmd_stuff ( `varlist' )"'
 		exit 198
 	}
 }
 else if "`profile'"!="" {
-	local varlist "`anything'"
 	// Disentangle profile; extract eq from it, if present
 	tokenize `profile', parse("[]")
 	if "`5'"!="" {
@@ -96,29 +156,9 @@ else {
 	exit 198
 }
 
-if "`gen'"=="" {
-	local gen1 _beta
-	local gen2 _pll
-}
-else gettoken gen1 gen2: gen
-if "`gen2'"=="" local gen2 _pll
+*** END OF MIXED PARSING
 
-if "`range'"!="" {
-	gettoken from to: range
-	confirm num `from'
-	confirm num `to'
-	if `from' > `to' {
-		local temp `from'
-		local from `to'
-		local to `temp'
-		local temp
-	}
-}
-if "`weight'" != "" local wt [`weight'`exp']
-
-*** END OF PARSING
-
-
+*** START OF CODE FOR LINEAR PROFILING - PROFILE() OPTION
 if "`profile'" != "" { // ------------ begin linear profiling --------
 	// Fit model and get level% ci. Program terminates if invalid cmd attempted.
 	if "`eq'"==""  & "`constant'"!="noconstant" & "`rmcoll'"!="normcoll" {
@@ -128,7 +168,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 	}
 	else local tempvl `varlist'
 
-	if !mi("`debug'") di as input `"capture noisily `cmd' `tempvl' `if' `in' `wt', `options' `constant' `useroffset'"'
+	if !mi("`debug'") di as input `"Finding MLE: `cmd' `tempvl' `if' `in' `wt', `options' `constant' `useroffset'"'
 	capture noisily `cmd' `tempvl' `if' `in' `wt', `options' `constant' `useroffset'
 	local ytitle `e(depvar)'
 	quietly {
@@ -138,11 +178,19 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		if "`cmd'"=="regress" local z = invttail(e(df_r), (100-`level')/200)
 		else local z = -invnorm((100-`level')/200)
 		local nobs = e(N)
-		capture local ll0  = e(ll)
-		if !mi("`debug'") di as input "--> ll0=`e(ll)'"
-		if _rc != 0 {
-			di as err "valid log likelihood not returned in e(ll)"
-			exit 198
+		local ll0  = e(ll)
+		local use_deviance 0
+		if missing(`ll0') {
+			noi di as txt "note: valid log likelihood not returned in e(ll);"
+			noi di as txt "if available, trying e(deviance) instead"
+			local ll0 = -e(deviance)/2
+			if missing(`ll0') {
+				di as err "valid deviance not returned in e(deviance)"
+				exit 198
+			}
+			else {
+				local use_deviance 1
+			}
 		}
 		capture local se = `eq'`eqxb'_se[`profile']
 		if _rc==0 {
@@ -186,7 +234,8 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		gen `Y' = .
 		gen long `order' = _n
 		local stepsize = (`to'-`from')/(`n'-1)
-		forvalues i=1/`n' {
+		if !mi("`debug'") di as input "Calculating profile likelihood values..."
+		forvalues i=1/`n' { // MAIN LOOP FOR PROFILE()
 			local b = `from'+(`i'-1)*`stepsize'
 			if "`eq'"!="" {
 				// Use constrained regression
@@ -203,18 +252,21 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 					regress `offset' `varlist' `if' `in' `wt', `options'
 				}
 				else {
-					replace `offset' = `b'*`profile'`plusoffset'
+					replace `offset' = `b'*`profile' `plusoffset'
 					`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
 				}
 			}
 			sort `order'
 			replace `X' = `b' in `i'
-			replace `Y' = e(ll) in `i'
-			if "`dots'"!="nodots" noi di "." _c
+			replace `Y' = cond(`use_deviance', -e(deviance)/2, e(ll)) in `i'
+			if "`dots'"!="nodots" noi di as text "." _c
 		}
+		if "`dots'"!="nodots" noi di
 		local cost 0	// "cost": number of extra evaluations of pll needed to find likelihood based CI
 		local left_limit .
 		local right_limit .
+
+		if !mi("`debug'") di as input "Finding CI limits..."
 		if "`ci'"!="noci" {
 /*
 			Search for likelihood based CI bounds: VERY crude!
@@ -255,11 +307,11 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 							regress `offset' `varlist' `if' `in' `wt', `options'
 						}
 						else {
-							replace `offset' = `b'*`profile'`plusoffset'
+							replace `offset' = `b'*`profile' `plusoffset'
 							`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
 						}
 					}
-					local Ynew = e(ll)
+					local Ynew = cond(`use_deviance', -e(deviance)/2, e(ll))
 					if `Ynew'<`target' {	// now bracketing target
 						local left_limit = `bold'-`stepsize'*(`target'-`Yold')/(`Ynew'-`Yold')
 					}
@@ -268,7 +320,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 						local bold `b'
 						local ++i
 					}
-					if "`dots'"!="nodots" noi di "." _c
+					if "`dots'"!="nodots" noi di as text "." _c
 				}
 				local cost `i'
 				if missing(`left_limit') noi di as txt _n "[note: failed to find left-hand confidence limit]"
@@ -294,11 +346,11 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 							regress `offset' `varlist' `if' `in' `wt', `options'
 						}
 						else {
-							replace `offset' = `b'*`profile'`plusoffset'
+							replace `offset' = `b'*`profile' `plusoffset'
 							`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
 						}
 					}
-					local Ynew = e(ll)
+					local Ynew = cond(`use_deviance', -e(deviance)/2, e(ll))
 					if `Ynew'<`target' {	// now bracketing target
 						local right_limit = `bold'+`stepsize'*(`target'-`Yold')/(`Ynew'-`Yold')
 					}
@@ -307,7 +359,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 						local bold `b'
 						local ++i
 					}
-					if "`dots'"!="nodots" noi di "." _c
+					if "`dots'"!="nodots" noi di as text "." _c
 				}
 				local cost = `cost'+`i'
 			}
@@ -325,29 +377,28 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		lab var `X' "`eq'_b[`profile']"
 	}
 }
+*** END OF CODE FOR LINEAR PROFILING
+*** START OF CODE FOR NON-LINEAR PROFILING - FORMULA() OPTION
 else {	// --------------- begin non-linear profiling ---------------
 	tempvar xx
 	qui gen `xx' = .
 	// Trial fit of model with central value of param. Program terminates if invalid cmd attempted.
-	local A = (`to'-`from')/2
-	parsat `"`anything'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+	local A = (`to'+`from')/2 // IW 
+	parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
 	local result `r(result)'
 	CheckCollin `result'
 	if ("`s(result)'" == "") {
 		local A = `A' * 1.05 // adjust a bit
-		parsat `"`anything'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+		parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
 	}
+	if !mi("`debug'") di as input "Starting with parm = `A'"
+	if !mi("`debug'") di as input `"MLE: `cmd' `result' `if' `in' `wt', `options' `constant' `useroffset'"'
 	cap `cmd' `result' `if' `in' `wt', `options' `constant' `useroffset'
 	local rc = _rc
 	if `rc' error `rc'
 
 	local ytitle `e(depvar)'
-	cap local ll = e(ll)
-	if _rc | ("`ll'"==".") {
-		di as err "valid log likelihood not returned in e(ll)"
-		exit 198
-	}
-
+	local ll = e(ll)
 	quietly {
 		if "`cmd'"=="regress" local z = invttail(e(df_r), (100-`level')/200)
 		else local z = -invnorm((100-`level')/200)
@@ -369,16 +420,16 @@ else {	// --------------- begin non-linear profiling ---------------
 		local b0 .
 		local ll0 .
 		local done 0
-		forvalues i=1/`n' {
+		forvalues i=1/`n' { // MAIN LOOP FOR FORMULA()
 			local A = `from'+(`i'-1)*`stepsize'
 			// Substitute A in `formula' and fit model
-			parsat `"`anything'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+			parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
 			// Search for collinearity in expression, e.g. caused by x and x^p with p = 1.
 			local result `r(result)'
 			CheckCollin `result'
 			if "`s(result)'" == "" {
 				noi di as err "collinearity detected with parameter value = " `A'
-				noi di as err "recommend you exclude this value from the parameter range"
+				noi di as err "we recommend you exclude this value from the parameter range"
 				exit 198
 			}
 			cap `cmd' `result' `if' `in' `wt', `options' `constant' `useroffset'
@@ -403,7 +454,7 @@ else {	// --------------- begin non-linear profiling ---------------
 			sort `order'
 			replace `X' = `A' in `i'
 			replace `Y' = e(ll) in `i'
-			if "`dots'"!="nodots" noi di "." _c
+			if "`dots'"!="nodots" noi di as text "." _c
 		}
 		if !`done' {
 			// MLE not straddled. Attempt quadratic solution using terminals of range and a midpoint. Maintain equal spacing.
@@ -459,7 +510,7 @@ else {	// --------------- begin non-linear profiling ---------------
 				while missing(`left_limit') & `i'<=`maxcost' {
 					local A = `from'-`i'*`stepsize'
 					// evaluate pll
-					parsat `"`anything'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+					parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
 					cap `cmd' `r(result)' `if' `in' `wt', `options' `constant' `useroffset'
 					if _rc {
 						noi di as err "model fit failed at parameter = " `A'
@@ -474,7 +525,7 @@ else {	// --------------- begin non-linear profiling ---------------
 						local bold `A'
 						local ++i
 					}
-					if "`dots'"!="nodots" noi di "." _c
+					if "`dots'"!="nodots" noi di as text "." _c
 				}
 				local cost `i'
 				if missing(`left_limit') noi di as txt _n "[note: failed to find left-hand confidence limit]"
@@ -489,7 +540,7 @@ else {	// --------------- begin non-linear profiling ---------------
 				while missing(`right_limit') & `i'<=`maxcost' {
 					local A = `to'+`i'*`stepsize'
 					// evaluate pll
-					parsat `"`anything'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+					parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
 					cap `cmd' `r(result)' `if' `in' `wt', `options' `constant' `useroffset'
 					if _rc {
 						noi di as err "model fit failed at parameter = " `A'
@@ -504,7 +555,7 @@ else {	// --------------- begin non-linear profiling ---------------
 						local bold `A'
 						local ++i
 					}
-					if "`dots'"!="nodots" noi di "." _c
+					if "`dots'"!="nodots" noi di as text "." _c
 				}
 				local cost = `cost'+`i'
 			}
@@ -523,27 +574,34 @@ else {	// --------------- begin non-linear profiling ---------------
 		local llci .
 		local ulci .
 		lab var `X' "`placeholder' in `formula'"
+		if "`dots'"!="nodots" noi di
 	}
+	local use_deviance 0
 }
+*** END OF CODE FOR NON-LINEAR PROFILING
+
+*** FINAL CODE COMMON TO BOTH PROFILE AND FORMULA
+
 // Pseudo-SE
 local pse = (`right_limit'-`left_limit')/(2*`z')
 capture drop `gen1'
 capture drop `gen2'
 rename `X' `gen1'
 rename `Y' `gen2'
-lab var `gen2' "profile log likelihood function"
+if `use_deviance' local star = "*"
+lab var `gen2' "profile log likelihood function`star'"
 local ll_limit = `ll0'-`z'^2/2
 local limit `ll_limit'
 if "`difference'"!="" {
 	// compute difference, subtract ll0
 	qui replace `gen2' = `gen2'-`ll0'
-	lab var `gen2' "profile log likelihood difference function"
+	lab var `gen2' "profile log likelihood difference function`star'"
 	local limit = -`z'^2/2
 }
 if "`deviance'"!="" {
 	qui replace `gen2' = -2*`gen2'
-	if "`difference'"!="" lab var `gen2' "profile deviance difference function"
-	else lab var `gen2' "profile deviance function"
+	if "`difference'"!="" lab var `gen2' "profile deviance difference function`star'"
+	else lab var `gen2' "profile deviance function`star'"
 	local limit = -2*`limit'
 }
 local asym = 100*((`right_limit'-`b0')-(`b0'-`left_limit'))/(`right_limit'-`left_limit')
@@ -561,12 +619,14 @@ if "`graph'"!="nograph" {
 	if !missing(`right_limit') local rrr `right_limit'
 	if ("`lll'`rrr'"!="")					///
 		local xl xline(`lll' `rrr', lstyle(ci) `cilines')
+	if `use_deviance' {
+		local note note("`star'Defining log likelihood = -0.5*e(deviance)")
+	}
 	local graphcmd graph twoway line `gen2' `gen1', `gropt' `title' ///
 	    `xl' yline(`limit', lstyle(refline) `levline')
-	if !mi("`debug'") di as input `"--> `graphcmd'"'
+	if !mi("`debug'") di as input `"Drawing graph: `graphcmd'"'
 	`graphcmd'
 }
-if "`dots'"!="nodots" di
 local tt "Coef."
 di as txt _n "{hline 13}{c TT}{hline 47}"
 di as txt %12s abbrev("`ytitle'",12) _col(14)"{c |}" ///
@@ -582,6 +642,8 @@ di _col(14) "{c |}" as res ///
   _col(53) %9.0g `right_limit'
 di as txt "{hline 13}{c BT}{hline 47}"
 di as txt "Note: Std. Err. is pseudo standard error, derived from PLL CI"
+
+*** RETURN RESULTS
 
 // MLE of beta
 return scalar b = `b0'
@@ -610,6 +672,9 @@ return scalar cost = `cost'
 return scalar asym = `asym'
 end
 
+
+
+
 program define parsat, rclass
 version 9.0
 syntax anything [if], Formula(string) var(varname) VALue(string) Placeholder(string)
@@ -622,6 +687,9 @@ local f = subinstr(`"`formula'"', `"`placeholder'"' , "`value'", .)
 quietly replace `var' = `f' `if'
 return local result `result'
 end
+
+
+
 
 program define CheckCollin, sclass
 version 9.0

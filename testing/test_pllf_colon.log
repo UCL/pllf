@@ -1,0 +1,590 @@
+----------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  c:\ian\git\pllf\testing\test_pllf_colon.log
+  log type:  text
+ opened on:  28 May 2025, 17:52:20
+
+. version
+version 18.5
+
+. which pllf
+c:\ian\git\pllf\pllf.ado
+*! v 1.2.0 PR 04mar2023 / IW 28may2025
+
+. 
+. // START TESTING
+. 
+. * from help file
+. use ../brcancer, clear
+(German breast cancer data)
+
+. 
+. * Syntax 1
+. 
+. stcox x1 x4a x5e x6 hormon, nohr
+
+        Failure _d: censrec
+  Analysis time _t: rectime
+
+Iteration 0:  Log likelihood = -1788.1731
+Iteration 1:  Log likelihood = -1729.3392
+Iteration 2:  Log likelihood =  -1724.659
+Iteration 3:  Log likelihood = -1724.5759
+Iteration 4:  Log likelihood = -1724.5758
+Refining estimates:
+Iteration 0:  Log likelihood = -1724.5758
+
+Cox regression with Breslow method for ties
+
+No. of subjects =     686                               Number of obs =    686
+No. of failures =     299
+Time at risk    = 771,400
+                                                        LR chi2(5)    = 127.19
+Log likelihood = -1724.5758                             Prob > chi2   = 0.0000
+
+------------------------------------------------------------------------------
+          _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+          x1 |   .0010071   .0060449     0.17   0.868    -.0108407    .0128548
+         x4a |   .6464434   .2466192     2.62   0.009     .1630787    1.129808
+         x5e |  -1.994528   .2258596    -8.83   0.000    -2.437204   -1.551851
+          x6 |   -.002276   .0005416    -4.20   0.000    -.0033376   -.0012144
+      hormon |  -.3821333   .1280919    -2.98   0.003    -.6331889   -.1310778
+------------------------------------------------------------------------------
+
+. local b5 = _b[x5e]
+
+. local se5 = _se[x5e]
+
+. pllf, profile(x5e) range(-3 -1): stcox x1 x4a x5e x6 hormon, nohr
+Removing collinearity: reducing -x1 x4a x5e x6 hormon- to -x1 x4a x5e x6 hormon o.x5e-
+
+        Failure _d: censrec
+  Analysis time _t: rectime
+
+Iteration 0:  Log likelihood = -1788.1731
+Iteration 1:  Log likelihood = -1729.3392
+Iteration 2:  Log likelihood =  -1724.659
+Iteration 3:  Log likelihood = -1724.5759
+Iteration 4:  Log likelihood = -1724.5758
+Refining estimates:
+Iteration 0:  Log likelihood = -1724.5758
+
+Cox regression with Breslow method for ties
+
+No. of subjects =     686                               Number of obs =    686
+No. of failures =     299
+Time at risk    = 771,400
+                                                        LR chi2(5)    = 127.19
+Log likelihood = -1724.5758                             Prob > chi2   = 0.0000
+
+------------------------------------------------------------------------------
+          _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+          x1 |   .0010071   .0060449     0.17   0.868    -.0108407    .0128548
+         x4a |   .6464434   .2466192     2.62   0.009     .1630787    1.129808
+         x5e |  -1.994528   .2258596    -8.83   0.000    -2.437204   -1.551851
+          x6 |   -.002276   .0005416    -4.20   0.000    -.0033376   -.0012144
+      hormon |  -.3821333   .1280919    -2.98   0.003    -.6331889   -.1310778
+         x5e |          0  (omitted)
+------------------------------------------------------------------------------
+....................................................................................................
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         x5e | -1.994528    .2259809    -2.435381   -1.549552
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. assert `b5' == r(b)
+
+. assert `se5' == r(se)
+
+. assert reldif(r(se),r(pse))<0.001
+
+. 
+. stpm x1 x4a x5e x6 hormon, df(2) scale(h) 
+
+Initial:      Log likelihood = -613.04232
+Rescale:      Log likelihood = -613.04232
+Rescale eq:   Log likelihood = -613.04232
+Iteration 0:  Log likelihood = -613.04232  
+Iteration 1:  Log likelihood = -612.56333  
+Iteration 2:  Log likelihood = -612.56186  
+Iteration 3:  Log likelihood = -612.56186  
+
+                                                  Number of obs   =        686
+                                                  Wald chi2(5)    =     121.62
+Log likelihood = -612.56186                       Prob > chi2     =     0.0000
+
+------------------------------------------------------------------------------
+          _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+s0           |
+       _cons |   1.817123   .1132867    16.04   0.000     1.595085    2.039161
+-------------+----------------------------------------------------------------
+s1           |
+       _cons |   .3962196   .0698136     5.68   0.000     .2593875    .5330517
+-------------+----------------------------------------------------------------
+xb           |
+          x1 |   .0013215   .0060384     0.22   0.827    -.0105135    .0131566
+         x4a |   .6584541   .2465223     2.67   0.008     .1752793    1.141629
+         x5e |   -1.99701   .2254953    -8.86   0.000    -2.438973   -1.555048
+          x6 |  -.0022624     .00054    -4.19   0.000    -.0033207    -.001204
+      hormon |  -.3800499   .1280752    -2.97   0.003    -.6310726   -.1290271
+       _cons |  -12.74299   .8991564   -14.17   0.000    -14.50531   -10.98068
+------------------------------------------------------------------------------
+Deviance =  1225.124 (686 observations.)
+
+. local b1 = [xb]_b[x1]
+
+. local se1 = [xb]_se[x1]
+
+. pllf, profile(x1) gen(X Y) normcoll: stpm x1 x4a x5e x6 hormon, df(2) scale(h) 
+
+Initial:      Log likelihood = -613.04232
+Rescale:      Log likelihood = -613.04232
+Rescale eq:   Log likelihood = -613.04232
+Iteration 0:  Log likelihood = -613.04232  
+Iteration 1:  Log likelihood = -612.56333  
+Iteration 2:  Log likelihood = -612.56186  
+Iteration 3:  Log likelihood = -612.56186  
+
+                                                  Number of obs   =        686
+                                                  Wald chi2(5)    =     121.62
+Log likelihood = -612.56186                       Prob > chi2     =     0.0000
+
+------------------------------------------------------------------------------
+          _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+s0           |
+       _cons |   1.817123   .1132867    16.04   0.000     1.595085    2.039161
+-------------+----------------------------------------------------------------
+s1           |
+       _cons |   .3962196   .0698136     5.68   0.000     .2593874    .5330518
+-------------+----------------------------------------------------------------
+xb           |
+          x1 |   .0013215   .0060384     0.22   0.827    -.0105135    .0131566
+         x4a |   .6584541   .2465223     2.67   0.008     .1752793    1.141629
+         x5e |   -1.99701   .2254953    -8.86   0.000    -2.438973   -1.555048
+          x6 |  -.0022624     .00054    -4.19   0.000    -.0033207    -.001204
+      hormon |  -.3800499   .1280752    -2.97   0.003    -.6310726   -.1290271
+       _cons |  -12.74299   .8991567   -14.17   0.000    -14.50531   -10.98068
+------------------------------------------------------------------------------
+Deviance =  1225.124 (686 observations.)
+....................................................................................................
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+          x1 |  .0013215    .0060392    -.0105103    .0131631
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. confirm var X Y
+
+. mac l _b1
+_b1:            .0013215433224143
+
+. di r(b)
+.00132154
+
+. assert reldif(`b1',r(b))<1E-7
+
+. assert reldif(`se1',r(se))<1E-7
+
+. assert reldif(r(se),r(pse))<0.001
+
+. 
+. pllf, profile([ln_p]_cons) n(50): streg x1 x4a x5e x6 hormon, distribution(weibull)
+
+        Failure _d: censrec
+  Analysis time _t: rectime
+
+Fitting constant-only model:
+Iteration 0:  Log likelihood = -710.24321
+Iteration 1:  Log likelihood = -699.79737
+Iteration 2:  Log likelihood = -699.71947
+Iteration 3:  Log likelihood = -699.71947
+
+Fitting full model:
+Iteration 0:  Log likelihood = -699.71947  
+Iteration 1:  Log likelihood = -646.41715  
+Iteration 2:  Log likelihood = -631.12382  
+Iteration 3:  Log likelihood = -630.89104  
+Iteration 4:  Log likelihood = -630.89092  
+Iteration 5:  Log likelihood = -630.89092  
+
+Weibull PH regression
+
+No. of subjects =     686                               Number of obs =    686
+No. of failures =     299
+Time at risk    = 771,400
+                                                        LR chi2(5)    = 137.66
+Log likelihood = -630.89092                             Prob > chi2   = 0.0000
+
+------------------------------------------------------------------------------
+          _t | Haz. ratio   Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+          x1 |   1.001749   .0060328     0.29   0.772     .9899949    1.013643
+         x4a |    1.95377   .4814322     2.72   0.007     1.205389    3.166793
+         x5e |   .1226157    .027794    -9.26   0.000      .078632    .1912023
+          x6 |   .9976533   .0005425    -4.32   0.000     .9965906    .9987171
+      hormon |   .6621346   .0845785    -3.23   0.001     .5154863    .8505021
+       _cons |   .0000533   .0000335   -15.63   0.000     .0000155    .0001829
+-------------+----------------------------------------------------------------
+       /ln_p |   .3416282   .0482968     7.07   0.000     .2469683    .4362881
+-------------+----------------------------------------------------------------
+           p |   1.407237    .067965                      1.280139    1.546954
+         1/p |   .7106124   .0343203                      .6464315    .7811654
+------------------------------------------------------------------------------
+Note: _cons estimates baseline hazard.
+..................................................
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+[ln_p]       |
+       _cons |  .3416282    .0483095     .2448842    .4342541
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. pllf, profile([ln_p]x4b) deviance difference n(20): streg x1 x4a x5e x6 hormon, distribution(weibu
+> ll) ancillary(x4b) 
+
+        Failure _d: censrec
+  Analysis time _t: rectime
+
+Fitting constant-only model:
+Iteration 0:  Log likelihood = -699.71947  
+Iteration 1:  Log likelihood = -696.37074  
+Iteration 2:  Log likelihood = -695.98746  
+Iteration 3:  Log likelihood = -695.98653  
+Iteration 4:  Log likelihood = -695.98653  
+
+Fitting full model:
+Iteration 0:  Log likelihood = -695.98653  
+Iteration 1:  Log likelihood = -647.22463  
+Iteration 2:  Log likelihood = -630.86499  
+Iteration 3:  Log likelihood = -630.57654  
+Iteration 4:  Log likelihood = -630.57235  
+Iteration 5:  Log likelihood = -630.57235  
+
+Weibull PH regression
+
+No. of subjects =     686                               Number of obs =    686
+No. of failures =     299
+Time at risk    = 771,400
+                                                        LR chi2(5)    = 130.83
+Log likelihood = -630.57235                             Prob > chi2   = 0.0000
+
+------------------------------------------------------------------------------
+          _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+_t           |
+          x1 |   .0018659   .0060072     0.31   0.756     -.009908    .0136399
+         x4a |   .6454264   .2484522     2.60   0.009     .1584691    1.132384
+         x5e |  -2.098508   .2269636    -9.25   0.000    -2.543349   -1.653668
+          x6 |   -.002284   .0005459    -4.18   0.000    -.0033539    -.001214
+      hormon |   -.402601   .1283243    -3.14   0.002     -.654112     -.15109
+       _cons |  -9.850297   .6294816   -15.65   0.000    -11.08406   -8.616536
+-------------+----------------------------------------------------------------
+ln_p         |
+         x4b |   .0108322   .0134126     0.81   0.419     -.015456    .0371205
+       _cons |   .3408146   .0484149     7.04   0.000     .2459232    .4357061
+------------------------------------------------------------------------------
+....................
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+[ln_p]       |
+         x4b |  .0108322    .0134789    -.0162806    .0365557
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. * pllf, profile([d]group) range(0.27 1.55): poisson d group, exposure(y) 
+. 
+. * Syntax 2
+. *pllf logit y x1 X, formula(exp(-X*x2)) range(.05 .25)
+. pllf, formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a X x6 hormon
+....................................................................................................
+> ...
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           X |  .1369005    .0471162     .0694187    .2541106
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. local pllf_ll = r(ll)
+
+. mac l _pllf_ll
+_pllf_ll:       -1724.494527373777
+
+. gen expXx5 = exp(-r(b)*x5)
+
+. stcox x1 x4a expXx5 x6 hormon
+
+        Failure _d: censrec
+  Analysis time _t: rectime
+
+Iteration 0:  Log likelihood = -1788.1731
+Iteration 1:  Log likelihood = -1728.7511
+Iteration 2:  Log likelihood = -1724.5797
+Iteration 3:  Log likelihood = -1724.4946
+Iteration 4:  Log likelihood = -1724.4945
+Refining estimates:
+Iteration 0:  Log likelihood = -1724.4945
+
+Cox regression with Breslow method for ties
+
+No. of subjects =     686                               Number of obs =    686
+No. of failures =     299
+Time at risk    = 771,400
+                                                        LR chi2(5)    = 127.36
+Log likelihood = -1724.4945                             Prob > chi2   = 0.0000
+
+------------------------------------------------------------------------------
+          _t | Haz. ratio   Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+          x1 |   1.001004   .0060544     0.17   0.868     .9892075    1.012941
+         x4a |   1.911051   .4712224     2.63   0.009     1.178651    3.098557
+      expXx5 |   .1427484   .0316978    -8.77   0.000     .0923759    .2205888
+          x6 |     .99772   .0005401    -4.22   0.000     .9966621    .9987791
+      hormon |   .6810263   .0872149    -3.00   0.003     .5298532    .8753306
+------------------------------------------------------------------------------
+
+. di e(ll)
+-1724.4945
+
+. assert abs(e(ll)-`pllf_ll')<1E-3
+
+. 
+. * Syntax 1 again
+. sysuse auto, clear
+(1978 automobile data)
+
+. gen one = 1
+
+. pllf, profile(one) normcoll: logit foreign mpg one, noconstant 
+
+Iteration 0:  Log likelihood = -51.292891  
+Iteration 1:  Log likelihood = -39.368337  
+Iteration 2:  Log likelihood = -39.288837  
+Iteration 3:  Log likelihood =  -39.28864  
+Iteration 4:  Log likelihood =  -39.28864  
+
+Logistic regression                                     Number of obs =     74
+                                                        Wald chi2(2)  =  17.49
+Log likelihood = -39.28864                              Prob > chi2   = 0.0002
+
+------------------------------------------------------------------------------
+     foreign | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         mpg |   .1597621   .0525876     3.04   0.002     .0566922     .262832
+         one |  -4.378866   1.211295    -3.62   0.000    -6.752961   -2.004771
+------------------------------------------------------------------------------
+....................................................................................................
+
+-------------------------------------------------------------
+     foreign |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         one | -4.378866    1.226019    -6.993122   -2.187215
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. * NB normcoll is needed here
+. 
+. 
+. * perfect prediction
+. clear
+
+. input z d n
+
+             z          d          n
+  1. 0 0 38
+  2. 0 1 4
+  3. 1 0 36
+  4. 1 1 0
+  5. end
+
+. tab d z [fw=n], chi2
+
+           |           z
+         d |         0          1 |     Total
+-----------+----------------------+----------
+         0 |        38         36 |        74 
+         1 |         4          0 |         4 
+-----------+----------------------+----------
+     Total |        42         36 |        78 
+
+          Pearson chi2(1) =   3.6139   Pr = 0.057
+
+. pllf, profile(z) range(-5 0) gropt(name(perfpred,replace)):  logit d z [fw=n]
+Removing collinearity: reducing -d z- to -d z o.z-
+
+note: z != 0 predicts failure perfectly;
+      z omitted and 1 obs not used.
+
+Iteration 0:  Log likelihood = -13.208672  
+Iteration 1:  Log likelihood = -13.208672  
+
+Logistic regression                                    Number of obs =      42
+                                                       LR chi2(0)    =   -0.00
+                                                       Prob > chi2   =       .
+Log likelihood = -13.208672                            Pseudo R2     = -0.0000
+
+------------------------------------------------------------------------------
+           d | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |          0  (omitted)
+           z |          0  (omitted)
+       _cons |  -2.251292   .5256575    -4.28   0.000    -3.281562   -1.221022
+------------------------------------------------------------------------------
+....................................................................................................
+..................................................
+[note: failed to find left-hand confidence limit]
+
+-------------------------------------------------------------
+           d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z |         0           .            .   -.3892171
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. 
+. 
+. * blogit and glm
+. clear
+
+. input z n d
+
+             z          n          d
+  1. 0 100 38
+  2. 1 100 28
+  3. end
+
+. 
+. blogit d n i.z
+
+Logistic regression for grouped data                    Number of obs =    200
+                                                        LR chi2(1)    =   2.27
+                                                        Prob > chi2   = 0.1321
+Log likelihood = -125.70174                             Pseudo R2     = 0.0089
+
+------------------------------------------------------------------------------
+    _outcome | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         1.z |  -.4549134   .3033941    -1.50   0.134    -1.049555    .1397282
+       _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
+------------------------------------------------------------------------------
+
+. pllf, profile(z) debug normcoll gropt(name(blogit,replace)):  blogit d n z
+Finding MLE: blogit d n z   ,   
+
+Logistic regression for grouped data                    Number of obs =    200
+                                                        LR chi2(1)    =   2.27
+                                                        Prob > chi2   = 0.1321
+Log likelihood = -125.70174                             Pseudo R2     = 0.0089
+
+------------------------------------------------------------------------------
+    _outcome | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |  -.4549134   .3033941    -1.50   0.134    -1.049555    .1397282
+       _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
+------------------------------------------------------------------------------
+Calculating profile likelihood values...
+....................................................................................................
+Finding CI limits...
+Drawing graph: graph twoway line _pll _beta, name(blogit,replace) title("Asymmetry = -0.8%") xline(-
+> 1.055611256680831 .1366537912798056, lstyle(ci) ) yline(-127.6224738115053, lstyle(refline) )
+
+-------------------------------------------------------------
+         d n |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z | -.4549134    .3041548    -1.055611    .1366538
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. * understands blogit has 2 "yvars"
+. 
+. glm d z, family(binomial n) 
+
+Iteration 0:  Log likelihood = -4.9255063  
+Iteration 1:  Log likelihood = -4.9255063  
+
+Generalized linear models                         Number of obs   =          2
+Optimization     : ML                             Residual df     =          0
+                                                  Scale parameter =          1
+Deviance         =  1.64309e-14                   (1/df) Deviance =          .
+Pearson          =  4.03166e-19                   (1/df) Pearson  =          .
+
+Variance function: V(u) = u*(1-u/n)               [Binomial]
+Link function    : g(u) = ln(u/(n-u))             [Logit]
+
+                                                  AIC             =   6.925506
+Log likelihood   = -4.925506276                   BIC             =   1.64e-14
+
+------------------------------------------------------------------------------
+             |                 OIM
+           d | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |  -.4549134   .3033941    -1.50   0.134    -1.049555    .1397282
+       _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
+------------------------------------------------------------------------------
+
+. pllf, profile(z) debug normcoll: glm d z, family(binomial n)
+Finding MLE: glm d z   , family(binomial n)  
+
+Iteration 0:  Log likelihood = -4.9255063  
+Iteration 1:  Log likelihood = -4.9255063  
+
+Generalized linear models                         Number of obs   =          2
+Optimization     : ML                             Residual df     =          0
+                                                  Scale parameter =          1
+Deviance         =  1.64309e-14                   (1/df) Deviance =          .
+Pearson          =  4.03166e-19                   (1/df) Pearson  =          .
+
+Variance function: V(u) = u*(1-u/n)               [Binomial]
+Link function    : g(u) = ln(u/(n-u))             [Logit]
+
+                                                  AIC             =   6.925506
+Log likelihood   = -4.925506276                   BIC             =   1.64e-14
+
+------------------------------------------------------------------------------
+             |                 OIM
+           d | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |  -.4549134   .3033941    -1.50   0.134    -1.049555    .1397282
+       _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
+------------------------------------------------------------------------------
+Calculating profile likelihood values...
+....................................................................................................
+Finding CI limits...
+Drawing graph: graph twoway line _pll _beta,  title("Asymmetry = -0.8%") xline(-1.055610843987607 .1
+> 366534232930309, lstyle(ci) ) yline(-6.846235686798055, lstyle(refline) )
+
+-------------------------------------------------------------
+           d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z | -.4549134    .3041546    -1.055611    .1366534
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. di as result "*** PLLF HAS PASSED ALL THE TESTS IN `filename'.do ***"
+*** PLLF HAS PASSED ALL THE TESTS IN test_pllf_colon.do ***
+
+. 
+. log close
+      name:  <unnamed>
+       log:  c:\ian\git\pllf\testing\test_pllf_colon.log
+  log type:  text
+ closed on:  28 May 2025, 17:53:10
+----------------------------------------------------------------------------------------------------

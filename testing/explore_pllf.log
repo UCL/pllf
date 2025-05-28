@@ -1,0 +1,221 @@
+----------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  c:\ian\git\pllf\testing\explore_pllf.log
+  log type:  text
+ opened on:  28 May 2025, 18:13:03
+
+. /*
+> Explore PLLFs
+> explore_pllf.do
+> 3 data sets showing RR=0.5 and same Wald CI
+> IW 8nov2024
+> 
+> I could use this with a 2nd study with symmetrical LL, e.g. 3/10 vs 3/10.
+> I could show these 3 data sets give the same result when 2-stage analysed using normal approximati
+> on, but not when correctly analysed
+> */
+. pda
+
+. 
+. clear
+
+. input z d1 py1 d2 py2 d3 py3
+
+             z         d1        py1         d2        py2         d3        py3
+  1. 0 3 10 2 10 6 30
+  2. 1 3 20 6 60 2 20
+  3. end
+
+. 
+. forvalues i=1/3 {
+  2.         di as input "Data data`i'"
+  3.         gen lpy`i' = log(py`i')
+  4.         poisson d`i' z, offset(lpy`i') irr
+  5.         local b`i'=_b[z]
+  6.         local se`i'=_se[z]
+  7.         est store d`i'
+  8.         pllf, profile(z) range(-3 1.5) gen(beta`i' pll`i') nograph normcoll debug difference: p
+> oisson d`i' z, offset(lpy`i') irr 
+  9.         local d0 = d`i'[1]
+ 10.         local d1 = d`i'[2]
+ 11.         local py0 = py`i'[1]
+ 12.         local py1 = py`i'[2]
+ 13.         label var pll`i' "Data `i': `d1'/`py1' vs `d0'/`py0'"
+ 14. }
+Data data1
+
+Iteration 0:  Log likelihood = -2.9918452  
+Iteration 1:  Log likelihood = -2.9918452  
+
+Poisson regression                                      Number of obs =      2
+                                                        LR chi2(1)    =   0.71
+                                                        Prob > chi2   = 0.4005
+Log likelihood = -2.9918452                             Pseudo R2     = 0.1056
+
+------------------------------------------------------------------------------
+          d1 |        IRR   Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |         .5   .4082483    -0.85   0.396     .1009176    2.477269
+       _cons |         .3   .1732051    -2.09   0.037     .0967564    .9301708
+        lpy1 |          1  (offset)
+------------------------------------------------------------------------------
+Note: _cons estimates baseline incidence rate.
+Finding MLE: poisson d1 z   , irr  offset(lpy1)
+
+Iteration 0:  Log likelihood = -2.9918452  
+Iteration 1:  Log likelihood = -2.9918452  
+
+Poisson regression                                      Number of obs =      2
+                                                        LR chi2(1)    =   0.71
+                                                        Prob > chi2   = 0.4005
+Log likelihood = -2.9918452                             Pseudo R2     = 0.1056
+
+------------------------------------------------------------------------------
+          d1 |        IRR   Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |         .5   .4082483    -0.85   0.396     .1009176    2.477269
+       _cons |         .3   .1732051    -2.09   0.037     .0967564    .9301708
+        lpy1 |          1  (offset)
+------------------------------------------------------------------------------
+Note: _cons estimates baseline incidence rate.
+Calculating profile likelihood values...
+....................................................................................................
+Finding CI limits...
+
+-------------------------------------------------------------
+          d1 |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z | -.6931472    .8606408     -2.37995    .9936993
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+Data data2
+(98 missing values generated)
+
+Iteration 0:  Log likelihood = -3.1355543  
+Iteration 1:  Log likelihood = -3.1355472  
+Iteration 2:  Log likelihood = -3.1355472  
+
+Poisson regression                                      Number of obs =      2
+                                                        LR chi2(1)    =   0.64
+                                                        Prob > chi2   = 0.4251
+Log likelihood = -3.1355472                             Pseudo R2     = 0.0921
+
+------------------------------------------------------------------------------
+          d2 |        IRR   Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |         .5   .4082483    -0.85   0.396     .1009176    2.477269
+       _cons |         .2   .1414214    -2.28   0.023     .0500195    .7996876
+        lpy2 |          1  (offset)
+------------------------------------------------------------------------------
+Note: _cons estimates baseline incidence rate.
+Finding MLE: poisson d2 z   , irr  offset(lpy2)
+
+Iteration 0:  Log likelihood = -3.1355543  
+Iteration 1:  Log likelihood = -3.1355472  
+Iteration 2:  Log likelihood = -3.1355472  
+
+Poisson regression                                      Number of obs =      2
+                                                        LR chi2(1)    =   0.64
+                                                        Prob > chi2   = 0.4251
+Log likelihood = -3.1355472                             Pseudo R2     = 0.0921
+
+------------------------------------------------------------------------------
+          d2 |        IRR   Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |         .5   .4082483    -0.85   0.396     .1009176    2.477269
+       _cons |         .2   .1414214    -2.28   0.023     .0500195    .7996876
+        lpy2 |          1  (offset)
+------------------------------------------------------------------------------
+Note: _cons estimates baseline incidence rate.
+Calculating profile likelihood values...
+....................................................................................................
+Finding CI limits...
+
+-------------------------------------------------------------
+          d2 |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z | -.6931472    .8643107    -2.160885    1.227151
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+Data data3
+(98 missing values generated)
+
+Iteration 0:  Log likelihood = -3.1355543  
+Iteration 1:  Log likelihood = -3.1355472  
+Iteration 2:  Log likelihood = -3.1355472  
+
+Poisson regression                                      Number of obs =      2
+                                                        LR chi2(1)    =   0.80
+                                                        Prob > chi2   = 0.3718
+Log likelihood = -3.1355472                             Pseudo R2     = 0.1128
+
+------------------------------------------------------------------------------
+          d3 |        IRR   Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |         .5   .4082483    -0.85   0.396     .1009176    2.477269
+       _cons |         .2   .0816497    -3.94   0.000     .0898521    .4451758
+        lpy3 |          1  (offset)
+------------------------------------------------------------------------------
+Note: _cons estimates baseline incidence rate.
+Finding MLE: poisson d3 z   , irr  offset(lpy3)
+
+Iteration 0:  Log likelihood = -3.1355543  
+Iteration 1:  Log likelihood = -3.1355472  
+Iteration 2:  Log likelihood = -3.1355472  
+
+Poisson regression                                      Number of obs =      2
+                                                        LR chi2(1)    =   0.80
+                                                        Prob > chi2   = 0.3718
+Log likelihood = -3.1355472                             Pseudo R2     = 0.1128
+
+------------------------------------------------------------------------------
+          d3 |        IRR   Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |         .5   .4082483    -0.85   0.396     .1009176    2.477269
+       _cons |         .2   .0816497    -3.94   0.000     .0898521    .4451758
+        lpy3 |          1  (offset)
+------------------------------------------------------------------------------
+Note: _cons estimates baseline incidence rate.
+Calculating profile likelihood values...
+....................................................................................................
+Finding CI limits...
+
+-------------------------------------------------------------
+          d3 |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z | -.6931472     .864335     -2.61339    .7747411
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. * Verify Wald results are the same
+. est table _all, eq(1) keep(z) se
+
+-----------------------------------------------------
+    Variable |     d1           d2           d3      
+-------------+---------------------------------------
+           z | -.69314718    -.6931472   -.69314716  
+             |  .81649658    .81649658    .81649658  
+-----------------------------------------------------
+                                         Legend: b/se
+
+. 
+. * Create Normal approximation to LL
+. * same for all data sets
+. gen normapprox_ll = -0.5*(beta1-`b1')^2/(`se1')^2
+
+. label var norma "Normal approx"
+
+. 
+. * Graph
+. line pll* norma beta1, ytitle(Shifted PLLF) xtitle(log RR) yli(-1.92) saving(explore_pllf, replace
+> ) lcol(red blue green black)
+file explore_pllf.gph saved
+
+. 
+end of do-file
+      name:  <unnamed>
+       log:  c:\ian\git\pllf\testing\explore_pllf.log
+  log type:  text
+ closed on:  28 May 2025, 18:13:11
+----------------------------------------------------------------------------------------------------

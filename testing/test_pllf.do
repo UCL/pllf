@@ -35,7 +35,7 @@ assert reldif(r(se),r(pse))<0.001
 stpm x1 x4a x5e x6 hormon, df(2) scale(h) 
 local b1 = [xb]_b[x1]
 local se1 = [xb]_se[x1]
-pllf, profile(x1) gen(X Y) normcoll: stpm x1 x4a x5e x6 hormon, df(2) scale(h) 
+pllf, profile(x1) gen(X Y): stpm x1 x4a x5e x6 hormon, df(2) scale(h) 
 confirm var X Y
 mac l _b1
 di r(b)
@@ -43,9 +43,9 @@ assert reldif(`b1',r(b))<1E-7
 assert reldif(`se1',r(se))<1E-7
 assert reldif(r(se),r(pse))<0.001
 
-pllf, profile([ln_p]_cons) n(50): streg x1 x4a x5e x6 hormon, distribution(weibull)
+pllf, profile([ln_p]_cons) n_eval(50): streg x1 x4a x5e x6 hormon, distribution(weibull)
 
-pllf, profile([ln_p]x4b) deviance difference n(20): streg x1 x4a x5e x6 hormon, distribution(weibull) ancillary(x4b) 
+pllf, profile([ln_p]x4b) deviance difference n_eval(20): streg x1 x4a x5e x6 hormon, distribution(weibull) ancillary(x4b) 
 
 * pllf, profile([d]group) range(0.27 1.55): poisson d group, exposure(y) 
 
@@ -62,8 +62,10 @@ assert abs(e(ll)-`pllf_ll')<1E-3
 * Syntax 1 again
 sysuse auto, clear
 gen one = 1
-pllf, profile(one) normcoll: logit foreign mpg one, noconstant 
-* NB normcoll is needed here
+pllf, profile(one): reg mpg foreign rep78 one, noconstant 
+local asym=r(asym)
+pllf, profile(_cons): reg mpg foreign rep78
+assert reldif( `asym', r(asym)) < 1E-7
 
 
 * perfect prediction
@@ -87,11 +89,35 @@ input z n d
 end
 
 blogit d n i.z
-pllf, profile(z) debug normcoll gropt(name(blogit,replace)):  blogit d n z
+pllf, profile(z) debug gropt(name(blogit,replace)):  blogit d n z
 * understands blogit has 2 "yvars"
 
 glm d z, family(binomial n) 
-pllf, profile(z) debug normcoll: glm d z, family(binomial n)
+pllf, profile(z) debug: glm d z, family(binomial n)
+
+
+* poisson with exposure()
+clear
+input group pyears events
+0 200 38
+1 100 19
+end
+poisson events group, exposure(pyears)
+pllf, profile(group): poisson events group, exposure(pyears)
+pllf, profile(group) range(-1 1): poisson events group, exposure(pyears)
+local asym=r(asym)
+di r(asym)
+pllf, profile([events]group) range(-1 1): poisson events group, exposure(pyears)
+di r(asym)
+assert reldif( `asym', r(asym)) < 1E-4 // fails at 1E-7
+
+* profile the constant: two ways
+pllf, trace n_eval(10) debug profile(_cons): poisson events group, exposure(pyears)
+local asym=r(asym)
+gen one=1
+pllf, trace n_eval(10) debug profile(one): poisson events group one, exposure(pyears) nocons
+assert reldif( `asym', r(asym)) < 1E-7
+
 
 di as result "*** PLLF HAS PASSED ALL THE TESTS IN `filename'.do ***"
 

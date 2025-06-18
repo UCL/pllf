@@ -38,7 +38,7 @@ one variable in the dataset{p_end}
 {synopt :{opt lev:el(#)}}sets the confidence level to {it:#}{p_end}
 {synopt :{opt levlin:e(cline_options)}}specifies rendition of horizontal line{p_end}
 {synopt :{opt maxc:ost(#)}}sets an upper limit of 2 * {it:#} on the additional evaluations of the PLL{p_end}
-{synopt :{opt n_eval(#)}}evaluates PLL at {it:#} equally spaced {it:X} values{p_end}
+{synopt :{opt n:_eval(#)}}evaluates PLL at {it:#} equally spaced {it:X} values{p_end}
 {synopt :{opt noci}}suppresses calculation of PLL-based CI{p_end}
 {synopt :{opt nodot:s}}suppresses (supposedly entertaining) dots{p_end}
 {synopt :{opt nograph}}suppresses the line plot of the results{p_end}
@@ -360,6 +360,15 @@ Unfortunately, there is no simple way around this naming requirement.
 {cmd:. sysuse auto}{break}
 {cmd:. gen one = 1}{break}
 {cmd:. pllf logit foreign mpg one, noconstant profile(one)}
+
+{pstd}
+{cmd:. clear}{break}
+{cmd:. input group pyears events}{break}
+{cmd:{space 2}0 200 38}{break}
+{cmd:{space 2}1 100 19}{break}
+{cmd:{space 2}end}{break}
+{cmd:. poisson events group, exposure(pyears)}
+
 
 {phang}Syntax 2
 

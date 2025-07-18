@@ -1,5 +1,5 @@
 {smcl}
-{* 12may2025}{...}
+{* 18jul2025}{...}
 {hline}
 help for {hi:pllf}{right:Patrick Royston}
 {hline}
@@ -10,11 +10,13 @@ help for {hi:pllf}{right:Patrick Royston}
 
 {phang2}
 {opt pllf}
+[{cmd:,} {it:options}]:
 {it:regression_cmd}
 {it:regression_cmd_stuff}
 {ifin}
 {weight}
-[{cmd:,} {it:options}]
+[{cmd:,} {it:regression_cmd_options}]:
+
 
 
 {synoptset 30 tabbed}{...}
@@ -27,23 +29,26 @@ help for {hi:pllf}{right:Patrick Royston}
 {syntab :{it:Syntax 2}}
 {synopt :{opt form:ula(formula)}}defines a transformation involving at least
 one variable in the dataset{p_end}
-{synopt :{opt range(#1 #2)}}evaluates PLL over {it:#1} <= {opt X} <= {it:#2}{p_end}
-{syntab :{it:Options in common}}
-{synopt :{opt nocons:tant}}suppresses the regression constant{p_end}
-{synopt :{opt dev:iance}}requests minus 2 times PLL function{p_end}
-{synopt :{opt diff:erence}}computes PLL minus maximised log likelihood{p_end}
-{synopt :{opt gen(beta_var pll_var)}}creates {it:beta_var} and {it:pll_var}{p_end}
-{synopt :{opt cilin:es(cline_options)}}specifies rendition of confidence interval{p_end}
-{synopt :{opt gropt(cline_opts twoway_opts)}}supplies graph options to enhance PLL plot{p_end}
+{synopt :{opt pl:aceholder(string)}}sets the placeholder in Syntax 2 to {it:string}{p_end}
+{syntab :{it:Evaluation options: both syntaxes}}
 {synopt :{opt lev:el(#)}}sets the confidence level to {it:#}{p_end}
-{synopt :{opt levlin:e(cline_options)}}specifies rendition of horizontal line{p_end}
 {synopt :{opt maxc:ost(#)}}sets an upper limit of 2 * {it:#} on the additional evaluations of the PLL{p_end}
 {synopt :{opt n:_eval(#)}}evaluates PLL at {it:#} equally spaced {it:X} values{p_end}
 {synopt :{opt noci}}suppresses calculation of PLL-based CI{p_end}
+{synopt :{opt range(#1 #2)}}evaluates PLL over {it:#1} <= {opt X} <= {it:#2}{p_end}
+{syntab :{it:Output options: both syntaxes}}
+{synopt :{opt dev:iance}}requests minus 2 times PLL function{p_end}
+{synopt :{opt diff:erence}}computes PLL minus maximised log likelihood{p_end}
+{synopt :{opt eform}[{opt (string)}]}reports results on the exponentiated scale (with name {it:string}){p_end}
+{synopt :{opt gen(beta_var pll_var)}}creates {it:beta_var} and {it:pll_var}{p_end}
 {synopt :{opt nodot:s}}suppresses (supposedly entertaining) dots{p_end}
+{synopt :{opt ver:bose}}displays extended output including results of initial maximum likelihood fitting{p_end}
+{synopt :{opt tr:ace}}displays the result of each log-likelihood evaluation{p_end}
+{syntab :{it:Graph options: both syntaxes}}
+{synopt :{opt cilin:es(cline_options)}}specifies rendition of confidence interval{p_end}
+{synopt :{opt gropt(cline_opts twoway_opts)}}supplies graph options to enhance PLL plot{p_end}
+{synopt :{opt levlin:e(cline_options)}}specifies rendition of horizontal line{p_end}
 {synopt :{opt nograph}}suppresses the line plot of the results{p_end}
-{synopt :{opt pl:aceholder(string)}}sets the placeholder in Syntax 2 to {it:string}{p_end}
-{synopt :{it:regression_cmd_options}}options appropriate to {it:regression_cmd}{p_end}
 
 
 {pstd}
@@ -71,7 +76,7 @@ by maximum likelihood may be used. This includes
 
 {pstd}
 All weight types supported by {it:regression_cmd} are allowed; see help
-{help weight}.
+{help weight}. All options supported by {it:regression_cmd} should be allowed.
 
 
 {title:Description}
@@ -127,15 +132,18 @@ are not computed. Other features are similar to
 those with syntax 1.
 
 {pstd}
-Finally, before using {cmd:pllf} please read an important comment
+[DROP?] Finally, before using {cmd:pllf} please read an important comment
 in {it:Remarks} under the heading {it:Handling 'equations' correctly}.
 
 
 {title:Options}
 
+{p 2}{bf:Syntax 1}
+
 {phang}
 {cmd:profile(}{it:xvarname} | [{cmd:[}{it:eqname}{cmd:]}]{it:paramname}{cmd:)}
-(syntax 1) is not optional. In the first format,
+(
+with syntax 1 is not optional. In the first format,
 the PLL function for the regression
 coefficient for {it:xvarname} is calculated. {it:xvarname}
 is a covariate in the main response model.
@@ -147,7 +155,17 @@ for the Weibull model, {cmd:profile([ln_p]_cons)} would give
 the PLL function for the log of the shape parameter, p.
 
 {phang}
-{opt formula(formula)} (syntax 2) is not optional.
+{opt range(#1 #2)} with syntax 1 evaluates the PLL function
+over {it:#1} <= beta <= {it:#2}, where beta is the regression coefficient
+for {it:xvarname}. Default is for {it:#1} and {it:#2} to be the
+confidence limits for beta defined by the option {cmd:level()} and
+the usual assumption of a normal distribution for beta_hat, the
+maximum likelihood estimate of beta.
+
+{p 2}{bf:Syntax 2}
+
+{phang}
+{opt formula(formula)} with syntax 2 is not optional.
 {it:formula} defines
 a transformation involving at least one variable in the dataset and the
 parameter denoted by placeholder {cmd:X}.
@@ -155,50 +173,28 @@ parameter denoted by placeholder {cmd:X}.
 Example: {cmd:formula(exp(-X*x5))}.
 
 {phang}
-{opt cilines(cline_options)} specifies the rendition of the vertical
-lines representing the bounds of the profile-likelihood-based confidence
-interval (CI).  See {help cline_options:{it:cline_options}}.
+{opt range(#1 #2)} with syntax 2 is not optional.
+It evaluates the PLL function over {it:#1} <= {cmd:X} <= {it:#2},
+where {cmd:X} is the non-linear parameter of interest. {opt pllf}
+also seeks the MLE of {cmd:X}, but if the values of {it:#1 #2} are
+ill-chosen or the PLL function behaves 'badly',
+it may fail to find the MLE, or give an inaccurate estimate.
+The most satisfactory situation is when the MLE lies between {it:#1}
+and {it:#2}, and this may be judged from the plot of the PLL function.
+In many cases, particularly with large sample sizes,
+the PLL function is approximately quadratic with a single maximum.
 
 {phang}
-{opt deviance} requests minus 2 times the PLL function, i.e.
-the profile deviance function. If {cmd:difference}
-is also specified, {cmd:deviance} produces the profile deviance
-difference, i.e. minus 2 times the PLL difference.
+{opt placeholder(string)} defines the placeholder
+character(s) used in syntax 2. Spaces or other punctuation
+characters are not allowed. Default {it:string} is {cmd:X}
+(capital-x).
 
-{phang}
-{opt difference} computes the PLL function minus the maximised
-log likelhood for the model. See also {cmd:deviance}. Except
-in pathological cases, the resulting values are negative or zero.
-Pathological cases denote likelihood functions with multiple maxima
-or no maximum.
-
-{phang}
-{opt gropt(cline_options twoway_options)} supplies graph 
-options to enhance the plot of the PLL (or a transformation of it)
-against beta. The default graph is a line plot ({help twoway line})
-showing the PLL-based confidence interval for beta as vertical lines
-parallel to the Y-axis and the corresponding PLL value (or a
-transformation of it) as a horizontal line parallel to the X-axis.
-Appropriate linear transformation of the PLL is applied when the
-{cmd:deviance} and/or {cmd:difference} options are specified.  For a more on
-these options, see {help cline_options:{it:cline_options}} and 
-{help twoway_options:{it:twoway_options}}.
-
-{phang}
-{opt gen(beta_var pll_var)} creates two new variables:
-{it:beta_var} to contain the values of the regression coefficient
-over which the PLL is evaluated, and {it:pll_var}, to contain the PLL values.
-If {opt gen()} is not specified, the variables are created
-with default names of {opt _beta} and {opt _pll}, respectively.
+{p 2}{bf:Evaluation options: both syntaxes}
 
 {phang}
 {opt level(#)} sets the confidence level to {it:#}; default is
 {cmd:level(95)}.
-
-{phang}
-{opt levline(cline_options)} specifies the rendition of the horizontal
-line showing the profile-likelihood at the confidence level for the the
-profile-likelihood-based CI.  See {help cline_options:{it:cline_options}}.
 
 {phang}
 {opt maxcost(#)} sets an upper limit of 2 * {it:#}
@@ -216,43 +212,65 @@ default is 100.
 {phang}
 {cmd:noci} suppresses calculation of the PLL-based confidence limits.
 
+{p 2}{bf:Output options: both syntaxes}
+
+{phang}
+{opt deviance} requests minus 2 times the PLL function, i.e.
+the profile deviance function. If {cmd:difference}
+is also specified, {cmd:deviance} produces the profile deviance
+difference, i.e. minus 2 times the PLL difference.
+
+{phang}
+{opt difference} computes the PLL function minus the maximised
+log likelhood for the model. See also {cmd:deviance}. Except
+in pathological cases, the resulting values are negative or zero.
+Pathological cases denote likelihood functions with multiple maxima
+or no maximum.
+
+{phang}{opt eform}[{opt (string)}] reports results for the exponential of the 
+coefficient. If {it:string} is specified then this is used as the parameter name.
+
+{phang}
+{opt gen(beta_var pll_var)} creates two new variables:
+{it:beta_var} to contain the values of the regression coefficient
+over which the PLL is evaluated, and {it:pll_var}, to contain the PLL values.
+If {opt gen()} is not specified, the variables are created
+with default names of {opt _beta} and {opt _pll}, respectively.
+
 {phang}
 {opt nodots} suppresses dots. By default, a dot is
 displayed at each evaluation of the PLL.
 
+{phang}{opt verbose} displays extended output including results of initial maximum likelihood fitting.
+
+{phang}{opt trace} displays the result of each log-likelihood evaluation.
+
+{p 2}{bf:Graph options: both syntaxes}
+
+{phang}
+{opt cilines(cline_options)} specifies the rendition of the vertical
+lines representing the bounds of the profile-likelihood-based confidence
+interval (CI).  See {help cline_options:{it:cline_options}}.
+
+{phang}
+{opt gropt(cline_options twoway_options)} supplies graph 
+options to enhance the plot of the PLL (or a transformation of it)
+against beta. The default graph is a line plot ({help twoway line})
+showing the PLL-based confidence interval for beta as vertical lines
+parallel to the Y-axis and the corresponding PLL value (or a
+transformation of it) as a horizontal line parallel to the X-axis.
+Appropriate linear transformation of the PLL is applied when the
+{cmd:deviance} and/or {cmd:difference} options are specified.  For a more on
+these options, see {help cline_options:{it:cline_options}} and 
+{help twoway_options:{it:twoway_options}}.
+
+{phang}
+{opt levline(cline_options)} specifies the rendition of the horizontal
+line showing the profile-likelihood at the confidence level for the the
+profile-likelihood-based CI.  See {help cline_options:{it:cline_options}}.
+
 {phang}
 {opt nograph} suppresses the line plot of the results.
-
-{phang}
-{opt placeholder(string)} defines the placeholder
-character(s) used in Syntax 2. Spaces or other punctuation
-characters are not allowed. Default {it:string} is {cmd:X}
-(capital-x).
-
-{phang}
-{opt range(#1 #2)} with syntax 1 evaluates the PLL function
-over {it:#1} <= beta <= {it:#2}, where beta is the regression coefficient
-for {it:xvarname}. Default is for {it:#1} and {it:#2} to be the
-confidence limits for beta defined by the option {cmd:level()} and
-the usual assumption of a normal distribution for beta_hat, the
-maximum likelihood estimate of beta.
-
-{phang}
-{opt range(#1 #2)} with syntax 2 is not optional.
-It evaluates the PLL function over {it:#1} <= {cmd:X} <= {it:#2},
-where {cmd:X} is the non-linear parameter of interest. {opt pllf}
-also seeks the MLE of {cmd:X}, but if the values of {it:#1 #2} are
-ill-chosen or the PLL function behaves 'badly',
-it may fail to find the MLE, or give an inaccurate estimate.
-The most satisfactory situation is when the MLE lies between {it:#1}
-and {it:#2}, and this may be judged from the plot of the PLL function.
-In many cases, particularly with large sample sizes,
-the PLL function is approximately quadratic with a single maximum.
-
-{phang}
-{it:regression_cmd_options} may be any of the options appropriate to
-{it:regression_cmd}. If supported by {it:regression_cmd}, this could
-include {opt offset(varname)}.
 
 
 {title:Remarks}
@@ -283,12 +301,6 @@ the parameter of interest is close to normal, the usual standard
 error and the PLL-based standard error will be approximately equal.
 
 {pstd}
-To get a profile likelihood for the regression constant ({hi:_b[_cons]}),
-you should create a new variable equal to 1 for all observations
-and include that in the model together with the {opt noconstant} option
-(see example below).
-
-{pstd}
 Some estimation commands do not return a log likelihood, that is, after
 running the command, {cmd:e(ll)} is missing. Such programs may
 return a log pseudo-likelihood in the form of a deviance, which is
@@ -299,7 +311,7 @@ estimating confidence intervals. An example is {cmd:binreg}; if
 the {opt ml} option is not specified, it returns {cmd:e(deviance)}
 but not {cmd:e(ll)}.
 
-    {bf:{ul:Handling 'equations' correctly}}
+    {bf:{ul:Handling 'equations' correctly - DROP??}}
 
 {pstd}
 Sometimes, when one seems to have a single unnamed 'equation'
@@ -341,36 +353,53 @@ Unfortunately, there is no simple way around this naming requirement.
 
 {title:Examples}
 
-{phang}Syntax 1
+{p 2}{bf:Syntax 1}
 
-{phang}{cmd:. webuse brcancer, clear}{p_end}
-{phang}{cmd:. stset rectime, failure(censrec) scale(365.24)}
+{phang}Load breast cancer data
 
-{phang}{cmd:. pllf stcox x1 x4a x5e x6 hormon, profile(x5e) range(-3 -1)}
+{phang}. {stata "webuse brcancer, clear"}{p_end}
+{phang}. {stata "stset rectime, failure(censrec) scale(365.24)"}
 
-{phang}{cmd:. pllf stpm2 x1 x4a x5e x6 hormon, df(2) scale(hazard) gen(X Y) profile(x1)}
+{phang}Explore profile likelihood for coefficient of x5e
 
-{phang}{cmd:. pllf streg x1 x4a x5e x6 hormon, distribution(weibull) profile([ln_p]_cons) n(50)}
+{phang}. {stata "pllf, profile(x5e) range(-3 -1): stcox x1 x4a x5e x6 hormon"}
 
-{phang}{cmd:. pllf streg x1 x4a x5e x6 hormon, distribution(weibull) ancillary(x4b) profile([ln_p]x4b) deviance difference n(20)}
+{phang}Explore profile likelihood for coefficient of x1
 
-{phang}{cmd:. pllf poisson d group, exposure(y) profile([d]group) range(0.27 1.55)}
+{phang}. {stata "pllf, profile(x1) gen(X Y): stpm2 x1 x4a x5e x6 hormon, df(2) scale(hazard) "}
 
-{pstd}
-{cmd:. sysuse auto}{break}
-{cmd:. gen one = 1}{break}
-{cmd:. pllf logit foreign mpg one, noconstant profile(one)}
+{phang}Explore profile likelihood for Weibull shape parameter
 
-{pstd}
-{cmd:. clear}{break}
-{cmd:. input group pyears events}{break}
-{cmd:{space 2}0 200 38}{break}
-{cmd:{space 2}1 100 19}{break}
-{cmd:{space 2}end}{break}
-{cmd:. poisson events group, exposure(pyears)}
+{phang}. {stata "pllf, profile([ln_p]_cons) n(50): streg x1 x4a x5e x6 hormon, distribution(weibull)"}
+
+{phang}Explore profile likelihood for predictor of Weibull shape parameter
+
+{phang}. {stata "pllf, profile([ln_p]x4b) deviance difference n(20): streg x1 x4a x5e x6 hormon, distribution(weibull) ancillary(x4b) "}
+
+{phang}Load auto data and explore profile likelihood for the constant
+
+{phang}. {stata "sysuse auto, clear"}{p_end}
+{phang}. {stata "pllf, profile(_cons): logit foreign mpg"}
+
+{phang}Input simple two-group data with event outcome
+
+{phang}. {stata "clear"}{p_end}
+{phang}. {stata "input group pyears events"}{p_end}
+{phang}{space 4}{stata "      0 200 38"}{p_end}
+{phang}{space 4}{stata "      1 100 19"}{p_end}
+{phang}{space 4}{stata "      end"}{p_end}
+
+{phang}Fit Poisson model
+
+{phang}. {stata "poisson events group, exposure(pyears)"}{p_end}
+
+{phang}Explore profile likelihood for the coefficient of group
+
+{phang}. {stata "pllf, profile(group): poisson events group, exposure(pyears)"}
 
 
-{phang}Syntax 2
+
+{p 2}{bf:Syntax 2 [REVISE]}
 
 {phang}{cmd:. pllf logit y x1 X, formula(exp(-X*x2)) range(.05 .25)}
 
@@ -408,7 +437,7 @@ Stata Technical Bulletin STB-56, 45-47; STB reprints
 vol 10, 211-214.
 
 
-{title:Author}
+{title:Author [DISCUSS]}
 
 {pstd}
 Patrick Royston{break}

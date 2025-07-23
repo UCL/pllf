@@ -1,6 +1,8 @@
 /*
 *! v1.3.1 PR 04mar2023 / IW 23jul2025
 	mleline option
+	new attempt to detect collinearity in xvars 
+		fails by default, but new dropcollinear option forces continue
 v1.3.0 PR 04mar2023 / IW 18jun2025
 	sort out collinearity
 	better error capturing
@@ -39,7 +41,7 @@ syntax [, ///
  MAXCost(int -1) N_eval(integer 100) noci noDOTs nograph gropt(string asis) ///
  LEVLINe(string asis) CILINes(string asis) ///
  TRace VERbose eform EFORM2(string) ///
- mleline /// to be documented
+ mleline DROPCollinear /// to be documented
  debug LIst tol(real 1E-4) /// to remain undocumented
  ]
 
@@ -137,6 +139,27 @@ if "`offset'"!="" {
 }
 
 if "`weight'" != "" local wt [`weight'`exp']
+
+* attempt to detect collinearity in xvars
+if inlist("`cmd'", "streg", "stcox", "stpm", "stpm2") {
+	local yvar
+	local xvars `varlist'
+}
+else gettoken yvar xvars : varlist
+if inlist("`cmd'","blogit") {
+	gettoken yvar2 xvars : xvars
+	local yvar `yvar' `yvar2'
+}
+_rmcoll `xvars' `if' `in' `wt', forcedrop
+if r(k_omitted)>0 {
+	di as error "Collinearity found in xvarlist: `xvars'"
+	if !mi("`dropcollinear'") {
+		local xvars = r(varlist)
+		di as error "dropcollinear option --> reduced xvarlist: `xvars'"
+		local varlist `yvar' `xvars'
+	}
+	else exit 498
+}
 
 *** END OF PARSING REGRESSION COMMAND
 
@@ -327,6 +350,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 					`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
 				}
 			}
+			pause
 			if !mi("`trace'") & `i'==1 noi di ":"
 			sort `order'
 			replace `X' = `b' in `i'

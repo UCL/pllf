@@ -1,0 +1,173 @@
+---------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  c:\ian\git\pllf\testing\test_new_rmcoll.log
+  log type:  text
+ opened on:  23 Jul 2025, 13:02:20
+
+. /*
+> Test for new removing collinearity code
+> test_new_rmcoll.do
+> IW 23jul2025
+> */
+. 
+. pda
+
+. 
+. clear
+
+. input Z Y n
+
+             Z          Y          n
+  1. 0 0 38
+  2. 0 1 4
+  3. 1 0 36
+  4. 1 1 1
+  5. end
+
+. tab Z Y [fw=n]
+
+           |           Y
+         Z |         0          1 |     Total
+-----------+----------------------+----------
+         0 |        38          4 |        42 
+         1 |        36          1 |        37 
+-----------+----------------------+----------
+     Total |        74          5 |        79 
+
+. 
+. * correct command
+. pllf, profile(Z): logit Y Z [fw=n]
+Profiling....................................................................................
+> ................
+Lower confidence limit not yet found: searching......
+
+
+-------------------------------------------------------------
+           Y |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           Z | -1.332227     1.26688    -4.330427    .6356511
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. local ref = r(l_llci)
+
+. 
+. * duplicated covariate: fails by default
+. cap noi pllf, debug profile(Z): logit Y Z Z [fw=n]
+note: Z omitted because of collinearity.
+Collinearity found in xvarlist:  Z Z
+
+. assert _rc==498
+
+. 
+. * duplicated covariate: succeeds with dropcol option
+. pllf, debug profile(Z) dropcol: logit Y Z Z [fw=n]
+note: Z omitted because of collinearity.
+Collinearity found in xvarlist:  Z Z
+dropcollinear option --> reduced xvarlist: Z
+Debug: coefficient is Z
+Finding MLE using: logit Y Z [fweight= n],   
+
+Iteration 0:  Log likelihood = -18.638374  
+Iteration 1:  Log likelihood =  -17.86376  
+Iteration 2:  Log likelihood =  -17.80607  
+Iteration 3:  Log likelihood = -17.805953  
+Iteration 4:  Log likelihood = -17.805953  
+
+Logistic regression                                     Number of obs =     79
+                                                        LR chi2(1)    =   1.66
+                                                        Prob > chi2   = 0.1970
+Log likelihood = -17.805953                             Pseudo R2     = 0.0447
+
+------------------------------------------------------------------------------
+           Y | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           Z |  -1.332227   1.141969    -1.17   0.243    -3.570446    .9059913
+       _cons |  -2.251292   .5256575    -4.28   0.000    -3.281562   -1.221022
+------------------------------------------------------------------------------
+Profiling using offset.......................................................................
+> .............................
+Lower confidence limit not yet found: searching......
+
+Drawing graph: graph twoway line _pll _beta,  title("Asymmetry = -20.7%") xline(-4.3304269708
+> 33022 .6356511208497232, lstyle(ci) ) yline(-19.72668284758265, lstyle(refline) )
+
+-------------------------------------------------------------
+           Y |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           Z | -1.332227     1.26688    -4.330427    .6356511
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. assert `ref' == r(l_llci)
+
+. 
+. * identical covariate: fails by default
+. gen Z2=Z
+(96 missing values generated)
+
+. cap noi pllf, debug profile(Z): logit Y Z2 Z [fw=n]
+note: Z omitted because of collinearity.
+Collinearity found in xvarlist:  Z2 Z
+
+. assert _rc==498
+
+. 
+. * identical covariate placed first: fails with dropcol option
+. cap noi pllf, debug profile(Z) dropcol: logit Y Z2 Z [fw=n]
+note: Z omitted because of collinearity.
+Collinearity found in xvarlist:  Z2 Z
+dropcollinear option --> reduced xvarlist: Z2
+Profile variable Z not found in varlist
+
+. assert _rc==198
+
+. 
+. * identical covariate placed last: succeeds with dropcol option
+. pllf, debug profile(Z) dropcol: logit Y Z Z2 [fw=n]
+note: Z2 omitted because of collinearity.
+Collinearity found in xvarlist:  Z Z2
+dropcollinear option --> reduced xvarlist: Z
+Debug: coefficient is Z
+Finding MLE using: logit Y Z [fweight= n],   
+
+Iteration 0:  Log likelihood = -18.638374  
+Iteration 1:  Log likelihood =  -17.86376  
+Iteration 2:  Log likelihood =  -17.80607  
+Iteration 3:  Log likelihood = -17.805953  
+Iteration 4:  Log likelihood = -17.805953  
+
+Logistic regression                                     Number of obs =     79
+                                                        LR chi2(1)    =   1.66
+                                                        Prob > chi2   = 0.1970
+Log likelihood = -17.805953                             Pseudo R2     = 0.0447
+
+------------------------------------------------------------------------------
+           Y | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           Z |  -1.332227   1.141969    -1.17   0.243    -3.570446    .9059913
+       _cons |  -2.251292   .5256575    -4.28   0.000    -3.281562   -1.221022
+------------------------------------------------------------------------------
+Profiling using offset.......................................................................
+> .............................
+Lower confidence limit not yet found: searching......
+
+Drawing graph: graph twoway line _pll _beta,  title("Asymmetry = -20.7%") xline(-4.3304269708
+> 33022 .6356511208497232, lstyle(ci) ) yline(-19.72668284758265, lstyle(refline) )
+
+-------------------------------------------------------------
+           Y |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           Z | -1.332227     1.26688    -4.330427    .6356511
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. assert `ref' == r(l_llci)
+
+. 
+end of do-file
+      name:  <unnamed>
+       log:  c:\ian\git\pllf\testing\test_new_rmcoll.log
+  log type:  text
+ closed on:  23 Jul 2025, 13:02:26
+---------------------------------------------------------------------------------------------

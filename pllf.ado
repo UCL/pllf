@@ -1,5 +1,11 @@
 /*
-*! v1.3.0 PR 04mar2023 / IW 18jun2025
+*! v1.3.1 PR 04mar2023 / IW 23jul2025
+	mleline option
+v1.3.0 PR 04mar2023 / IW 18jun2025
+	sort out collinearity
+	better error capturing
+	allow profiling the constant
+	new eform, trace and verbose options
 v1.2.0 PR 04mar2023 / IW 28may2025	
 	reworked as a prefix command
 	fixed to work for prefect prediction
@@ -32,7 +38,8 @@ syntax [, ///
  PLaceholder(string) PROfile(string) range(string) ///
  MAXCost(int -1) N_eval(integer 100) noci noDOTs nograph gropt(string asis) ///
  LEVLINe(string asis) CILINes(string asis) ///
- TRace VERbose eform EFORM2(string) /// to be documented
+ TRace VERbose eform EFORM2(string) ///
+ mleline /// to be documented
  debug LIst tol(real 1E-4) /// to remain undocumented
  ]
 
@@ -694,6 +701,7 @@ if "`deviance'"!="" {
 	else lab var `gen2' "profile deviance function`star'"
 	local limit = -2*`limit'
 }
+if !mi("`mleline'") local limit `limit' `ll0'
 local asym = 100*((`right_limit'-`b0')-(`b0'-`left_limit'))/(`right_limit'-`left_limit')
 if "`graph'"!="nograph" {
 	local Asym: display %4.1f `asym'

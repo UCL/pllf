@@ -42,8 +42,8 @@ one variable in the dataset{p_end}
 {synopt :{opt eform}[{opt (string)}]}reports results on the exponentiated scale (with name {it:string}){p_end}
 {synopt :{opt gen(beta_var pll_var)}}creates {it:beta_var} and {it:pll_var}{p_end}
 {synopt :{opt nodot:s}}suppresses (supposedly entertaining) dots{p_end}
-{synopt :{opt ver:bose}}displays extended output including results of initial maximum likelihood fitting{p_end}
 {synopt :{opt tr:ace}}displays the result of each log-likelihood evaluation{p_end}
+{synopt :{opt ver:bose}}displays extended output including results of initial maximum likelihood fitting{p_end}
 {syntab :{it:Graph options: both syntaxes}}
 {synopt :{opt cilin:es(cline_options)}}specifies rendition of confidence interval{p_end}
 {synopt :{opt gropt(cline_opts twoway_opts)}}supplies graph options to enhance PLL plot{p_end}
@@ -241,9 +241,9 @@ with default names of {opt _beta} and {opt _pll}, respectively.
 {opt nodots} suppresses dots. By default, a dot is
 displayed at each evaluation of the PLL.
 
-{phang}{opt verbose} displays extended output including results of initial maximum likelihood fitting.
-
 {phang}{opt trace} displays the result of each log-likelihood evaluation.
+
+{phang}{opt verbose} displays extended output including results of initial maximum likelihood fitting.
 
 {p 2}{bf:Graph options: both syntaxes}
 

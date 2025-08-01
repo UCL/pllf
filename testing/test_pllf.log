@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- opened on:   1 Aug 2025, 19:20:22
+ opened on:   1 Aug 2025, 19:37:05
 
 . version
 version 19.5
@@ -127,7 +127,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . confirm var X Y
 
 . mac l _b1
-_b1:            .0013215433224131
+_b1:            .0013215433224165
 
 . di r(b)
 .00132154
@@ -223,8 +223,6 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . 
 . 
-. 
-. 
 . * Syntax 2
 . *pllf logit y x1 X, formula(exp(-X*x2)) range(.05 .25)
 . drop X Y // presence of X could mask failure of next cmd
@@ -294,14 +292,438 @@ Log likelihood = -1724.4945                             Prob > chi2   = 0.0000
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
-. di e(ll)
--1726.4634
+. di r(ll)
+-1724.4945
 
-. assert abs(e(ll)-`pllf_ll')<1E-3
-assertion is false
-r(9);
+. assert abs(r(ll)-`pllf_ll')<1E-3
 
-end of do-file
+. 
+. 
+. * Syntax 1 again
+. sysuse auto, clear
+(1978 automobile data)
 
-r(9);
+. gen one = 1
 
+. pllf, profile(one): reg mpg foreign rep78 one, noconstant 
+Profiling...........................................................................................
+> .........
+
+
+-------------------------------------------------------------
+         mpg |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         one |  15.85898    2.490363     10.88681    20.83115
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. local asym=r(asym)
+
+. pllf, profile(_cons): reg mpg foreign rep78
+Profiling...........................................................................................
+> .........
+
+
+-------------------------------------------------------------
+         mpg |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+       _cons |  15.85898    2.490363     10.88681    20.83115
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. assert reldif( `asym', r(asym)) < 1E-7
+
+. 
+. 
+. * perfect prediction
+. clear
+
+. input z d n
+
+             z          d          n
+  1. 0 0 38
+  2. 0 1 4
+  3. 1 0 36
+  4. 1 1 0
+  5. end
+
+. tab d z [fw=n], chi2
+
+           |           z
+         d |         0          1 |     Total
+-----------+----------------------+----------
+         0 |        38         36 |        74 
+         1 |         4          0 |         4 
+-----------+----------------------+----------
+     Total |        42         36 |        78 
+
+          Pearson chi2(1) =   3.6139   Pr = 0.057
+
+. pllf, profile(z) range(-5 0) gropt(name(perfpred,replace)):  logit d z [fw=n]
+Warning: after MLE, _se[z] is zero
+Profiling...........................................................................................
+> .........
+Lower confidence limit not yet found: searching..................................................
+[note: failed to find lower confidence limit]
+
+
+-------------------------------------------------------------
+           d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z |         .           .            .   -.3892171
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. 
+. 
+. * blogit and glm
+. clear
+
+. input z n d
+
+             z          n          d
+  1. 0 100 38
+  2. 1 100 28
+  3. end
+
+. 
+. blogit d n i.z
+
+Logistic regression for grouped data                    Number of obs =    200
+                                                        LR chi2(1)    =   2.27
+                                                        Prob > chi2   = 0.1321
+Log likelihood = -125.70174                             Pseudo R2     = 0.0089
+
+------------------------------------------------------------------------------
+    _outcome | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         1.z |  -.4549134   .3033941    -1.50   0.134    -1.049555    .1397282
+       _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
+------------------------------------------------------------------------------
+
+. pllf, profile(z) debug gropt(name(blogit,replace)) shownormal(lcol(red)): blogit d n z
+Debug: coefficient is z
+Finding MLE using: blogit d n z ,   
+
+Logistic regression for grouped data                    Number of obs =    200
+                                                        LR chi2(1)    =   2.27
+                                                        Prob > chi2   = 0.1321
+Log likelihood = -125.70174                             Pseudo R2     = 0.0089
+
+------------------------------------------------------------------------------
+    _outcome | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |  -.4549134   .3033941    -1.50   0.134    -1.049555    .1397282
+       _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
+------------------------------------------------------------------------------
+
+Profiling using offset..............................................................................
+> ......................
+
+Drawing graph: graph twoway (line _pll _beta) (line __000005 _beta, lpattern(dash) lcol(red)), name(
+> blogit,replace) title("Asymmetry = -0.8%") xline(-1.055611256680831 .1366537912798056, lstyle(ci) 
+> ) yline(-127.6224738115053, lstyle(refline) )
+
+-------------------------------------------------------------
+         d n |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z | -.4549134    .3041548    -1.055611    .1366538
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. * understands blogit has 2 "yvars"
+. 
+. glm d z, family(binomial n) 
+
+Iteration 0:  Log likelihood = -4.9255063  
+Iteration 1:  Log likelihood = -4.9255063  
+
+Generalized linear models                         Number of obs   =          2
+Optimization     : ML                             Residual df     =          0
+                                                  Scale parameter =          1
+Deviance         =  1.64309e-14                   (1/df) Deviance =          .
+Pearson          =  4.03166e-19                   (1/df) Pearson  =          .
+
+Variance function: V(u) = u*(1-u/n)               [Binomial]
+Link function    : g(u) = ln(u/(n-u))             [Logit]
+
+                                                  AIC             =   6.925506
+Log likelihood   = -4.925506276                   BIC             =   1.64e-14
+
+------------------------------------------------------------------------------
+             |                 OIM
+           d | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |  -.4549134   .3033941    -1.50   0.134    -1.049555    .1397282
+       _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
+------------------------------------------------------------------------------
+
+. pllf, profile(z) debug: glm d z, family(binomial n)
+Debug: coefficient is z
+Finding MLE using: glm d z , family(binomial n)  
+
+Iteration 0:  Log likelihood = -4.9255063  
+Iteration 1:  Log likelihood = -4.9255063  
+
+Generalized linear models                         Number of obs   =          2
+Optimization     : ML                             Residual df     =          0
+                                                  Scale parameter =          1
+Deviance         =  1.64309e-14                   (1/df) Deviance =          .
+Pearson          =  4.03166e-19                   (1/df) Pearson  =          .
+
+Variance function: V(u) = u*(1-u/n)               [Binomial]
+Link function    : g(u) = ln(u/(n-u))             [Logit]
+
+                                                  AIC             =   6.925506
+Log likelihood   = -4.925506276                   BIC             =   1.64e-14
+
+------------------------------------------------------------------------------
+             |                 OIM
+           d | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           z |  -.4549134   .3033941    -1.50   0.134    -1.049555    .1397282
+       _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
+------------------------------------------------------------------------------
+
+Profiling using offset..............................................................................
+> ......................
+
+Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -0.8%") xline(-1.055610843987607
+>  .1366534232930309, lstyle(ci) ) yline(-6.846235686798055, lstyle(refline) )
+
+-------------------------------------------------------------
+           d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z | -.4549134    .3041546    -1.055611    .1366534
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. 
+. * poisson with exposure()
+. clear
+
+. input group pyears events
+
+         group     pyears     events
+  1. 0 200 38
+  2. 1 100 19
+  3. end
+
+. poisson events group, exposure(pyears)
+
+Iteration 0:  Log likelihood = -5.1354684  
+Iteration 1:  Log likelihood = -5.1354681  
+
+Poisson regression                                     Number of obs =       2
+                                                       LR chi2(1)    =   -0.00
+                                                       Prob > chi2   =  1.0000
+Log likelihood = -5.1354681                            Pseudo R2     = -0.0000
+
+------------------------------------------------------------------------------
+      events | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       group |   1.10e-08   .2809757     0.00   1.000    -.5507023    .5507023
+       _cons |  -1.660731   .1622214   -10.24   0.000    -1.978679   -1.342783
+  ln(pyears) |          1  (exposure)
+------------------------------------------------------------------------------
+
+. pllf, profile(group): poisson events group, exposure(pyears)
+Profiling...........................................................................................
+> .........
+
+
+-------------------------------------------------------------
+      events |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+       group |  1.10e-08    .2828049    -.5712639    .5373108
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. pllf, profile(group) range(-1 1): poisson events group, exposure(pyears)
+Profiling...........................................................................................
+> .........
+
+
+-------------------------------------------------------------
+      events |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+       group |  1.10e-08    .2827977     -.571238    .5373087
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. local asym=r(asym)
+
+. di r(asym)
+-3.0607062
+
+. pllf, profile([events]group) range(-1 1): poisson events group, exposure(pyears)
+Profiling...........................................................................................
+> .........
+
+
+-------------------------------------------------------------
+      events |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+[events]     |
+       group |  1.10e-08    .2827977    -.5712379    .5373088
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. di r(asym)
+-3.0606876
+
+. assert reldif( `asym', r(asym)) < 1E-4 // fails at 1E-7
+
+. 
+. * profile the constant: two ways
+. pllf, trace n_eval(10) debug profile(_cons): poisson events group, exposure(pyears)
+Debug: coefficient is _cons
+Finding MLE using: poisson events group , exposure(pyears)
+
+Iteration 0:  Log likelihood = -5.1354684  
+Iteration 1:  Log likelihood = -5.1354681  
+
+Poisson regression                                     Number of obs =       2
+                                                       LR chi2(1)    =   -0.00
+                                                       Prob > chi2   =  1.0000
+Log likelihood = -5.1354681                            Pseudo R2     = -0.0000
+
+------------------------------------------------------------------------------
+      events | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       group |   1.10e-08   .2809757     0.00   1.000    -.5507023    .5507023
+       _cons |  -1.660731   .1622214   -10.24   0.000    -1.978679   -1.342783
+  ln(pyears) |          1  (exposure)
+------------------------------------------------------------------------------
+
+Profiling using offset:
+_cons=-2.04226897740474, LL=-7.5807054
+_cons=-1.95748280598834, LL=-6.6547154
+_cons=-1.872696634571941, LL=-5.9318752
+_cons=-1.787910463155542, LL=-5.4301603
+_cons=-1.703124291739142, LL=-5.1691369
+_cons=-1.618338120322743, LL=-5.1701022
+_cons=-1.533551948906344, LL=-5.4562384
+_cons=-1.448765777489945, LL=-6.0527784
+_cons=-1.363979606073545, LL=-6.9871881
+_cons=-1.279193434657146, LL=-8.2893638
+
+Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -5.1%") xline(-1.994243603483113
+>  -1.359486308345403, lstyle(ci) ) yline(-7.056197538295342, lstyle(refline) )
+
+-------------------------------------------------------------
+      events |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+       _cons | -1.660731    .1619309    -1.994244   -1.359486
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. local asym=r(asym)
+
+. gen one=1
+
+. pllf, trace n_eval(10) debug profile(one): poisson events group one, exposure(pyears) nocons
+Debug: coefficient is one
+Finding MLE using: poisson events group one , noconstant exposure(pyears)
+
+Iteration 0:  Log likelihood = -84.716151  
+Iteration 1:  Log likelihood = -5.2554669  
+Iteration 2:  Log likelihood = -5.1356577  
+Iteration 3:  Log likelihood = -5.1354681  
+Iteration 4:  Log likelihood = -5.1354681  
+
+Poisson regression                                      Number of obs =      2
+                                                        Wald chi2(2)  = 157.21
+Log likelihood = -5.1354681                             Prob > chi2   = 0.0000
+
+------------------------------------------------------------------------------
+      events | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+       group |   3.44e-11   .2809757     0.00   1.000    -.5507023    .5507023
+         one |  -1.660731   .1622214   -10.24   0.000    -1.978679   -1.342783
+  ln(pyears) |          1  (exposure)
+------------------------------------------------------------------------------
+
+Profiling using offset:
+one=-2.042268978345897, LL=-7.5807054
+one=-1.957482806895991, LL=-6.6547154
+one=-1.872696635446085, LL=-5.9318752
+one=-1.787910463996179, LL=-5.4301603
+one=-1.703124292546274, LL=-5.1691369
+one=-1.618338121096368, LL=-5.1701022
+one=-1.533551949646462, LL=-5.4562384
+one=-1.448765778196556, LL=-6.0527784
+one=-1.36397960674665, LL=-6.9871881
+one=-1.279193435296744, LL=-8.2893638
+
+Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -5.1%") xline(-1.994243603464133
+>  -1.359486308343629, lstyle(ci) ) yline(-7.056197538295324, lstyle(refline) )
+
+-------------------------------------------------------------
+      events |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         one | -1.660731    .1619309    -1.994244   -1.359486
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. assert reldif( `asym', r(asym)) < 1E-7
+
+. 
+. 
+. * TRISST data, MRI vs CT comparison
+. * NB it's a NI trial so don't get excited about the profile CI not crossing the null 
+. *       NI margin is +0.057
+. use ../TRISST, clear
+(NI trial of MRI vs CT after testicular cancer. Margin: RD = +0.057. Joffe 2022.)
+
+. pllf, shown verbose profile(modality): binreg outcome modality [fw=n], rd
+Finding MLE using: binreg outcome modality [fweight= n], rd  
+
+Iteration 1:  Deviance =  100.0224
+Iteration 2:  Deviance =  100.0224
+
+Generalized linear models                         Number of obs   =        669
+Optimization     : MQL Fisher scoring             Residual df     =        667
+                   (IRLS EIM)                     Scale parameter =          1
+Deviance         =  100.0224151                   (1/df) Deviance =   .1499586
+Pearson          =          669                   (1/df) Pearson  =   1.002999
+
+Variance function: V(u) = u*(1-u)                 [Bernoulli]
+Link function    : g(u) = u                       [Identity]
+
+                                                  BIC             =  -4239.336
+
+------------------------------------------------------------------------------
+             |                 EIM
+     outcome | Risk diff.   std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+    modality |  -.0178926    .009349    -1.91   0.056    -.0362163    .0004311
+       _cons |   .0238806   .0083416     2.86   0.004     .0075313    .0402299
+------------------------------------------------------------------------------
+note: valid log likelihood not returned in e(ll);
+if available, trying e(deviance) instead
+Profiling...........................................................................................
+> .........
+
+
+-------------------------------------------------------------
+     outcome |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+    modality | -.0178926    .0099405    -.0390899   -.0001239
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. 
+. di as result "*** PLLF HAS PASSED ALL THE TESTS IN `filename'.do ***"
+*** PLLF HAS PASSED ALL THE TESTS IN test_pllf.do ***
+
+. 
+. log close
+      name:  <unnamed>
+       log:  c:\ian\git\pllf\testing\test_pllf.log
+  log type:  text
+ closed on:   1 Aug 2025, 19:38:12
+----------------------------------------------------------------------------------------------------

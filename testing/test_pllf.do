@@ -3,7 +3,7 @@ rudimentary test file for pllf
 IW 17mar2025
 Added commands from help file 12may2025
 Revised for the colon command 28may2025
-Added test of shownormal() 1aug2025
+Added tests of shownormal() and collinearity handling 1aug2025
 */
 
 local filename test_pllf
@@ -64,8 +64,6 @@ pllf, profile([ln_p]_cons) n_eval(50): streg x1 x4a x5e x6 hormon, distribution(
 pllf, profile([ln_p]x4b) deviance difference n_eval(20): streg x1 x4a x5e x6 hormon, distribution(weibull) ancillary(x4b) 
 
 
-
-
 * Syntax 2
 *pllf logit y x1 X, formula(exp(-X*x2)) range(.05 .25)
 drop X Y // presence of X could mask failure of next cmd
@@ -77,8 +75,9 @@ stcox x1 x4a expXx5 x6 hormon
 di e(ll)
 assert abs(e(ll)-`pllf_ll')<1E-3
 pllf, formula(exp(-@*x5)) placeholder(@) range(.05 .25): stcox x1 x4a @ x6 hormon
-di e(ll)
-assert abs(e(ll)-`pllf_ll')<1E-3
+di r(ll)
+assert abs(r(ll)-`pllf_ll')<1E-3
+
 
 * Syntax 1 again
 sysuse auto, clear

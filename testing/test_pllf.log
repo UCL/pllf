@@ -2,14 +2,14 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- opened on:  18 Jun 2025, 20:17:36
+ opened on:   1 Aug 2025, 18:08:37
 
 . version
 version 19.5
 
 . which pllf
-c:\ian\git\pllf\pllf.ado
-*! v1.3.0 PR 04mar2023 / IW 18jun2025
+..\pllf.ado
+*! v1.3.1 PR 04mar2023 / IW 23jul2025
 
 . 
 . // START TESTING
@@ -56,10 +56,11 @@ Log likelihood = -1724.5758                             Prob > chi2   = 0.0000
 
 . local se5 = _se[x5e]
 
-. pllf, profile(x5e) range(-3 -1): stcox x1 x4a x5e x6 hormon, nohr
+. pllf, profile(x5e) range(-3 -1) shownormal: stcox x1 x4a x5e x6 hormon, nohr
 Profiling...........................................................................................
 > .........
 
+(586 missing values generated)
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
@@ -96,7 +97,7 @@ s0           |
        _cons |   1.817123   .1132867    16.04   0.000     1.595085    2.039161
 -------------+----------------------------------------------------------------
 s1           |
-       _cons |   .3962196   .0698136     5.68   0.000     .2593875    .5330517
+       _cons |   .3962196   .0698136     5.68   0.000     .2593874    .5330517
 -------------+----------------------------------------------------------------
 xb           |
           x1 |   .0013215   .0060384     0.22   0.827    -.0105135    .0131566
@@ -127,7 +128,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . confirm var X Y
 
 . mac l _b1
-_b1:            .0013215433224135
+_b1:            .0013215433224109
 
 . di r(b)
 .00132154
@@ -137,6 +138,36 @@ _b1:            .0013215433224135
 . assert reldif(`se1',r(se))<1E-7
 
 . assert reldif(r(se),r(pse))<0.001
+
+. 
+. * with/without eqname: failed 1/8/2025
+. * note it's faster via constraints
+. pllf, profile(x5e) n_eval(20): streg x1 x4a x5e x6 hormon, dist(expo)
+Profiling....................
+
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         x5e | -1.839526    .2212454    -2.270783   -1.403518
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. local ulci = r(l_ulci)
+
+. pllf, profile([_t]x5e) n_eval(20): streg x1 x4a x5e x6 hormon, dist(expo)
+Profiling....................
+
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+[_t]         |
+         x5e | -1.839526    .2212454    -2.270783   -1.403518
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. assert reldif(`ulci', r(l_ulci))<1E-7
 
 . 
 . pllf, profile([ln_p]_cons) n_eval(50): streg x1 x4a x5e x6 hormon, distribution(weibull)
@@ -328,7 +359,7 @@ Log likelihood = -125.70174                             Pseudo R2     = 0.0089
        _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
 ------------------------------------------------------------------------------
 
-. pllf, profile(z) debug gropt(name(blogit,replace)):  blogit d n z
+. pllf, profile(z) debug gropt(name(blogit,replace)) shownormal(lcol(red)): blogit d n z
 Debug: coefficient is z
 Finding MLE using: blogit d n z ,   
 
@@ -343,11 +374,13 @@ Log likelihood = -125.70174                             Pseudo R2     = 0.0089
            z |  -.4549134   .3033941    -1.50   0.134    -1.049555    .1397282
        _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
 ------------------------------------------------------------------------------
+
 Profiling using offset..............................................................................
 > ......................
 
-Drawing graph: graph twoway line _pll _beta, name(blogit,replace) title("Asymmetry = -0.8%") xline(-
-> 1.055611256680831 .1366537912798056, lstyle(ci) ) yline(-127.6224738115053, lstyle(refline) )
+Drawing graph: graph twoway (line _pll _beta) (line __000005 _beta, lpattern(dash) lcol(red)), name(
+> blogit,replace) title("Asymmetry = -0.8%") xline(-1.055611256680831 .1366537912798056, lstyle(ci) 
+> ) yline(-127.6224738115053, lstyle(refline) )
 
 -------------------------------------------------------------
          d n |     Coef.   Std. Err.     [95% PLL Conf. Int.]
@@ -409,11 +442,12 @@ Log likelihood   = -4.925506276                   BIC             =   1.64e-14
            z |  -.4549134   .3033941    -1.50   0.134    -1.049555    .1397282
        _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
 ------------------------------------------------------------------------------
+
 Profiling using offset..............................................................................
 > ......................
 
-Drawing graph: graph twoway line _pll _beta,  title("Asymmetry = -0.8%") xline(-1.055610843987607 .1
-> 366534232930309, lstyle(ci) ) yline(-6.846235686798055, lstyle(refline) )
+Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -0.8%") xline(-1.055610843987607
+>  .1366534232930309, lstyle(ci) ) yline(-6.846235686798055, lstyle(refline) )
 
 -------------------------------------------------------------
            d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
@@ -520,6 +554,7 @@ Log likelihood = -5.1354681                            Pseudo R2     = -0.0000
        _cons |  -1.660731   .1622214   -10.24   0.000    -1.978679   -1.342783
   ln(pyears) |          1  (exposure)
 ------------------------------------------------------------------------------
+
 Profiling using offset:
 _cons=-2.04226897740474, LL=-7.5807054
 _cons=-1.95748280598834, LL=-6.6547154
@@ -532,8 +567,8 @@ _cons=-1.448765777489945, LL=-6.0527784
 _cons=-1.363979606073545, LL=-6.9871881
 _cons=-1.279193434657146, LL=-8.2893638
 
-Drawing graph: graph twoway line _pll _beta,  title("Asymmetry = -5.1%") xline(-1.994243603483113 -1
-> .359486308345403, lstyle(ci) ) yline(-7.056197538295342, lstyle(refline) )
+Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -5.1%") xline(-1.994243603483113
+>  -1.359486308345403, lstyle(ci) ) yline(-7.056197538295342, lstyle(refline) )
 
 -------------------------------------------------------------
       events |     Coef.   Std. Err.     [95% PLL Conf. Int.]
@@ -548,7 +583,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . pllf, trace n_eval(10) debug profile(one): poisson events group one, exposure(pyears) nocons
 Debug: coefficient is one
-Finding MLE using: poisson events group one , nocons exposure(pyears)
+Finding MLE using: poisson events group one , noconstant exposure(pyears)
 
 Iteration 0:  Log likelihood = -84.716151  
 Iteration 1:  Log likelihood = -5.2554669  
@@ -567,6 +602,7 @@ Log likelihood = -5.1354681                             Prob > chi2   = 0.0000
          one |  -1.660731   .1622214   -10.24   0.000    -1.978679   -1.342783
   ln(pyears) |          1  (exposure)
 ------------------------------------------------------------------------------
+
 Profiling using offset:
 one=-2.042268978345897, LL=-7.5807054
 one=-1.957482806895991, LL=-6.6547154
@@ -579,8 +615,8 @@ one=-1.448765778196556, LL=-6.0527784
 one=-1.36397960674665, LL=-6.9871881
 one=-1.279193435296744, LL=-8.2893638
 
-Drawing graph: graph twoway line _pll _beta,  title("Asymmetry = -5.1%") xline(-1.994243603464133 -1
-> .359486308343629, lstyle(ci) ) yline(-7.056197538295324, lstyle(refline) )
+Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -5.1%") xline(-1.994243603464133
+>  -1.359486308343629, lstyle(ci) ) yline(-7.056197538295324, lstyle(refline) )
 
 -------------------------------------------------------------
       events |     Coef.   Std. Err.     [95% PLL Conf. Int.]
@@ -601,5 +637,5 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- closed on:  18 Jun 2025, 20:18:32
+ closed on:   1 Aug 2025, 18:09:31
 ----------------------------------------------------------------------------------------------------

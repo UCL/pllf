@@ -1,5 +1,5 @@
 {smcl}
-{* 18jul2025}{...}
+{* 01aug2025}{...}
 {hline}
 help for {hi:pllf}{right:Patrick Royston}
 {hline}
@@ -26,16 +26,19 @@ help for {hi:pllf}{right:Patrick Royston}
 {synopt :{opt pro:file(xvarname)}}PLL is required for variable {it:xvarname}, or{p_end}
 {synopt :{opt pro:file([eqname]paramname)}}PLL is required for parameter
 {it:paramname} or {opt [}{it:eqname}{opt ]}{it:paramname}{p_end}
+
 {syntab :{it:Syntax 2}}
 {synopt :{opt form:ula(formula)}}defines a transformation involving at least
 one variable in the dataset{p_end}
 {synopt :{opt pl:aceholder(string)}}sets the placeholder in Syntax 2 to {it:string}{p_end}
+
 {syntab :{it:Evaluation options: both syntaxes}}
 {synopt :{opt lev:el(#)}}sets the confidence level to {it:#}{p_end}
 {synopt :{opt maxc:ost(#)}}sets an upper limit of 2 * {it:#} on the additional evaluations of the PLL{p_end}
 {synopt :{opt n:_eval(#)}}evaluates PLL at {it:#} equally spaced {it:X} values{p_end}
 {synopt :{opt noci}}suppresses calculation of PLL-based CI{p_end}
 {synopt :{opt range(#1 #2)}}evaluates PLL over {it:#1} <= {opt X} <= {it:#2}{p_end}
+
 {syntab :{it:Output options: both syntaxes}}
 {synopt :{opt dev:iance}}requests minus 2 times PLL function{p_end}
 {synopt :{opt diff:erence}}computes PLL minus maximised log likelihood{p_end}
@@ -44,11 +47,14 @@ one variable in the dataset{p_end}
 {synopt :{opt nodot:s}}suppresses (supposedly entertaining) dots{p_end}
 {synopt :{opt tr:ace}}displays the result of each log-likelihood evaluation{p_end}
 {synopt :{opt ver:bose}}displays extended output including results of initial maximum likelihood fitting{p_end}
+
 {syntab :{it:Graph options: both syntaxes}}
 {synopt :{opt cilin:es(cline_options)}}specifies rendition of confidence interval{p_end}
 {synopt :{opt gropt(cline_opts twoway_opts)}}supplies graph options to enhance PLL plot{p_end}
 {synopt :{opt levlin:e(cline_options)}}specifies rendition of horizontal line{p_end}
 {synopt :{opt nograph}}suppresses the line plot of the results{p_end}
+{synopt :{opt shown:ormal}[{opt (line_options)}]}adds a Normal approximation to the PLL plot.{p_end}
+{synoptline}
 
 
 {pstd}
@@ -130,10 +136,6 @@ by the variable created by substituting the current value of {cmd:X} in
 computed by a simple grid search. Normal-based confidence limits
 are not computed. Other features are similar to
 those with syntax 1.
-
-{pstd}
-[DROP?] Finally, before using {cmd:pllf} please read an important comment
-in {it:Remarks} under the heading {it:Handling 'equations' correctly}.
 
 
 {title:Options}
@@ -272,6 +274,10 @@ profile-likelihood-based CI.  See {help cline_options:{it:cline_options}}.
 {phang}
 {opt nograph} suppresses the line plot of the results.
 
+{phang}
+{opt shownormal}[{opt (line_options)}] adds a Normal approximation to the 
+plot of the PLL. {it:line_options} are options valid for {help line}.
+
 
 {title:Remarks}
 
@@ -310,45 +316,6 @@ log pseudo-likelihood, defined as -0.5*{cmd:e(deviance)}, for
 estimating confidence intervals. An example is {cmd:binreg}; if
 the {opt ml} option is not specified, it returns {cmd:e(deviance)}
 but not {cmd:e(ll)}.
-
-    {bf:{ul:Handling 'equations' correctly - DROP??}}
-
-{pstd}
-Sometimes, when one seems to have a single unnamed 'equation'
-whose parameters are to be estimated, Stata has a hidden name
-for the equation. It is essential in such cases to specify the
-equation name in the {opt profile()} option, otherwise a syntax
-error will probably occur. The most obvious example
-is the {cmd:poisson} command (also the {cmd:glm}
-command). The main equation in {cmd:poisson} and {cmd:glm} is called
-{cmd:[}{it:varname}{cmd:]} where {it:varname} is the name of
-the dependent variable. For example, the command
-
-{phang}{cmd:. pllf count group, exposure(y) range(0.2 1.6) profile(count)}
-
-{pstd}
-fails, whereas 
-
-{phang}{cmd:. pllf count group, exposure(y) range(0.2 1.6) profile([count]group)}
-
-{pstd}
-works as intended.
-
-{pstd}
-You can discover hidden equation names by running the regression command
-in question and then typing {cmd:matrix list e(b)}. Any equation names will
-appear in the top row of the description, followed by a colon. For example:
-
-{phang}{cmd:. pllf count group, exposure(y)}{p_end}
-{phang}{cmd:. matrix list e(b)}
-
-    {bf:e(b)[1,2]}
-    {bf:         count:      count:}
-    {bf:         group       _cons}
-    {bf:y1   .89797677  -5.0930282}
-
-{pstd}
-Unfortunately, there is no simple way around this naming requirement.
 
 
 {title:Examples}
@@ -436,14 +403,18 @@ for explanatory variables in logistic regression.
 Stata Technical Bulletin STB-56, 45-47; STB reprints
 vol 10, 211-214.
 
+{phang}
+P. Royston. 2007. Profile Likelihood for Estimation and Confidence Intervals. The Stata Journal 7, 376–387. {browse "https://doi.org/10.1177/1536867X0700700305"}.
 
-{title:Author [DISCUSS]}
+{phang}Please use the above reference to cite this software.
 
-{pstd}
-Patrick Royston{break}
-MRC Clinical Trials Unit, London NW1 2DA, UK.
 
-{pstd}Email: {browse "mailto:pr@ctu.mrc.ac.uk":patrick.royston@ctu.mrc.ac.uk}
+{title:Authors}
+
+{pstd}Patrick Royston, MRC Clinical Trials Unit at UCL, London, UK.{break}
+
+{pstd}Ian White, MRC Clinical Trials Unit at UCL, London, UK.{break}
+Email: {browse "mailto:ian.white@ucl.ac.uk":Ian White}
 
 
 {title:Also see}

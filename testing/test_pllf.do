@@ -2,16 +2,18 @@
 rudimentary test file for pllf
 IW 17mar2025
 Added commands from help file 12may2025
-REvised for the colon command 28may2025
+Revised for the colon command 28may2025
+Added test of shownormal() 1aug2025
 */
 
 local filename test_pllf
 
 prog drop _all
 cd c:\ian\git\pllf\testing
+adopath ++ ..
 cap log close
 set linesize 100
-clear all // avoids the "too many sersets" error
+clear all 
 
 log using `filename', replace text
 version
@@ -27,7 +29,7 @@ use ../brcancer, clear
 stcox x1 x4a x5e x6 hormon, nohr
 local b5 = _b[x5e]
 local se5 = _se[x5e]
-pllf, profile(x5e) range(-3 -1): stcox x1 x4a x5e x6 hormon, nohr
+pllf, profile(x5e) range(-3 -1) shownormal: stcox x1 x4a x5e x6 hormon, nohr
 assert `b5' == r(b)
 assert `se5' == r(se)
 assert reldif(r(se),r(pse))<0.001
@@ -42,6 +44,13 @@ di r(b)
 assert reldif(`b1',r(b))<1E-7
 assert reldif(`se1',r(se))<1E-7
 assert reldif(r(se),r(pse))<0.001
+
+* with/without eqname: failed 1/8/2025
+* note it's faster via constraints
+pllf, profile(x5e) n_eval(20): streg x1 x4a x5e x6 hormon, dist(expo)
+local ulci = r(l_ulci)
+pllf, profile([_t]x5e) n_eval(20): streg x1 x4a x5e x6 hormon, dist(expo)
+assert reldif(`ulci', r(l_ulci))<1E-7
 
 pllf, profile([ln_p]_cons) n_eval(50): streg x1 x4a x5e x6 hormon, distribution(weibull)
 
@@ -89,7 +98,7 @@ input z n d
 end
 
 blogit d n i.z
-pllf, profile(z) debug gropt(name(blogit,replace)):  blogit d n z
+pllf, profile(z) debug gropt(name(blogit,replace)) shownormal(lcol(red)): blogit d n z
 * understands blogit has 2 "yvars"
 
 glm d z, family(binomial n) 

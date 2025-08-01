@@ -45,8 +45,8 @@ syntax [, ///
  MAXCost(int -1) N_eval(integer 100) noci noDOTs nograph gropt(string asis) ///
  LEVLINe(string asis) CILINes(string asis) ///
  TRace VERbose eform EFORM2(string) ///
- mleline DROPCollinear SHOWNormal SHOWNormal2(string) /// to be documented
- debug LIst tol(real 1E-4) pause /// to remain undocumented
+ MLELine DROPCollinear SHOWNormal SHOWNormal2(string) /// to be documented
+ debug debug2 LIst tol(real 1E-4) pause /// to remain undocumented
  ]
 
 if `maxcost'<0 local maxcost = int(`n_eval'/2)
@@ -112,7 +112,16 @@ if substr("`cmd'", -1, .) == "," {
 else if ("`cmd'"=="fit") | ("`cmd'"=="reg") | (substr("`cmd'",1,4)=="regr") local cmd regress
 
 local 0 `statacmd'
-syntax [varlist] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR *]
+syntax [anything] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) exposure(varname) NOCONStant *]
+if !missing("`profile'") unab varlist : `anything'
+else { // remove placeholder from anything to make varlist
+	// Check for `placeholder' in `varlist'
+	local varlist: subinstr local anything "`placeholder'" "", count(local nat)
+	if `nat'==0 {
+		di as err `"`placeholder' not found in regression_cmd_stuff ( `varlist' )"'
+		exit 198
+	}
+}
 if "`cmd'"=="logistic" & !missing("`coef'") local or or
 if "`cmd'"=="stcox"  & !missing("`nohr'") local hr hr
 if !missing("`irr'`or'`hr'") {
@@ -123,7 +132,6 @@ if !missing("`eform2'") {
 	local eform eform
 	local eformname `eform2'
 }
-syntax [varlist] [if] [in] [using] [fweight pweight aweight iweight], [offset(varname) exposure(varname) NOCONStant *]
 local constant `noconstant'
 // Process user offset, if specified
 if "`exposure'"!="" {
@@ -180,12 +188,6 @@ if "`formula'"!="" {
 	}
 	if "`range'"=="" {
 		di as err "range() required"
-		exit 198
-	}
-	// Check for `placeholder' in `varlist'
-	local result: subinstr local varlist "`placeholder'" "", count(local nat)
-	if `nat'==0 {
-		di as err `"`placeholder' not found in regression_cmd_stuff ( `varlist' )"'
 		exit 198
 	}
 }
@@ -366,6 +368,10 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 					`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
 				}
 			}
+			if !missing("`debug2'") {
+				di "coeff=`b'"
+				noisily `cmd'
+			}
 			if !missing("`trace'") & `i'==1 noi di ":"
 			sort `order'
 			replace `X' = `b' in `i'
@@ -518,6 +524,7 @@ else {	// --------------- begin non-linear profiling ---------------
 	qui gen `xx' = .
 	// Trial fit of model with central value of param. Program terminates if invalid cmd attempted.
 	local A = (`to'+`from')/2 // IW 
+	local varlist `varlist' `placeholder'
 	parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
 	local result `r(result)'
 	CheckCollin `result'
@@ -718,20 +725,24 @@ else {	// --------------- begin non-linear profiling ---------------
 
 if !missing("`list'") l `X' `Y' if !missing(`X')
 
+// Pseudo-SE
+local pse = (`right_limit'-`left_limit')/(2*`z')
+
 if !missing("`shownormal'") {
-	if missing(`se') | `se'<=0 {
+	if !missing("`profile'") local usese `se'
+	else local usese `pse'
+	if missing(`usese') | `usese'<=0 local usese `pse'
+	if missing(`usese') | `usese'<=0 {
 		noisily di as error "Warning: can't graph Normal approximation when se is missing"
 		local shownormal
 	}
 	else {
 		tempvar normapprox
-		gen `normapprox' = -0.5*((`X'-`b0')/`se')^2
+		qui gen `normapprox' = -0.5*((`X'-`b0')/`usese')^2
 		label var `normapprox' "Normal approximation"
 	}
 }
 
-// Pseudo-SE
-local pse = (`right_limit'-`left_limit')/(2*`z')
 capture drop `gen1'
 capture drop `gen2'
 rename `X' `gen1'

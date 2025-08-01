@@ -52,19 +52,31 @@ local ulci = r(l_ulci)
 pllf, profile([_t]x5e) n_eval(20): streg x1 x4a x5e x6 hormon, dist(expo)
 assert reldif(`ulci', r(l_ulci))<1E-7
 
+* collinearity
+gen horm2=hormon
+cap noi pllf, profile(x5e) n_eval(20): streg horm2 x1 x4a x5e x6 hormon, distribution(expo)
+assert _rc==498
+pllf, profile(x5e) n_eval(20) dropcol: streg horm2 x1 x4a x5e x6 hormon, distribution(expo)
+assert reldif(`ulci', r(l_ulci))<1E-7
+
 pllf, profile([ln_p]_cons) n_eval(50): streg x1 x4a x5e x6 hormon, distribution(weibull)
 
 pllf, profile([ln_p]x4b) deviance difference n_eval(20): streg x1 x4a x5e x6 hormon, distribution(weibull) ancillary(x4b) 
 
-* pllf, profile([d]group) range(0.27 1.55): poisson d group, exposure(y) 
+
+
 
 * Syntax 2
 *pllf logit y x1 X, formula(exp(-X*x2)) range(.05 .25)
+drop X Y // presence of X could mask failure of next cmd
 pllf, formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a X x6 hormon
 local pllf_ll = r(ll)
 mac l _pllf_ll
 gen expXx5 = exp(-r(b)*x5)
 stcox x1 x4a expXx5 x6 hormon
+di e(ll)
+assert abs(e(ll)-`pllf_ll')<1E-3
+pllf, formula(exp(-@*x5)) placeholder(@) range(.05 .25): stcox x1 x4a @ x6 hormon
 di e(ll)
 assert abs(e(ll)-`pllf_ll')<1E-3
 
@@ -126,6 +138,13 @@ local asym=r(asym)
 gen one=1
 pllf, trace n_eval(10) debug profile(one): poisson events group one, exposure(pyears) nocons
 assert reldif( `asym', r(asym)) < 1E-7
+
+
+* TRISST data, MRI vs CT comparison
+* NB it's a NI trial so don't get excited about the profile CI not crossing the null 
+* 	NI margin is +0.057
+use ../TRISST, clear
+pllf, shown verbose profile(modality): binreg outcome modality [fw=n], rd
 
 
 di as result "*** PLLF HAS PASSED ALL THE TESTS IN `filename'.do ***"

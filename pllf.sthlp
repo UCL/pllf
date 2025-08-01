@@ -33,6 +33,7 @@ one variable in the dataset{p_end}
 {synopt :{opt pl:aceholder(string)}}sets the placeholder in Syntax 2 to {it:string}{p_end}
 
 {syntab :{it:Evaluation options: both syntaxes}}
+{synopt :{opt dropc:ollinear}}drops any collinear variables{p_end}
 {synopt :{opt lev:el(#)}}sets the confidence level to {it:#}{p_end}
 {synopt :{opt maxc:ost(#)}}sets an upper limit of 2 * {it:#} on the additional evaluations of the PLL{p_end}
 {synopt :{opt n:_eval(#)}}evaluates PLL at {it:#} equally spaced {it:X} values{p_end}
@@ -52,6 +53,7 @@ one variable in the dataset{p_end}
 {synopt :{opt cilin:es(cline_options)}}specifies rendition of confidence interval{p_end}
 {synopt :{opt gropt(cline_opts twoway_opts)}}supplies graph options to enhance PLL plot{p_end}
 {synopt :{opt levlin:e(cline_options)}}specifies rendition of horizontal line{p_end}
+{synopt :{opt mlel:ine}}adds a horizontal line at the MLE{p_end}
 {synopt :{opt nograph}}suppresses the line plot of the results{p_end}
 {synopt :{opt shown:ormal}[{opt (line_options)}]}adds a Normal approximation to the PLL plot.{p_end}
 {synoptline}
@@ -195,6 +197,10 @@ characters are not allowed. Default {it:string} is {cmd:X}
 {p 2}{bf:Evaluation options: both syntaxes}
 
 {phang}
+{opt dropcollinear} drops any collinear variables. The default is to 
+stop with an error if the x variables are collinear.
+
+{phang}
 {opt level(#)} sets the confidence level to {it:#}; default is
 {cmd:level(95)}.
 
@@ -272,6 +278,9 @@ line showing the profile-likelihood at the confidence level for the the
 profile-likelihood-based CI.  See {help cline_options:{it:cline_options}}.
 
 {phang}
+{opt mleline} adds a horizontal line at the MLE.
+
+{phang}
 {opt nograph} suppresses the line plot of the results.
 
 {phang}
@@ -322,32 +331,6 @@ but not {cmd:e(ll)}.
 
 {p 2}{bf:Syntax 1}
 
-{phang}Load breast cancer data
-
-{phang}. {stata "webuse brcancer, clear"}{p_end}
-{phang}. {stata "stset rectime, failure(censrec) scale(365.24)"}
-
-{phang}Explore profile likelihood for coefficient of x5e
-
-{phang}. {stata "pllf, profile(x5e) range(-3 -1): stcox x1 x4a x5e x6 hormon"}
-
-{phang}Explore profile likelihood for coefficient of x1
-
-{phang}. {stata "pllf, profile(x1) gen(X Y): stpm2 x1 x4a x5e x6 hormon, df(2) scale(hazard) "}
-
-{phang}Explore profile likelihood for Weibull shape parameter
-
-{phang}. {stata "pllf, profile([ln_p]_cons) n(50): streg x1 x4a x5e x6 hormon, distribution(weibull)"}
-
-{phang}Explore profile likelihood for predictor of Weibull shape parameter
-
-{phang}. {stata "pllf, profile([ln_p]x4b) deviance difference n(20): streg x1 x4a x5e x6 hormon, distribution(weibull) ancillary(x4b) "}
-
-{phang}Load auto data and explore profile likelihood for the constant
-
-{phang}. {stata "sysuse auto, clear"}{p_end}
-{phang}. {stata "pllf, profile(_cons): logit foreign mpg"}
-
 {phang}Input simple two-group data with event outcome
 
 {phang}. {stata "clear"}{p_end}
@@ -364,11 +347,46 @@ but not {cmd:e(ll)}.
 
 {phang}. {stata "pllf, profile(group): poisson events group, exposure(pyears)"}
 
+{phang}Load TRISST trial data ({help pllf##Joffe2022:Joffe et al (2022)}). The data 
+are from a non-inferiority trial of MRI vs CT for surveillance after testicular 
+cancer. The PLL CI does not cross zero while the Normal CI does. However this 
+is a non-inferiority trial with margin a risk difference of +0.057, so both CIs 
+clearly establish non-inferiority.
 
+{phang}. {stata "use TRISST, clear"}{p_end}
+{phang}. {stata "pllf, shownorm verbose profile(modality): binreg outcome modality [fw=n], rd"}
 
-{p 2}{bf:Syntax 2 [REVISE]}
+{phang}Load breast cancer data
 
-{phang}{cmd:. pllf logit y x1 X, formula(exp(-X*x2)) range(.05 .25)}
+{phang}. {stata "webuse brcancer, clear"}{p_end}
+{phang}. {stata "stset rectime, failure(censrec) scale(365.24)"}
+
+{phang}Explore profile likelihood for coefficient of x5e
+
+{phang}. {stata "pllf, profile(x5e) range(-3 -1): stcox x1 x4a x5e x6 hormon"}
+
+{phang}Explore profile likelihood for coefficient of x1
+
+{phang}. {stata "pllf, profile(x1) gen(X Y): stpm2 x1 x4a x5e x6 hormon, df(2) scale(hazard) "}
+
+{phang}Explore profile likelihood for the constant
+
+{phang}. {stata "pllf, profile(_cons) n(50): streg x1 x4a x5e x6 hormon, distribution(weibull)"}
+
+{phang}Explore profile likelihood for Weibull shape parameter
+
+{phang}. {stata "pllf, profile([ln_p]_cons) n(50): streg x1 x4a x5e x6 hormon, distribution(weibull)"}
+
+{phang}Explore profile likelihood for predictor of Weibull shape parameter
+
+{phang}. {stata "pllf, profile([ln_p]x4b) deviance difference n(20): streg x1 x4a x5e x6 hormon, distribution(weibull) ancillary(x4b) "}
+
+{p 2}{bf:Syntax 2}
+
+{phang}The following two commands are equivalent.
+
+{phang}. {stata "pllf, formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a X x6 hormon"}{p_end}
+{phang}. {stata "pllf, placeholder(@) formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a @ x6 hormon"}
 
 
 {title:Stored}
@@ -392,10 +410,19 @@ apply only to syntax 1, otherwise to both syntaxes:
 
 {title:References}
 
+{phang}Please use this reference to cite this software:
+
 {phang}
-D. J. Venzon and S. H. Moolgavkar. 1988. A method for computing
-profile-likelihood-based confidence intervals. Applied Statistics
-37: 87-94.
+P. Royston. 2007. Profile Likelihood for Estimation and Confidence Intervals. The Stata 
+Journal 7, 376–387. {browse "https://doi.org/10.1177/1536867X0700700305"}.
+
+{phang}Other references:
+
+{phang}{marker Joffe2022}
+J. K. Joffe et al. 2022. Imaging Modality and Frequency in Surveillance of Stage I 
+Seminoma Testicular Cancer: Results From a Randomized, Phase III, Noninferiority 
+Trial (TRISST). Journal of Clinical Oncology 40, 2468–2478. 
+{browse "https://doi.org/10.1200/JCO.21.01199"}.
 
 {phang}
 M. S. Pearce. 2000. Profile likelihood confidence intervals
@@ -404,9 +431,9 @@ Stata Technical Bulletin STB-56, 45-47; STB reprints
 vol 10, 211-214.
 
 {phang}
-P. Royston. 2007. Profile Likelihood for Estimation and Confidence Intervals. The Stata Journal 7, 376–387. {browse "https://doi.org/10.1177/1536867X0700700305"}.
-
-{phang}Please use the above reference to cite this software.
+D. J. Venzon and S. H. Moolgavkar. 1988. A method for computing
+profile-likelihood-based confidence intervals. Applied Statistics
+37: 87-94.
 
 
 {title:Authors}

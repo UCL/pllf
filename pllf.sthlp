@@ -9,13 +9,13 @@ help for {hi:pllf}{right:Patrick Royston}
 
 
 {phang2}
-{opt pllf}
-[{cmd:,} {it:options}]:
+{opt pllf,}
+[{it:options}]:
 {it:regression_cmd}
 {it:regression_cmd_stuff}
 {ifin}
 {weight}
-[{cmd:,} {it:regression_cmd_options}]:
+[{cmd:,} {it:regression_cmd_options}]
 
 
 

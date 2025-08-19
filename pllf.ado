@@ -29,13 +29,12 @@ version 11.0
 
 // SEPARATE PLLF/PREFIX PART FROM STATA COMMAND
 
-	local cmdline : copy local 0
-	mata: _parse_colon("hascolon", "statacmd")
-	if !`hascolon' {
-		di as error "pllf is now a prefix command, with syntax:"
-		di as error "    pllf<, options>: <regcmd>"
-		exit 198
-	}
+mata: _parse_colon("hascolon", "statacmd")
+if !`hascolon' {
+	di as error "pllf is now a prefix command, with syntax:"
+	di as error "    pllf<, options>: <regcmd>"
+	exit 198
+}
 
 // PARSE PLLF OPTIONS FROM FIRST ARGUMENT
 

@@ -1,7 +1,7 @@
 {smcl}
-{* 01aug2025}{...}
+{* 03aug2025}{...}
 {hline}
-help for {hi:pllf}{right:Patrick Royston}
+help for {hi:pllf}{right:Patrick Royston, Ian White}
 {hline}
 
 
@@ -15,7 +15,7 @@ help for {hi:pllf}{right:Patrick Royston}
 {it:regression_cmd_stuff}
 {ifin}
 {weight}
-[{cmd:,} {it:regression_cmd_options}]
+[{cmd:,} {it:regression_cmd_options}]:
 
 
 
@@ -78,8 +78,8 @@ by maximum likelihood may be used. This includes
 {help regress},
 {help reg3},
 {help stcox},
-{help streg}
-{help stpm}
+{help streg},
+{help stpm},
 {help stpm2}, and probably others.
 
 {pstd}
@@ -88,6 +88,16 @@ All weight types supported by {it:regression_cmd} are allowed; see help
 
 
 {title:Description}
+
+{pstd}
+{opt pllf} computes and plots the profile log likelihood function for a
+single predictor in a regression model. The term "profile" implies
+adjustment for other predictor(s) in the model, if any. It is assumed that
+the likelihood function exists.
+
+{pstd}
+Plentiful general material on the PLLF is available on the Internet.
+For example, search "google profile likelihood method".
 
 {pstd}
 {opt pllf} has two basic syntaxes, depending on which of the options
@@ -104,11 +114,10 @@ according to the needs of {it:regression_cmd}. For example, for
 {it:varlist_iv}{cmd:)}.
 
 {pstd}
-{opt pllf} with the {opt profile()} option (syntax 1)
-computes the profile log likelihood (PLL) function
-for the regression coefficient of a covariate defined by
-{cmd:profile(}{it:xvarname}{cmd:)} or a parameter or variable
-defined by {cmd:profile(}[{cmd:[}{it:eqname}{cmd:]}]{it:paramname}{cmd:)}
+With syntax 1, {opt pllf} with the {opt profile()} option computes the
+profile log likelihood (PLL) function for the regression coefficient
+of a covariate defined by {cmd:profile(}{it:xvarname}{cmd:)} or a
+parameter or variable defined by {cmd:profile(}[{cmd:[}{it:eqname}{cmd:]}]{it:paramname}{cmd:)}
 within a model specified by {it:regression_cmd} {it:yvar} {it:xvarlist},
 {it:regression_cmd_options}.
 {opt pllf} also reports
@@ -129,14 +138,14 @@ according to the formula defined by {opt formula()}, which must
 also include {cmd:X} at least once.
 
 {pstd}
-{opt pllf} with the {opt formula()} option (syntax 2)
+With syntax 2, {opt pllf} with the {opt formula()} option
 computes the PLL function of a non-linear parameter denoted
 by {cmd:X}. {cmd:X} is symbolically included where necessary
 in {it:regression_cmd_stuff}. In effect, {cmd:X} is replaced on the fly
 by the variable created by substituting the current value of {cmd:X} in
 {it:formula}. {opt pllf} reports the MLE and PLL-based confidence limits,
 computed by a simple grid search. Normal-based confidence limits
-are not computed. Other features are similar to
+are not computed. Other features with syntax 2 are similar to
 those with syntax 1.
 
 
@@ -331,7 +340,7 @@ but not {cmd:e(ll)}.
 
 {p 2}{bf:Syntax 1}
 
-{phang}Input simple two-group data with event outcome
+{phang}Input two-group data with event outcome
 
 {phang}. {stata "clear"}{p_end}
 {phang}. {stata "input group pyears events"}{p_end}
@@ -367,26 +376,40 @@ clearly establish non-inferiority.
 
 {phang}Explore profile likelihood for coefficient of x1
 
-{phang}. {stata "pllf, profile(x1) gen(X Y): stpm2 x1 x4a x5e x6 hormon, df(2) scale(hazard) "}
+{phang}. {stata "pllf, profile(x1) gen(X Y): stcox x1 x4a x5e x6 hormon"}
 
-{phang}Explore profile likelihood for the constant
+{phang}Explore profile likelihood for the constant of Weibull distribution
 
 {phang}. {stata "pllf, profile(_cons) n(50): streg x1 x4a x5e x6 hormon, distribution(weibull)"}
+
+{phang}Explore profile likelihood for the constant of flexible parametric model (stpm2)
+
+{phang}. {stata "pllf, profile(_cons) n(50): stpm2 x1 x4a x5e x6 hormon, df(2) scale(hazard) "}
 
 {phang}Explore profile likelihood for Weibull shape parameter
 
 {phang}. {stata "pllf, profile([ln_p]_cons) n(50): streg x1 x4a x5e x6 hormon, distribution(weibull)"}
 
-{phang}Explore profile likelihood for predictor of Weibull shape parameter
+{phang}Explore profile deviance for predictor of Weibull shape parameter
 
 {phang}. {stata "pllf, profile([ln_p]x4b) deviance difference n(20): streg x1 x4a x5e x6 hormon, distribution(weibull) ancillary(x4b) "}
 
 {p 2}{bf:Syntax 2}
 
-{phang}The following two commands are equivalent.
+{pstd}The following two commands with syntax 2 are equivalent and give
+identical results. The {cmd:stcox} models are nonlinear in X but conditionally linear
+in exp(-X*x5).
 
 {phang}. {stata "pllf, formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a X x6 hormon"}{p_end}
 {phang}. {stata "pllf, placeholder(@) formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a @ x6 hormon"}
+
+{pstd}
+In the first command, values X in {cmd:range(.05 .25)} are substituted in turn into
+{opt formula(exp(-X*x5))} and the corresponding log likelihood values are determined.
+
+{pstd}
+In the second command, values of @ from {opt placeholder(@)} instead of X are used in
+{opt formula()} and in the {cmd:stcox} model.
 
 
 {title:Stored}

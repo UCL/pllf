@@ -1,0 +1,160 @@
+----------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  c:\ian\git\pllf\testing\compare_versions_pllf.log
+  log type:  text
+ opened on:  23 Jul 2025, 09:27:53
+
+. /* 
+> CHECK OLD AND NEW VERSIONS AGREE
+> compare_versions_pllf
+> IW 23jul2025
+> */
+. 
+. // OLD VERSION
+. 
+. cap adopath - c:\ian\git\pllf
+
+. which pllf
+c:\ian\ado\plus\p\pllf.ado
+*! version 1.0.1 PR 17jul2007
+
+. pda
+
+. 
+. webuse brcancer, clear
+(German breast cancer data)
+
+. stset rectime, fail(censrec)
+
+Survival-time data settings
+
+         Failure event: censrec!=0 & censrec<.
+Observed time interval: (0, rectime]
+     Exit on or before: failure
+
+--------------------------------------------------------------------------
+        686  total observations
+          0  exclusions
+--------------------------------------------------------------------------
+        686  observations remaining, representing
+        299  failures in single-record/single-failure data
+    771,400  total analysis time at risk and under observation
+                                                At risk from t =         0
+                                     Earliest observed entry t =         0
+                                          Last observed exit t =     2,659
+
+. stcox x1 x4a x5e x6 hormon, nohr
+
+        Failure _d: censrec
+  Analysis time _t: rectime
+
+Iteration 0:  Log likelihood = -1788.1731
+Iteration 1:  Log likelihood = -1729.3392
+Iteration 2:  Log likelihood =  -1724.659
+Iteration 3:  Log likelihood = -1724.5759
+Iteration 4:  Log likelihood = -1724.5758
+Refining estimates:
+Iteration 0:  Log likelihood = -1724.5758
+
+Cox regression with Breslow method for ties
+
+No. of subjects =     686                               Number of obs =    686
+No. of failures =     299
+Time at risk    = 771,400
+                                                        LR chi2(5)    = 127.19
+Log likelihood = -1724.5758                             Prob > chi2   = 0.0000
+
+------------------------------------------------------------------------------
+          _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+          x1 |   .0010071   .0060449     0.17   0.868    -.0108407    .0128548
+         x4a |   .6464434   .2466192     2.62   0.009     .1630787    1.129808
+         x5e |  -1.994528   .2258596    -8.83   0.000    -2.437204   -1.551851
+          x6 |   -.002276   .0005416    -4.20   0.000    -.0033376   -.0012144
+      hormon |  -.3821333   .1280919    -2.98   0.003    -.6331889   -.1310778
+------------------------------------------------------------------------------
+
+. pllf stcox x1 x4a x5e x6 hormon, nohr profile(x5e) range(-3 -1) gen(beta1 pll1) gropt(name(pll1, replace))
+
+        Failure _d: censrec
+  Analysis time _t: rectime
+
+Iteration 0:  Log likelihood = -1788.1731
+Iteration 1:  Log likelihood = -1729.3392
+Iteration 2:  Log likelihood =  -1724.659
+Iteration 3:  Log likelihood = -1724.5759
+Iteration 4:  Log likelihood = -1724.5758
+Refining estimates:
+Iteration 0:  Log likelihood = -1724.5758
+
+Cox regression with Breslow method for ties
+
+No. of subjects =     686                               Number of obs =    686
+No. of failures =     299
+Time at risk    = 771,400
+                                                        LR chi2(5)    = 127.19
+Log likelihood = -1724.5758                             Prob > chi2   = 0.0000
+
+------------------------------------------------------------------------------
+          _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+          x1 |   .0010071   .0060449     0.17   0.868    -.0108407    .0128548
+         x4a |   .6464434   .2466192     2.62   0.009     .1630787    1.129808
+         x5e |  -1.994528   .2258596    -8.83   0.000    -2.437204   -1.551851
+          x6 |   -.002276   .0005416    -4.20   0.000    -.0033376   -.0012144
+      hormon |  -.3821333   .1280919    -2.98   0.003    -.6331889   -.1310778
+------------------------------------------------------------------------------
+....................................................................................................
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         x5e | -1.994528    .2259809    -2.435381   -1.549552
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. 
+. // NEW VERSION
+. 
+. myadopath pllf
+  [1]              "c:\ian\git\pllf"
+  [2]  (BASE)      "C:\Program Files\Stata18\ado\base/"
+  [3]  (SITE)      "C:\Program Files\Stata18\ado\site/"
+  [4]              "."
+  [5]  (PERSONAL)  "c:\ian\ado\personal/"
+  [6]  (PLUS)      "c:\ian\ado\plus/"
+  [7]  (OLDPLACE)  "c:\ado/"
+
+. which pllf
+c:\ian\git\pllf\pllf.ado
+*! v1.3.1 PR 04mar2023 / IW 23jul2025
+
+. pda
+
+. 
+. pllf, profile(x5e) range(-3 -1) mleline gen(beta2 pll2) gropt(name(pll2, replace)): stcox x1 x4a x5e x6 hormon
+> , nohr
+Profiling....................................................................................................
+
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         x5e | -1.994528    .2259809    -2.435381   -1.549552
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. assert beta1==beta2
+
+. assert pll1==pll2
+
+. 
+. 
+end of do-file
+      name:  <unnamed>
+       log:  c:\ian\git\pllf\testing\compare_versions_pllf.log
+  log type:  text
+ closed on:  23 Jul 2025, 09:27:57
+----------------------------------------------------------------------------------------------------------------

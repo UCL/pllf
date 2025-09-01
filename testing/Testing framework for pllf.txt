@@ -1,0 +1,13 @@
+TESTING FRAMEWORK FOR PLLF
+
+Should work with -poisson, exposure()-
+
+Should work for simple grouped data 
+
+Should work for 
+	each command listed
+	covariate or constant
+	[eq]coef or coef
+
+Perfect prediction:
+	should output only the far confidence limit

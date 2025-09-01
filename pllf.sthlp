@@ -1,5 +1,5 @@
 {smcl}
-{* 03aug2025}{...}
+{* 01sep2025}{...}
 {hline}
 help for {hi:pllf}{right:Patrick Royston, Ian White}
 {hline}
@@ -8,14 +8,17 @@ help for {hi:pllf}{right:Patrick Royston, Ian White}
 {title:Profile log likelihood function}
 
 
+{phang}
+Syntax 1: fit a regression command and compute the profile log likelihood function for one of its parameters
+
 {phang2}
-{opt pllf,}
-[{it:options}]:
-{it:regression_cmd}
-{it:regression_cmd_stuff}
-{ifin}
-{weight}
-[{cmd:,} {it:regression_cmd_options}]:
+{opt pllf, profile(parm)} [{it:options}]: {it:regression_cmd}
+
+{phang}
+Syntax 2: fit a regression command and include an extra non-linear term given by a formula involving observed variable(s) and one unknown parameter
+
+{phang2}
+{opt pllf, formula(formula)} [{it:options}]: {it:regression_cmd}
 
 
 
@@ -201,8 +204,7 @@ the PLL function is approximately quadratic with a single maximum.
 {phang}
 {opt placeholder(string)} defines the placeholder
 character(s) used in syntax 2. Spaces or other punctuation
-characters are not allowed. Default {it:string} is {cmd:X}
-(capital-x).
+characters are not allowed. Default {it:string} is {cmd:@}.
 
 {p 2}{bf:Evaluation options: both syntaxes}
 
@@ -347,8 +349,8 @@ but not {cmd:e(ll)}.
 
 {phang}. {stata "clear"}{p_end}
 {phang}. {stata "input group pyears events"}{p_end}
-{phang}{space 4}{stata "      0 200 38"}{p_end}
-{phang}{space 4}{stata "      1 100 19"}{p_end}
+{phang}{space 4}{stata "      0 200 8"}{p_end}
+{phang}{space 4}{stata "      1 100 3"}{p_end}
 {phang}{space 4}{stata "      end"}{p_end}
 
 {phang}Fit Poisson model
@@ -359,7 +361,7 @@ but not {cmd:e(ll)}.
 
 {phang}. {stata "pllf, profile(group): poisson events group, exposure(pyears)"}
 
-{phang}Load TRISST trial data ({help pllf##Joffe2022:Joffe et al (2022)}). The data 
+{phang}Load TRISST trial data ({help pllf##Joffe2022:Joffe et al, 2022}). The data 
 are from a non-inferiority trial of MRI vs CT for surveillance after testicular 
 cancer. The PLL CI does not cross zero while the Normal CI does. However this 
 is a non-inferiority trial with margin a risk difference of +0.057, so both CIs 
@@ -403,8 +405,8 @@ clearly establish non-inferiority.
 identical results. The {cmd:stcox} models are nonlinear in X but conditionally linear
 in exp(-X*x5).
 
-{phang}. {stata "pllf, formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a X x6 hormon"}{p_end}
-{phang}. {stata "pllf, placeholder(@) formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a @ x6 hormon"}
+{phang}. {stata "pllf, formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a x6 hormon"}{p_end}
+{phang}. {stata "pllf, placeholder(X) formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a x6 hormon"}
 
 {pstd}
 In the first command, values X in {cmd:range(.05 .25)} are substituted in turn into

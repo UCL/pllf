@@ -1,5 +1,7 @@
 /*
-*! v1.3.2 PR 04mar2023 / IW 01aug2025
+*! v1.3.3 PR 04mar2023 / IW 01sep2025
+	shownormal -> normal, and saved by gen()
+v1.3.2 PR 04mar2023 / IW 01aug2025
 	new shownormal option
 	fix with stpm
 	fix noconstant option
@@ -44,7 +46,7 @@ syntax [, ///
  MAXCost(int -1) N_eval(integer 100) noci noDOTs nograph gropt(string asis) ///
  LEVLINe(string asis) CILINes(string asis) ///
  TRace VERbose eform EFORM2(string) ///
- MLELine DROPCollinear SHOWNormal SHOWNormal2(string) /// to be documented
+ MLELine DROPCollinear NORMal NORMal2(string) /// to be documented
  debug debug2 LIst tol(real 1E-4) pause /// to remain undocumented
  ]
 
@@ -58,12 +60,14 @@ if "`placeholder'"!="" {
 }
 else local placeholder X
 
-if "`gen'"=="" {
-	local gen1 _beta
-	local gen2 _pll
+if "`gen'"!="" {
+	local gen1 : word 1 of `gen'
+	local gen2 : word 2 of `gen'
+	local gen3 : word 3 of `gen'
 }
-else gettoken gen1 gen2: gen
+if "`gen1'"=="" local gen1 _beta
 if "`gen2'"=="" local gen2 _pll
+if "`gen3'"=="" local gen3 _pllnorm
 
 if "`range'"!="" {
 	gettoken from to: range
@@ -84,9 +88,9 @@ if !missing("`debug'") local verbose verbose
 if !missing("`verbose'") local noisily noisily
 else local noisily quietly
 
-if !missing("`shownormal2'") {
-	local shownormal shownormal 
-	local shownormalopts `shownormal2' 
+if !missing("`normal2'") {
+	local normal normal 
+	local normalopts `normal2' 
 }
 
 *** END OF PARSING PLLF OPTIONS
@@ -727,41 +731,45 @@ if !missing("`list'") l `X' `Y' if !missing(`X')
 // Pseudo-SE
 local pse = (`right_limit'-`left_limit')/(2*`z')
 
-if !missing("`shownormal'") {
+if !missing("`normal'") {
 	if !missing("`profile'") local usese `se'
 	else local usese `pse'
 	if missing(`usese') | `usese'<=0 local usese `pse'
 	if missing(`usese') | `usese'<=0 {
 		noisily di as error "Warning: can't graph Normal approximation when se is missing"
-		local shownormal
+		local normal
 	}
 	else {
-		tempvar normapprox
-		qui gen `normapprox' = -0.5*((`X'-`b0')/`usese')^2
-		label var `normapprox' "Normal approximation"
+		tempvar Z
+		qui gen `Z' = -0.5*((`X'-`b0')/`usese')^2
+		label var `Z' "normal approximation to PLLF"
 	}
 }
 
 capture drop `gen1'
-capture drop `gen2'
 rename `X' `gen1'
+capture drop `gen2'
 rename `Y' `gen2'
+if !missing("`normal'") {
+	capture drop `gen3'
+	rename `Z' `gen3'
+}
 if `use_deviance' local star = "*"
-lab var `gen2' "profile log likelihood function`star'"
+lab var `gen2' "profile log likelihood`star'"
 local ll_limit = `ll0'-`z'^2/2
 local limit `ll_limit'
 if "`difference'"!="" {
 	// compute difference, subtract ll0
 	qui replace `gen2' = `gen2'-`ll0'
-	lab var `gen2' "profile log likelihood difference function`star'"
+	lab var `gen2' "profile log likelihood difference`star'"
 	local limit = -`z'^2/2
 }
-else if !mi("`shownormal'") qui replace `normapprox' = `normapprox'+`ll0'
+else if !mi("`normal'") qui replace `gen3' = `gen3'+`ll0'
 if "`deviance'"!="" {
 	qui replace `gen2' = -2*`gen2'
-	if !mi("`shownormal'") qui replace `normapprox' = -2*`normapprox'
-	if "`difference'"!="" lab var `gen2' "profile deviance difference function`star'"
-	else lab var `gen2' "profile deviance function`star'"
+	if !mi("`normal'") qui replace `gen3' = -2*`gen3'
+	if "`difference'"!="" lab var `gen2' "profile deviance difference`star'"
+	else lab var `gen2' "profile deviance`star'"
 	local limit = -2*`limit'
 }
 if !missing("`mleline'") local limit `limit' `ll0'
@@ -783,8 +791,8 @@ if "`graph'"!="nograph" {
 	if `use_deviance' {
 		local note note("`star'Defining log likelihood = -0.5*e(deviance)")
 	}
-	if !mi("`shownormal'") {
-		local normgraph (line `normapprox' `gen1', lpattern(dash) `shownormalopts')
+	if !mi("`normal'") {
+		local normgraph (line `gen3' `gen1', lpattern(dash) `normalopts')
 	}
 	local graphcmd graph twoway (line `gen2' `gen1') `normgraph', `gropt' `title' ///
 	    `xl' yline(`limit', lstyle(refline) `levline')

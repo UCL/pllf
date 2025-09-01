@@ -2,14 +2,14 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- opened on:  19 Aug 2025, 18:56:37
+ opened on:   1 Sep 2025, 17:27:09
 
 . version
 version 19.5
 
 . which pllf
 ..\pllf.ado
-*! v1.3.2 PR 04mar2023 / IW 01aug2025
+*! v1.3.3 PR 04mar2023 / IW 01sep2025
 
 . 
 . // START TESTING
@@ -56,7 +56,7 @@ Log likelihood = -1724.5758                             Prob > chi2   = 0.0000
 
 . local se5 = _se[x5e]
 
-. pllf, profile(x5e) range(-3 -1) shownormal: stcox x1 x4a x5e x6 hormon, nohr
+. pllf, profile(x5e) range(-3 -1) normal: stcox x1 x4a x5e x6 hormon, nohr
 Profiling...........................................................................................
 > .........
 
@@ -112,7 +112,7 @@ Deviance =  1225.124 (686 observations.)
 
 . local se1 = [xb]_se[x1]
 
-. pllf, profile(x1) gen(X Y): stpm x1 x4a x5e x6 hormon, df(2) scale(h) 
+. pllf, profile(x1) gen(betavar pllvar) normal: stpm x1 x4a x5e x6 hormon, df(2) scale(h) 
 Profiling...........................................................................................
 > .........
 
@@ -124,7 +124,7 @@ Profiling.......................................................................
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
-. confirm var X Y
+. confirm var betavar pllvar _pllnorm
 
 . mac l _b1
 _b1:            .0013215433224139
@@ -137,6 +137,8 @@ _b1:            .0013215433224139
 . assert reldif(`se1',r(se))<1E-7
 
 . assert reldif(r(se),r(pse))<0.001
+
+. drop betavar pllvar _pllnorm
 
 . 
 . * with/without eqname: failed 1/8/2025
@@ -224,9 +226,6 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . 
 . 
 . * Syntax 2
-. *pllf logit y x1 X, formula(exp(-X*x2)) range(.05 .25)
-. drop X Y // presence of X could mask failure of next cmd
-
 . pllf, formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a X x6 hormon
 ....................................................................................................
 > ...
@@ -402,7 +401,7 @@ Log likelihood = -125.70174                             Pseudo R2     = 0.0089
        _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
 ------------------------------------------------------------------------------
 
-. pllf, profile(z) debug gropt(name(blogit,replace)) shownormal(lcol(red)): blogit d n z
+. pllf, profile(z) debug gropt(name(blogit,replace)) normal(lcol(red)): blogit d n z
 Debug: coefficient is z
 Finding MLE using: blogit d n z ,   
 
@@ -421,7 +420,7 @@ Log likelihood = -125.70174                             Pseudo R2     = 0.0089
 Profiling using offset..............................................................................
 > ......................
 
-Drawing graph: graph twoway (line _pll _beta) (line __000005 _beta, lpattern(dash) lcol(red)), name(
+Drawing graph: graph twoway (line _pll _beta) (line _pllnorm _beta, lpattern(dash) lcol(red)), name(
 > blogit,replace) title("Asymmetry = -0.8%") xline(-1.055611256680831 .1366537912798056, lstyle(ci) 
 > ) yline(-127.6224738115053, lstyle(refline) )
 
@@ -678,7 +677,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . use ../TRISST, clear
 (NI trial of MRI vs CT after testicular cancer. Margin: RD = +0.057. Joffe 2022.)
 
-. pllf, shown verbose profile(modality): binreg outcome modality [fw=n], rd
+. pllf, norm verbose profile(modality): binreg outcome modality [fw=n], rd
 Finding MLE using: binreg outcome modality [fweight= n], rd  
 
 Iteration 1:  Deviance =  100.0224
@@ -725,5 +724,5 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- closed on:  19 Aug 2025, 18:57:42
+ closed on:   1 Sep 2025, 17:28:44
 ----------------------------------------------------------------------------------------------------

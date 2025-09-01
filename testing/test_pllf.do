@@ -3,7 +3,8 @@ rudimentary test file for pllf
 IW 17mar2025
 Added commands from help file 12may2025
 Revised for the colon command 28may2025
-Added tests of shownormal() and collinearity handling 1aug2025
+Added tests of normal() and collinearity handling 1aug2025
+Update for renaming shownormal to normal, 1sep2025
 */
 
 local filename test_pllf
@@ -29,7 +30,7 @@ use ../brcancer, clear
 stcox x1 x4a x5e x6 hormon, nohr
 local b5 = _b[x5e]
 local se5 = _se[x5e]
-pllf, profile(x5e) range(-3 -1) shownormal: stcox x1 x4a x5e x6 hormon, nohr
+pllf, profile(x5e) range(-3 -1) normal: stcox x1 x4a x5e x6 hormon, nohr
 assert `b5' == r(b)
 assert `se5' == r(se)
 assert reldif(r(se),r(pse))<0.001
@@ -37,13 +38,14 @@ assert reldif(r(se),r(pse))<0.001
 stpm x1 x4a x5e x6 hormon, df(2) scale(h) 
 local b1 = [xb]_b[x1]
 local se1 = [xb]_se[x1]
-pllf, profile(x1) gen(X Y): stpm x1 x4a x5e x6 hormon, df(2) scale(h) 
-confirm var X Y
+pllf, profile(x1) gen(betavar pllvar) normal: stpm x1 x4a x5e x6 hormon, df(2) scale(h) 
+confirm var betavar pllvar _pllnorm
 mac l _b1
 di r(b)
 assert reldif(`b1',r(b))<1E-7
 assert reldif(`se1',r(se))<1E-7
 assert reldif(r(se),r(pse))<0.001
+drop betavar pllvar _pllnorm
 
 * with/without eqname: failed 1/8/2025
 * note it's faster via constraints
@@ -65,8 +67,6 @@ pllf, profile([ln_p]x4b) deviance difference n_eval(20): streg x1 x4a x5e x6 hor
 
 
 * Syntax 2
-*pllf logit y x1 X, formula(exp(-X*x2)) range(.05 .25)
-drop X Y // presence of X could mask failure of next cmd
 pllf, formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a X x6 hormon
 local pllf_ll = r(ll)
 mac l _pllf_ll
@@ -109,7 +109,7 @@ input z n d
 end
 
 blogit d n i.z
-pllf, profile(z) debug gropt(name(blogit,replace)) shownormal(lcol(red)): blogit d n z
+pllf, profile(z) debug gropt(name(blogit,replace)) normal(lcol(red)): blogit d n z
 * understands blogit has 2 "yvars"
 
 glm d z, family(binomial n) 
@@ -143,7 +143,7 @@ assert reldif( `asym', r(asym)) < 1E-7
 * NB it's a NI trial so don't get excited about the profile CI not crossing the null 
 * 	NI margin is +0.057
 use ../TRISST, clear
-pllf, shown verbose profile(modality): binreg outcome modality [fw=n], rd
+pllf, norm verbose profile(modality): binreg outcome modality [fw=n], rd
 
 
 di as result "*** PLLF HAS PASSED ALL THE TESTS IN `filename'.do ***"

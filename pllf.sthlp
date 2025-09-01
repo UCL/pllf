@@ -44,7 +44,8 @@ one variable in the dataset{p_end}
 {synopt :{opt dev:iance}}requests minus 2 times PLL function{p_end}
 {synopt :{opt diff:erence}}computes PLL minus maximised log likelihood{p_end}
 {synopt :{opt eform}[{opt (string)}]}reports results on the exponentiated scale (with name {it:string}){p_end}
-{synopt :{opt gen(beta_var pll_var)}}creates {it:beta_var} and {it:pll_var}{p_end}
+{synopt :{opt gen(beta_var pll_var [pllnorm_var])}}creates {it:beta_var} and {it:pll_var},
+and if {cmd:normal()} is specified, also {it:pllnorm_var}.{p_end}
 {synopt :{opt nodot:s}}suppresses (supposedly entertaining) dots{p_end}
 {synopt :{opt tr:ace}}displays the result of each log-likelihood evaluation{p_end}
 {synopt :{opt ver:bose}}displays extended output including results of initial maximum likelihood fitting{p_end}
@@ -248,11 +249,13 @@ or no maximum.
 coefficient. If {it:string} is specified then this is used as the parameter name.
 
 {phang}
-{opt gen(beta_var pll_var)} creates two new variables:
+{opt gen(beta_var pll_var [pllnorm_var])} creates new variables:
 {it:beta_var} to contain the values of the regression coefficient
-over which the PLL is evaluated, and {it:pll_var}, to contain the PLL values.
+over which the PLL is evaluated, {it:pll_var} to contain the PLL values, and 
+(if {cmd:normal()} is specified) also {it:pllnorm_var} to contain the Normal 
+approximation to the PLL values.
 If {opt gen()} is not specified, the variables are created
-with default names of {opt _beta} and {opt _pll}, respectively.
+with default names of {opt _beta}, {opt _pll} (and {opt _pllnorm}), respectively.
 
 {phang}
 {opt nodots} suppresses dots. By default, a dot is

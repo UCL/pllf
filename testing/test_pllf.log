@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- opened on:   1 Sep 2025, 17:27:09
+ opened on:   1 Sep 2025, 17:47:07
 
 . version
 version 19.5
@@ -96,7 +96,7 @@ s0           |
        _cons |   1.817123   .1132867    16.04   0.000     1.595085    2.039161
 -------------+----------------------------------------------------------------
 s1           |
-       _cons |   .3962196   .0698136     5.68   0.000     .2593874    .5330517
+       _cons |   .3962196   .0698136     5.68   0.000     .2593875    .5330517
 -------------+----------------------------------------------------------------
 xb           |
           x1 |   .0013215   .0060384     0.22   0.827    -.0105135    .0131566
@@ -127,7 +127,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . confirm var betavar pllvar _pllnorm
 
 . mac l _b1
-_b1:            .0013215433224139
+_b1:            .0013215433224158
 
 . di r(b)
 .00132154
@@ -226,14 +226,14 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . 
 . 
 . * Syntax 2
-. pllf, formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a X x6 hormon
+. pllf, formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a x6 hormon
 ....................................................................................................
 > ...
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-           X |  .1369005    .0471162     .0694187    .2541106
+           @ |  .1369005    .0471162     .0694187    .2541106
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -280,14 +280,14 @@ Log likelihood = -1724.4945                             Prob > chi2   = 0.0000
 
 . assert abs(e(ll)-`pllf_ll')<1E-3
 
-. pllf, formula(exp(-@*x5)) placeholder(@) range(.05 .25): stcox x1 x4a @ x6 hormon
+. pllf, formula(exp(-#*x5)) placeholder(#) range(.05 .25): stcox x1 x4a x6 hormon
 ....................................................................................................
 > ...
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-           @ |  .1369005    .0471162     .0694187    .2541106
+           # |  .1369005    .0471162     .0694187    .2541106
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -724,5 +724,5 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- closed on:   1 Sep 2025, 17:28:44
+ closed on:   1 Sep 2025, 17:48:27
 ----------------------------------------------------------------------------------------------------

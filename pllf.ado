@@ -1,6 +1,8 @@
 /*
 *! v1.3.3 PR 04mar2023 / IW 01sep2025
 	shownormal -> normal, and saved by gen()
+	syntax 2: placeholder defaults to @ and is not needed on RHS
+	don't ereturn results
 v1.3.2 PR 04mar2023 / IW 01aug2025
 	new shownormal option
 	fix with stpm
@@ -58,7 +60,7 @@ if "`placeholder'"!="" {
 		exit 198
 	}
 }
-else local placeholder X
+else local placeholder @
 
 if "`gen'"!="" {
 	local gen1 : word 1 of `gen'
@@ -115,16 +117,7 @@ if substr("`cmd'", -1, .) == "," {
 else if ("`cmd'"=="fit") | ("`cmd'"=="reg") | (substr("`cmd'",1,4)=="regr") local cmd regress
 
 local 0 `statacmd'
-syntax [anything] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) exposure(varname) NOCONStant *]
-if !missing("`profile'") unab varlist : `anything'
-else { // remove placeholder from anything to make varlist
-	// Check for `placeholder' in `varlist'
-	local varlist: subinstr local anything "`placeholder'" "", count(local nat)
-	if `nat'==0 {
-		di as err `"`placeholder' not found in regression_cmd_stuff ( `varlist' )"'
-		exit 198
-	}
-}
+syntax [varlist] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) exposure(varname) NOCONStant *]
 if "`cmd'"=="logistic" & !missing("`coef'") local or or
 if "`cmd'"=="stcox"  & !missing("`nohr'") local hr hr
 if !missing("`irr'`or'`hr'") {
@@ -861,6 +854,10 @@ return scalar cost = `cost'
 
 // Percentage asymmetry
 return scalar asym = `asym'
+
+// Don't keep last model in memory, since it isn't the MLE
+ereturn clear
+
 end
 
 

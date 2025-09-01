@@ -67,14 +67,14 @@ pllf, profile([ln_p]x4b) deviance difference n_eval(20): streg x1 x4a x5e x6 hor
 
 
 * Syntax 2
-pllf, formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a X x6 hormon
+pllf, formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a x6 hormon
 local pllf_ll = r(ll)
 mac l _pllf_ll
 gen expXx5 = exp(-r(b)*x5)
 stcox x1 x4a expXx5 x6 hormon
 di e(ll)
 assert abs(e(ll)-`pllf_ll')<1E-3
-pllf, formula(exp(-@*x5)) placeholder(@) range(.05 .25): stcox x1 x4a @ x6 hormon
+pllf, formula(exp(-#*x5)) placeholder(#) range(.05 .25): stcox x1 x4a x6 hormon
 di r(ll)
 assert abs(r(ll)-`pllf_ll')<1E-3
 

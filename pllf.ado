@@ -1,8 +1,9 @@
 /*
-*! v1.3.3 PR 04mar2023 / IW 01sep2025
+*! v1.3.3 PR 04mar2023 / IW 02sep2025
 	shownormal -> normal, and saved by gen()
 	syntax 2: placeholder defaults to @ and is not needed on RHS
 	don't ereturn results
+	graph respects eform
 v1.3.2 PR 04mar2023 / IW 01aug2025
 	new shownormal option
 	fix with stpm
@@ -510,7 +511,8 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 			if missing("`trace'") noi di
 			if missing(`right_limit') noi di as txt "[note: failed to find upper confidence limit]"
 		}
-		lab var `X' "`eq'_b[`profile']"
+		if missing("`eform'") lab var `X' "`eq'_b[`profile']"
+		else lab var `X' "exp(`eq'_b[`profile'])"
 	}
 }
 *** END OF CODE FOR LINEAR PROFILING
@@ -710,7 +712,8 @@ else {	// --------------- begin non-linear profiling ---------------
 		local se .
 		local llci .
 		local ulci .
-		lab var `X' "`placeholder' in `formula'"
+		if missing("`eform'") lab var `X' "`placeholder' in `formula'"
+		else lab var `X' "exp(`placeholder') in `formula'"
 		if "`dots'"!="nodots" noi di
 	}
 	local use_deviance 0
@@ -735,7 +738,7 @@ if !missing("`normal'") {
 	else {
 		tempvar Z
 		qui gen `Z' = -0.5*((`X'-`b0')/`usese')^2
-		label var `Z' "normal approximation to PLLF"
+		lab var `Z' "normal approximation"
 	}
 }
 
@@ -779,6 +782,14 @@ if "`graph'"!="nograph" {
 
 	if !missing(`left_limit')  local lll `left_limit'
 	if !missing(`right_limit') local rrr `right_limit'
+	if !missing("`eform'") {
+		qui replace `gen1'=exp(`gen1') // will be reversed later
+		if !missing(`lll') local lll = exp(`lll')
+		if !missing(`rrr') local rrr = exp(`rrr')
+		cap niceloglabels `gen1', local(betalabel) style(125)
+		if !_rc local gropt xscale(log) xlabel(`betalabel') `gropt'
+		if _rc==199 di as text as smcl "To improve xlabels, please use {stata ssc install niceloglabels}"
+	}
 	if ("`lll'`rrr'"!="")					///
 		local xl xline(`lll' `rrr', lstyle(ci) `cilines')
 	if `use_deviance' {
@@ -786,6 +797,8 @@ if "`graph'"!="nograph" {
 	}
 	if !mi("`normal'") {
 		local normgraph (line `gen3' `gen1', lpattern(dash) `normalopts')
+		local ytitle : variable label `gen2'
+		local gropt ytitle(`ytitle') `gropt'
 	}
 	local graphcmd graph twoway (line `gen2' `gen1') `normgraph', `gropt' `title' ///
 	    `xl' yline(`limit', lstyle(refline) `levline')
@@ -795,6 +808,7 @@ if "`graph'"!="nograph" {
 		pause
 	}
 	`graphcmd'
+	if !missing("`eform'") qui replace `gen1'=log(`gen1')
 }
 local tt "Coef."
 di as txt _n "{hline 13}{c TT}{hline 47}"

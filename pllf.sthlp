@@ -1,5 +1,5 @@
 {smcl}
-{* 01sep2025}{...}
+{* 02sep2025}{...}
 {hline}
 help for {hi:pllf}{right:Patrick Royston, Ian White}
 {hline}
@@ -12,7 +12,7 @@ help for {hi:pllf}{right:Patrick Royston, Ian White}
 Syntax 1: fit a regression command and compute the profile log likelihood function for one of its parameters
 
 {phang2}
-{opt pllf, profile(parm)} [{it:options}]: {it:regression_cmd}
+{opt pllf, profile(parameter)} [{it:options}]: {it:regression_cmd}
 
 {phang}
 Syntax 2: fit a regression command and include an extra non-linear term given by a formula involving observed variable(s) and one unknown parameter
@@ -39,9 +39,9 @@ one variable in the dataset{p_end}
 {synopt :{opt dropc:ollinear}}drops any collinear variables{p_end}
 {synopt :{opt lev:el(#)}}sets the confidence level to {it:#}{p_end}
 {synopt :{opt maxc:ost(#)}}sets an upper limit of 2 * {it:#} on the additional evaluations of the PLL{p_end}
-{synopt :{opt n:_eval(#)}}evaluates PLL at {it:#} equally spaced {it:X} values{p_end}
+{synopt :{opt n:_eval(#)}}evaluates PLL at {it:#} equally spaced parameter values{p_end}
 {synopt :{opt noci}}suppresses calculation of PLL-based CI{p_end}
-{synopt :{opt range(#1 #2)}}evaluates PLL over {it:#1} <= {opt X} <= {it:#2}{p_end}
+{synopt :{opt range(#1 #2)}}evaluates PLL over {it:#1} <= parameter <= {it:#2}{p_end}
 
 {syntab :{it:Output options: both syntaxes}}
 {synopt :{opt dev:iance}}requests minus 2 times PLL function{p_end}
@@ -110,47 +110,29 @@ syntaxes 1 and 2.
 
 {pstd}
 With syntax 1, {opt profile()} must be specified and {opt formula()} is
-not allowed. {it:regression_cmd_stuff} typically takes the simple form
-[{it:depvar}] {it:varlist}, although more complex syntax is supported
-according to the needs of {it:regression_cmd}. For example, for
-{it:regression_cmd} {cmd:ivreg}, {it:regression_cmd_stuff} takes the form
-{it:depvar} [{it:varlist1}] {cmd:(}{it:varlist2} {cmd:=}
-{it:varlist_iv}{cmd:)}.
-
-{pstd}
-With syntax 1, {opt pllf} with the {opt profile()} option computes the
+not allowed. {opt pllf} computes the
 profile log likelihood (PLL) function for the regression coefficient
 of a covariate defined by {cmd:profile(}{it:xvarname}{cmd:)} or a
 parameter or variable defined by {cmd:profile(}[{cmd:[}{it:eqname}{cmd:]}]{it:paramname}{cmd:)}
-within a model specified by {it:regression_cmd} {it:yvar} {it:xvarlist},
-{it:regression_cmd_options}.
+within a model specified by {it:regression_cmd}.
 {opt pllf} also reports
 PLL-based confidence limits, computed by a simple grid search.
-{it:xvarname} does not have to be a member of {it:xvarlist}, although
-it is harmless to include it. The results
-are saved to new variables assigned by the {cmd:gen()} option.
-The dataset length is increased if {cmd:n()} exceeds the number
-of observations ({cmd:_N}).
+{it:xvarname} must be a covariate in {it:regression_cmd}. 
 
 {pstd}
 With syntax 2, {opt formula()} and {cmd:range()}
 must be specified and {opt profile()} is 
-not allowed. {it:regression_cmd_stuff} is similar to that for
-syntax 1, except that {it:regression_cmd_stuff} must include the
-placeholder {cmd:X}. This is substituted by a variable calculated 
-according to the formula defined by {opt formula()}, which must 
-also include {cmd:X} at least once.
+not allowed. {opt pllf} computes the PLL function of a non-linear parameter denoted
+(by default) by {cmd:@}. {cmd:formula()} is symbolically added to the regression model 
+{it:regression_cmd}. {opt pllf} reports the MLE and PLL-based confidence limits,
+computed by a simple grid search. Normal-based confidence limits
+are not computed. 
 
 {pstd}
-With syntax 2, {opt pllf} with the {opt formula()} option
-computes the PLL function of a non-linear parameter denoted
-by {cmd:X}. {cmd:X} is symbolically included where necessary
-in {it:regression_cmd_stuff}. In effect, {cmd:X} is replaced on the fly
-by the variable created by substituting the current value of {cmd:X} in
-{it:formula}. {opt pllf} reports the MLE and PLL-based confidence limits,
-computed by a simple grid search. Normal-based confidence limits
-are not computed. Other features with syntax 2 are similar to
-those with syntax 1.
+With both syntaxes, the results
+are saved to new variables assigned by the {cmd:gen()} option.
+The dataset length is increased if {cmd:n()} exceeds the number
+of observations ({cmd:_N}).
 
 
 {title:Options}
@@ -159,7 +141,6 @@ those with syntax 1.
 
 {phang}
 {cmd:profile(}{it:xvarname} | [{cmd:[}{it:eqname}{cmd:]}]{it:paramname}{cmd:)}
-(
 with syntax 1 is not optional. In the first format,
 the PLL function for the regression
 coefficient for {it:xvarname} is calculated. {it:xvarname}
@@ -185,15 +166,15 @@ maximum likelihood estimate of beta.
 {opt formula(formula)} with syntax 2 is not optional.
 {it:formula} defines
 a transformation involving at least one variable in the dataset and the
-parameter denoted by placeholder {cmd:X}.
+parameter denoted by placeholder {cmd:@}.
 {it:formula} may be any valid Stata expression.
-Example: {cmd:formula(exp(-X*x5))}.
+Example: {cmd:formula(exp(-@*x5))}.
 
 {phang}
 {opt range(#1 #2)} with syntax 2 is not optional.
-It evaluates the PLL function over {it:#1} <= {cmd:X} <= {it:#2},
-where {cmd:X} is the non-linear parameter of interest. {opt pllf}
-also seeks the MLE of {cmd:X}, but if the values of {it:#1 #2} are
+It evaluates the PLL function over {it:#1} <= {cmd:@} <= {it:#2},
+where {cmd:@} is the non-linear parameter of interest. {opt pllf}
+also seeks the MLE of {cmd:@}, but if the values of {it:#1 #2} are
 ill-chosen or the PLL function behaves 'badly',
 it may fail to find the MLE, or give an inaccurate estimate.
 The most satisfactory situation is when the MLE lies between {it:#1}
@@ -226,7 +207,7 @@ confidence limits in pathological cases (see
 {opt difference}. Default {it:#} is {cmd:n()}/2.
 
 {phang}
-{opt n_eval(#)} evaluates the PLL function at {it:#} equally spaced X values;
+{opt n_eval(#)} evaluates the PLL function at {it:#} equally spaced parameter values;
 default is 100.
 
 {phang}
@@ -321,7 +302,7 @@ restart it with a more suitable range of values (see the {cmd:range()}
 option).
 
 {pstd}
-The pseudo standard error of beta or {cmd:X} is computed as
+The pseudo standard error of the parameter beta is computed as
 upper PLL confidence limit minus lower PLL confidence limit,
 divided by twice t, where t is the appropriate quantile
 of the t or normal distribution used in calculating normal
@@ -402,35 +383,31 @@ clearly establish non-inferiority.
 {p 2}{bf:Syntax 2}
 
 {pstd}The following two commands with syntax 2 are equivalent and give
-identical results. The {cmd:stcox} models are nonlinear in X but conditionally linear
-in exp(-X*x5).
+identical results. The {cmd:stcox} models are nonlinear in the parameter @ but conditionally linear
+in exp(-@*x5).
 
 {phang}. {stata "pllf, formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a x6 hormon"}{p_end}
 {phang}. {stata "pllf, placeholder(X) formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a x6 hormon"}
 
 {pstd}
-In the first command, values X in {cmd:range(.05 .25)} are substituted in turn into
-{opt formula(exp(-X*x5))} and the corresponding log likelihood values are determined.
-
-{pstd}
-In the second command, values of @ from {opt placeholder(@)} instead of X are used in
-{opt formula()} and in the {cmd:stcox} model.
+In both commands, values of {it:beta} in {cmd:range(.05 .25)} are substituted in turn into
+the extra model term exp(-{it:beta}*x5), and the corresponding log likelihood values are determined.
 
 
-{title:Stored}
+{title:Stored results}
 
 {pstd}
 {opt pllf} stores in {cmd:r()}. Entries in which only beta is mentioned
 apply only to syntax 1, otherwise to both syntaxes:
 
 	scalar {cmd:r(n)}         Number of obsevations in the estimation sample
-	scalar {cmd:r(b)}         MLE of beta or {cmd:X}
+	scalar {cmd:r(b)}         MLE of beta or {cmd:@}
 	scalar {cmd:r(se)}        Usual standard error of beta
-	scalar {cmd:r(pse)}       Pseudo standard error of beta or {cmd:X}
+	scalar {cmd:r(pse)}       Pseudo standard error of beta or {cmd:@}
 	scalar {cmd:r(n_llci)}    Lower normal-based confidence limit for beta
 	scalar {cmd:r(n_ulci)}    Upper normal-based confidence limit for beta
-	scalar {cmd:r(l_llci)}    Lower PLL-based confidence limit for beta or {cmd:X}
-	scalar {cmd:r(l_ulci)}    Upper PLL-based confidence limit for beta or {cmd:X}
+	scalar {cmd:r(l_llci)}    Lower PLL-based confidence limit for beta or {cmd:@}
+	scalar {cmd:r(l_ulci)}    Upper PLL-based confidence limit for beta or {cmd:@}
 	scalar {cmd:r(ll)}        Maximised log likelihood
 	scalar {cmd:r(ll_limit)}  Value of log likelihood for likelihood based CI calc
 	scalar {cmd:r(cost)}      "Cost" of evaluating PLL-based confidence limits

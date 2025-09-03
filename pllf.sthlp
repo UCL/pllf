@@ -397,22 +397,21 @@ the extra model term exp(-{it:beta}*x5), and the corresponding log likelihood va
 {title:Stored results}
 
 {pstd}
-{opt pllf} stores in {cmd:r()}. 
+{opt pllf} stores the following scalars in {cmd:r()}:
 
 {synoptset 23 tabbed}{...}
-{p2col 5 23 26 2: Scalars}{p_end}
-{synopt:{cmd:r(nobs)}}      Number of observations in the estimation sample{p_end}
+{synopt:{cmd:r(nobs)}}      number of observations in the estimation sample{p_end}
 {synopt:{cmd:r(b)}}         MLE of parameter{p_end}
-{synopt:{cmd:r(se)}}        Usual standard error of parameter (syntax 1 only){p_end}
-{synopt:{cmd:r(pse)}}       Pseudo standard error of parameter{p_end}
-{synopt:{cmd:r(n_llci)}}    Lower normal-based confidence limit for parameter (syntax 1 only){p_end}
-{synopt:{cmd:r(n_ulci)}}    Upper normal-based confidence limit for parameter (syntax 1 only){p_end}
-{synopt:{cmd:r(l_llci)}}    Lower PLL-based confidence limit for parameter{p_end}
-{synopt:{cmd:r(l_ulci)}}    Upper PLL-based confidence limit for parameter{p_end}
-{synopt:{cmd:r(ll)}}        Maximised log likelihood{p_end}
-{synopt:{cmd:r(ll_limit)}}  Value of log likelihood for likelihood based CI calc{p_end}
-{synopt:{cmd:r(cost)}}      "Cost" of evaluating PLL-based confidence limits{p_end}
-{synopt:{cmd:r(asym)}}      Estimated asymmetry of PLL function{p_end}
+{synopt:{cmd:r(se)}}        usual standard error of parameter (syntax 1 only){p_end}
+{synopt:{cmd:r(pse)}}       pseudo standard error of parameter{p_end}
+{synopt:{cmd:r(n_llci)}}    lower normal-based confidence limit for parameter (syntax 1 only){p_end}
+{synopt:{cmd:r(n_ulci)}}    upper normal-based confidence limit for parameter (syntax 1 only){p_end}
+{synopt:{cmd:r(l_llci)}}    lower PLL-based confidence limit for parameter{p_end}
+{synopt:{cmd:r(l_ulci)}}    upper PLL-based confidence limit for parameter{p_end}
+{synopt:{cmd:r(ll)}}        maximised log likelihood{p_end}
+{synopt:{cmd:r(ll_limit)}}  value of log likelihood for likelihood based CI calculation{p_end}
+{synopt:{cmd:r(cost)}}      "cost" of evaluating PLL-based confidence limits{p_end}
+{synopt:{cmd:r(asym)}}      estimated asymmetry of PLL function{p_end}
 
 
 {title:References}

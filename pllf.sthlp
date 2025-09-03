@@ -9,13 +9,14 @@ help for {hi:pllf}{right:Patrick Royston, Ian White}
 
 
 {phang}
-Syntax 1: fit a regression command and compute the profile log likelihood function for one of its parameters
+Syntax 1: fit a regression command and compute the profile log likelihood (PLL) function for one of its parameters
 
 {phang2}
 {opt pllf, profile(parameter)} [{it:options}]: {it:regression_cmd}
 
 {phang}
-Syntax 2: fit a regression command and include an extra non-linear term given by a formula involving observed variable(s) and one unknown parameter
+Syntax 2: fit a regression command and compute the profile log likelihood (PLL) function for a parameter in an extra non-linear term,
+which is given by a formula involving observed variable(s) and one unknown parameter
 
 {phang2}
 {opt pllf, formula(formula)} [{it:options}]: {it:regression_cmd}
@@ -26,14 +27,14 @@ Syntax 2: fit a regression command and include an extra non-linear term given by
 {synopthdr}
 {synoptline}
 {syntab :{it:Syntax 1}}
-{synopt :{opt pro:file(xvarname)}}PLL is required for variable {it:xvarname}, or{p_end}
+{synopt :{opt pro:file(xvarname)}}PLL is required for the coefficient of variable {it:xvarname}, or{p_end}
 {synopt :{opt pro:file([eqname]paramname)}}PLL is required for parameter
 {it:paramname} or {opt [}{it:eqname}{opt ]}{it:paramname}{p_end}
 
 {syntab :{it:Syntax 2}}
-{synopt :{opt form:ula(formula)}}defines a transformation involving at least
-one variable in the dataset{p_end}
-{synopt :{opt pl:aceholder(string)}}sets the placeholder in Syntax 2 to {it:string}{p_end}
+{synopt :{opt form:ula(formula)}}PLL is required for the unknown parameter in {it:formula}, which is a model term involving at least
+one variable in the dataset and one unknown parameter{p_end}
+{synopt :{opt pl:aceholder(string)}}sets the placeholder for the unknown parameter in {it:formula} to {it:string}{p_end}
 
 {syntab :{it:Evaluation options: both syntaxes}}
 {synopt :{opt dropc:ollinear}}drops any collinear variables{p_end}
@@ -47,8 +48,8 @@ one variable in the dataset{p_end}
 {synopt :{opt dev:iance}}requests minus 2 times PLL function{p_end}
 {synopt :{opt diff:erence}}computes PLL minus maximised log likelihood{p_end}
 {synopt :{opt eform}[{opt (string)}]}reports results on the exponentiated scale (with name {it:string}){p_end}
-{synopt :{opt gen(beta_var pll_var [pllnorm_var])}}creates {it:beta_var} and {it:pll_var},
-and if {cmd:normal()} is specified, also {it:pllnorm_var}.{p_end}
+{synopt :{opt gen(newvarlist)}}names the new variables to hold the parameter and the PLL; 
+if {cmd:normal()} is specified, also the Normal approximation to the PLL{p_end}
 {synopt :{opt nodot:s}}suppresses (supposedly entertaining) dots{p_end}
 {synopt :{opt tr:ace}}displays the result of each log-likelihood evaluation{p_end}
 {synopt :{opt ver:bose}}displays extended output including results of initial maximum likelihood fitting{p_end}
@@ -59,12 +60,12 @@ and if {cmd:normal()} is specified, also {it:pllnorm_var}.{p_end}
 {synopt :{opt levlin:e(cline_options)}}specifies rendition of horizontal line{p_end}
 {synopt :{opt mlel:ine}}adds a horizontal line at the MLE{p_end}
 {synopt :{opt nograph}}suppresses the line plot of the results{p_end}
-{synopt :{opt shown:ormal}[{opt (line_options)}]}adds a Normal approximation to the PLL plot.{p_end}
+{synopt :{opt norm:al}[{opt (line_options)}]}adds a Normal approximation to the PLL plot.{p_end}
 {synoptline}
 
 
 {pstd}
-where, in essence, any {it:regression_cmd} for which the parameters are estimated
+Any {it:regression_cmd} for which the parameters are estimated
 by maximum likelihood may be used. This includes
 {help clogit},
 {help cnreg},
@@ -101,19 +102,18 @@ the likelihood function exists.
 
 {pstd}
 Plentiful general material on the PLLF is available on the Internet.
-For example, search "google profile likelihood method".
+For example, search "profile likelihood method".
 
 {pstd}
 {opt pllf} has two basic syntaxes, depending on which of the options
-{opt profile()} or {opt formula()} is used. Let us call these
-syntaxes 1 and 2.
+{opt profile()} or {opt formula()} is used. 
 
 {pstd}
 With syntax 1, {opt profile()} must be specified and {opt formula()} is
 not allowed. {opt pllf} computes the
 profile log likelihood (PLL) function for the regression coefficient
 of a covariate defined by {cmd:profile(}{it:xvarname}{cmd:)} or a
-parameter or variable defined by {cmd:profile(}[{cmd:[}{it:eqname}{cmd:]}]{it:paramname}{cmd:)}
+parameter defined by {cmd:profile(}[{cmd:[}{it:eqname}{cmd:]}]{it:paramname}{cmd:)}
 within a model specified by {it:regression_cmd}.
 {opt pllf} also reports
 PLL-based confidence limits, computed by a simple grid search.
@@ -122,7 +122,7 @@ PLL-based confidence limits, computed by a simple grid search.
 {pstd}
 With syntax 2, {opt formula()} and {cmd:range()}
 must be specified and {opt profile()} is 
-not allowed. {opt pllf} computes the PLL function of a non-linear parameter denoted
+not allowed. {opt pllf} computes the PLL function for a non-linear parameter denoted
 (by default) by {cmd:@}. {cmd:formula()} is symbolically added to the regression model 
 {it:regression_cmd}. {opt pllf} reports the MLE and PLL-based confidence limits,
 computed by a simple grid search. Normal-based confidence limits
@@ -131,7 +131,7 @@ are not computed.
 {pstd}
 With both syntaxes, the results
 are saved to new variables assigned by the {cmd:gen()} option.
-The dataset length is increased if {cmd:n()} exceeds the number
+The dataset length is increased if {cmd:n_eval()} exceeds the number
 of observations ({cmd:_N}).
 
 
@@ -154,8 +154,8 @@ the PLL function for the log of the shape parameter, p.
 
 {phang}
 {opt range(#1 #2)} with syntax 1 evaluates the PLL function
-over {it:#1} <= beta <= {it:#2}, where beta is the regression coefficient
-for {it:xvarname}. Default is for {it:#1} and {it:#2} to be the
+over {it:#1} <= beta <= {it:#2}, where beta is the 
+parameter of interest. Default is for {it:#1} and {it:#2} to be the
 confidence limits for beta defined by the option {cmd:level()} and
 the usual assumption of a normal distribution for beta_hat, the
 maximum likelihood estimate of beta.
@@ -194,8 +194,8 @@ characters are not allowed. Default {it:string} is {cmd:@}.
 stop with an error if the x variables are collinear.
 
 {phang}
-{opt level(#)} sets the confidence level to {it:#}; default is
-{cmd:level(95)}.
+{opt level(#)} sets the confidence level to {it:#}; default is the current system level,
+see {help level}.
 
 {phang}
 {opt maxcost(#)} sets an upper limit of 2 * {it:#}
@@ -216,8 +216,8 @@ default is 100.
 {p 2}{bf:Output options: both syntaxes}
 
 {phang}
-{opt deviance} requests minus 2 times the PLL function, i.e.
-the profile deviance function. If {cmd:difference}
+{opt deviance} requests minus 2 times the PLL function, 
+i.e. the profile deviance function. If {cmd:difference}
 is also specified, {cmd:deviance} produces the profile deviance
 difference, i.e. minus 2 times the PLL difference.
 
@@ -232,9 +232,9 @@ or no maximum.
 coefficient. If {it:string} is specified then this is used as the parameter name.
 
 {phang}
-{opt gen(beta_var pll_var [pllnorm_var])} creates new variables:
+{opt gen(beta_var pll_var [pllnorm_var])} names the new variables created as
 {it:beta_var} to contain the values of the regression coefficient
-over which the PLL is evaluated, {it:pll_var} to contain the PLL values, and 
+over which the PLL is evaluated, and {it:pll_var} to contain the PLL values, and 
 (if {cmd:normal()} is specified) also {it:pllnorm_var} to contain the Normal 
 approximation to the PLL values.
 If {opt gen()} is not specified, the variables are created
@@ -279,7 +279,7 @@ profile-likelihood-based CI.  See {help cline_options:{it:cline_options}}.
 {opt nograph} suppresses the line plot of the results.
 
 {phang}
-{opt shownormal}[{opt (line_options)}] adds a Normal approximation to the 
+{opt normal}[{opt (line_options)}] adds a Normal approximation to the 
 plot of the PLL. {it:line_options} are options valid for {help line}.
 
 
@@ -397,20 +397,22 @@ the extra model term exp(-{it:beta}*x5), and the corresponding log likelihood va
 {title:Stored results}
 
 {pstd}
-{opt pllf} stores in {cmd:r()}. Entries in which only beta is mentioned
-apply only to syntax 1, otherwise to both syntaxes:
+{opt pllf} stores in {cmd:r()}. 
 
-	scalar {cmd:r(n)}         Number of obsevations in the estimation sample
-	scalar {cmd:r(b)}         MLE of beta or {cmd:@}
-	scalar {cmd:r(se)}        Usual standard error of beta
-	scalar {cmd:r(pse)}       Pseudo standard error of beta or {cmd:@}
-	scalar {cmd:r(n_llci)}    Lower normal-based confidence limit for beta
-	scalar {cmd:r(n_ulci)}    Upper normal-based confidence limit for beta
-	scalar {cmd:r(l_llci)}    Lower PLL-based confidence limit for beta or {cmd:@}
-	scalar {cmd:r(l_ulci)}    Upper PLL-based confidence limit for beta or {cmd:@}
-	scalar {cmd:r(ll)}        Maximised log likelihood
-	scalar {cmd:r(ll_limit)}  Value of log likelihood for likelihood based CI calc
-	scalar {cmd:r(cost)}      "Cost" of evaluating PLL-based confidence limits
+{synoptset 23 tabbed}{...}
+{p2col 5 23 26 2: Scalars}{p_end}
+{synopt:{cmd:r(nobs)}}      Number of observations in the estimation sample{p_end}
+{synopt:{cmd:r(b)}}         MLE of parameter{p_end}
+{synopt:{cmd:r(se)}}        Usual standard error of parameter (syntax 1 only){p_end}
+{synopt:{cmd:r(pse)}}       Pseudo standard error of parameter{p_end}
+{synopt:{cmd:r(n_llci)}}    Lower normal-based confidence limit for parameter (syntax 1 only){p_end}
+{synopt:{cmd:r(n_ulci)}}    Upper normal-based confidence limit for parameter (syntax 1 only){p_end}
+{synopt:{cmd:r(l_llci)}}    Lower PLL-based confidence limit for parameter{p_end}
+{synopt:{cmd:r(l_ulci)}}    Upper PLL-based confidence limit for parameter{p_end}
+{synopt:{cmd:r(ll)}}        Maximised log likelihood{p_end}
+{synopt:{cmd:r(ll_limit)}}  Value of log likelihood for likelihood based CI calc{p_end}
+{synopt:{cmd:r(cost)}}      "Cost" of evaluating PLL-based confidence limits{p_end}
+{synopt:{cmd:r(asym)}}      Estimated asymmetry of PLL function{p_end}
 
 
 {title:References}

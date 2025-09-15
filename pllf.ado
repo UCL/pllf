@@ -1,5 +1,9 @@
 /*
-*! v1.3.3 PR 04mar2023 / IW 02sep2025
+*! v1.3.4 PR 04mar2023 / IW 12sep2025
+	works for stcox with one covariate
+	PLLF stored as double - matters for very large samples
+	make trace work with syntax 2
+v1.3.3 PR 04mar2023 / IW 02sep2025
 	shownormal -> normal, and saved by gen()
 	syntax 2: placeholder defaults to @ and is not needed on RHS
 	don't ereturn results
@@ -336,7 +340,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		}
 		tempvar X Y order // values of X = regression coefficient, Y = profile likelihood for `profile'
 		gen `X' = .
-		gen `Y' = .
+		gen double `Y' = .
 		gen long `order' = _n
 		local stepsize = (`to'-`from')/(`n_eval'-1)
 		if !missing("`debug'") noisily di
@@ -362,7 +366,8 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 				else {
 					if !missing("`debug'") & `i'==1 noi di as text " using offset" _c
 					replace `offset' = `b'*`profilevar' `plusoffset'
-					`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
+					if "`cmd'"=="stcox" & missing("`varlist'") local estimate estimate
+					`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant' `estimate'
 				}
 			}
 			if !missing("`debug2'") {
@@ -375,14 +380,16 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 			replace `Y' = cond(`use_deviance', -e(deviance)/2, e(ll)) in `i'
 			if "`dots'"!="nodots" noi di as text "." _c
 			if !missing("`trace'") {
-				if !`use_deviance' noi di as text "`profile'=`b', LL=" as result e(ll)
-				else noi di as text "`profile'=`b', deviance=" as result e(deviance)
+				local col = length("`profile'")+14
+				noi di as text "`profile'=" as result `b' _c _col(`col')
+				if !`use_deviance' noi di as text "PLL=" as result e(ll)
+				else noi di as text "deviance=" as result e(deviance)
 			}
 		}
 		noi di
 		summ `Y', meanonly
 		if r(max)-r(min) < `tol' {
-			di as error "Warning: PLLF does not seem to vary over this range"
+			di as error "Warning: PLL does not seem to vary over this range"
 			exit 498
 		}
 		local cost 0	// "cost": number of extra evaluations of pll needed to find likelihood based CI
@@ -446,8 +453,10 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 					}
 					if "`dots'"!="nodots" noi di as text "." _c
 					else if !missing("`trace'") {
-						if !`use_deviance' noi di as text "`profile'=`b', LL=" as result `Ynew'
-						else noi di as text "`profile'=`b', deviance=" as result `Ynew'
+						local col = length("`profile'")+14
+						noi di as text "`profile'=" as result `b' _c _col(`col')
+						if !`use_deviance' noi di as text ", PLL=" as result `Ynew'
+						else noi di as text ", deviance=" as result `Ynew'
 					}
 
 				}
@@ -493,8 +502,9 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 					}
 					if "`dots'"!="nodots" noi di as text "." _c
 					else if !missing("`trace'") {
-						if !`use_deviance' noi di as text "`profile'=`b', LL=" as result `Ynew'
-						else noi di as text "`profile'=`b', deviance=" as result `Ynew'
+						noi di as text "`profile'=" as result `b' _c
+						if !`use_deviance' noi di as text ", PLL=" as result `Ynew'
+						else noi di as text ", deviance=" as result `Ynew'
 					}
 				}
 				local cost = `cost'+`i'
@@ -550,7 +560,7 @@ else {	// --------------- begin non-linear profiling ---------------
 		}
 		tempvar X Y order // values of X = regression coefficient, Y = profile likelihood for `profile'
 		gen `X' = .
-		gen `Y' = .
+		gen double `Y' = .
 		gen long `order' = _n
 		local stepsize = (`to'-`from')/(`n_eval'-1)
 		local y1 .
@@ -571,7 +581,7 @@ else {	// --------------- begin non-linear profiling ---------------
 				noi di as err "we recommend you exclude this value from the parameter range"
 				exit 198
 			}
-			cap `cmd' `result' `if' `in' `wt', `options' `constant' `useroffset'
+			cap `noisily' `cmd' `result' `if' `in' `wt', `options' `constant' `useroffset'
 			if _rc {
 				noi di as err "model fit failed at parameter = " `A'
 				exit 198
@@ -594,6 +604,11 @@ else {	// --------------- begin non-linear profiling ---------------
 			replace `X' = `A' in `i'
 			replace `Y' = e(ll) in `i'
 			if "`dots'"!="nodots" noi di as text "." _c
+			if !missing("`trace'") {
+				local col 25
+				noi di as text "Parameter `placeholder'=" as result `A' _c _col(`col')
+				noi di as text "PLL=" as result e(ll)
+			}
 		}
 		if !`done' {
 			// MLE not straddled. Attempt quadratic solution using terminals of range and a midpoint. Maintain equal spacing.
@@ -737,7 +752,7 @@ if !missing("`normal'") {
 	}
 	else {
 		tempvar Z
-		qui gen `Z' = -0.5*((`X'-`b0')/`usese')^2
+		qui gen double `Z' = -0.5*((`X'-`b0')/`usese')^2
 		lab var `Z' "normal approximation"
 	}
 }
@@ -810,16 +825,16 @@ if "`graph'"!="nograph" {
 	`graphcmd'
 	if !missing("`eform'") qui replace `gen1'=log(`gen1')
 }
-local tt "Coef."
 di as txt _n "{hline 13}{c TT}{hline 47}"
 di as txt %12s abbrev("`ytitle'",12) _col(14)"{c |}" _c
-if missing("`eform'") di as txt %10s "Coef." _c
+local parmname = cond(!missing("`profile'"),"Coef","Est")
+if missing("`eform'") di as txt %10s "`parmname'." _c
 else if !missing("`eformname'") di as txt %10s "`eformname'" _c
-else di as txt %10s "exp(Coef)" _c
+else di as txt %10s "exp(parmname)" _c
 di as txt "   Std. Err.     [`level'% PLL Conf. Int.]"
 di as txt "{hline 13}{c +}{hline 47}"
 if "`eq'"!="" di as res %-12s abbrev("`eq'",12) _col(14) as txt "{c |}"
-if "`formula'"!="" di as txt %12s "`placeholder'" _cont
+if "`formula'"!="" di as txt %12s "Parameter `placeholder'" _cont
 else di as txt %12s abbrev("`profile'",12) _cont
 if missing("`eform'") {
 	local b0_display `b0'

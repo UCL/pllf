@@ -54,7 +54,7 @@ syntax [, ///
  LEVLINe(string asis) CILINes(string asis) ///
  TRace VERbose eform EFORM2(string) ///
  MLELine DROPCollinear NORMal NORMal2(string) /// to be documented
- debug debug2 LIst tol(real 1E-4) pause /// to remain undocumented
+ debug debug2 LIst tol(real 1E-4) pause PROFILEOptions(string) /// to remain undocumented
  ]
 
 if `maxcost'<0 local maxcost = int(`n_eval'/2)
@@ -351,7 +351,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 				// Use constrained regression
 				if !missing("`debug'") & `i'==1 noi di as text " using constraint" _c
 				constraint define `cuse' `eq'`profile'=`b'
-				`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset'
+				`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset' `profileoptions'
 			}
 			else {
 				if `i'==1 {
@@ -361,17 +361,17 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 				if "`cmd'"=="regress" {
 					if !missing("`debug'") & `i'==1 noi di as text " using modified outcome" _c
 					replace `offset' = `yvar' - `b'*`profilevar'
-					regress `offset' `varlist' `if' `in' `wt', `options' `constant'
+					regress `offset' `varlist' `if' `in' `wt', `options' `constant' `profileoptions'
 				}
 				else {
 					if !missing("`debug'") & `i'==1 noi di as text " using offset" _c
 					replace `offset' = `b'*`profilevar' `plusoffset'
 					if "`cmd'"=="stcox" & missing("`varlist'") local estimate estimate
-					`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant' `estimate'
+					`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant' `estimate' `profileoptions'
 				}
 			}
 			if !missing("`debug2'") {
-				di "coeff=`b'"
+				noisily di as input "coeff=`b'"
 				noisily `cmd'
 			}
 			if !missing("`trace'") & `i'==1 noi di ":"
@@ -430,7 +430,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 					if "`eq'"!="" {
 						// Use constrained regression
 						constraint define `cuse' `eq'`profile'=`b'
-						`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset'
+						`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset' `profileoptions'
 					}
 					else {
 						if "`cmd'"=="regress" {

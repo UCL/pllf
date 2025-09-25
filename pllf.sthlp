@@ -349,7 +349,7 @@ is a non-inferiority trial with margin a risk difference of +0.057, so both CIs
 clearly establish non-inferiority.
 
 {phang}. {stata "use TRISST, clear"}{p_end}
-{phang}. {stata "pllf, shownorm verbose profile(modality): binreg outcome modality [fw=n], rd"}
+{phang}. {stata "pllf, norm verbose profile(modality): binreg outcome modality [fw=n], rd"}
 
 {phang}Load breast cancer data
 

@@ -1,6 +1,13 @@
 {smcl}
-{* 02sep2025}{...}
-{hline}
+{* 30sep2025}{...}
+{viewerjumpto "Description" "pllf##description"}{...}
+{viewerjumpto "Options" "pllf##options"}{...}
+{viewerjumpto "Remarks" "pllf##remarks"}{...}
+{viewerjumpto "Examples" "pllf##examples"}{...}
+{viewerjumpto "Stored results" "pllf##stored_results"}{...}
+{viewerjumpto "References" "pllf##references"}{...}
+{viewerjumpto "Authors" "pllf##authors"}{...}
+
 help for {hi:pllf}{right:Patrick Royston, Ian White}
 {hline}
 
@@ -92,7 +99,8 @@ All weight types supported by {it:regression_cmd} are allowed; see help
 {help weight}. All options supported by {it:regression_cmd} should be allowed.
 
 
-{title:Description}
+{title:Description}{marker description}
+
 
 {pstd}
 {opt pllf} computes and plots the profile log likelihood function for a
@@ -135,7 +143,7 @@ The dataset length is increased if {cmd:n_eval()} exceeds the number
 of observations ({cmd:_N}).
 
 
-{title:Options}
+{title:Options}{marker options}
 
 {p 2}{bf:Syntax 1}
 
@@ -283,7 +291,7 @@ profile-likelihood-based CI.  See {help cline_options:{it:cline_options}}.
 plot of the PLL. {it:line_options} are options valid for {help line}.
 
 
-{title:Remarks}
+{title:Remarks}{marker remarks}
 
 {pstd}
 The PLL function is used for two purposes: (1) to estimate likelihood-based
@@ -322,7 +330,7 @@ the {opt ml} option is not specified, it returns {cmd:e(deviance)}
 but not {cmd:e(ll)}.
 
 
-{title:Examples}
+{title:Examples}{marker examples}
 
 {p 2}{bf:Syntax 1}
 
@@ -394,7 +402,7 @@ In both commands, values of {it:beta} in {cmd:range(.05 .25)} are substituted in
 the extra model term exp(-{it:beta}*x5), and the corresponding log likelihood values are determined.
 
 
-{title:Stored results}
+{title:Stored results}{marker stored_results}
 
 {pstd}
 {opt pllf} stores the following scalars in {cmd:r()}:
@@ -414,7 +422,7 @@ the extra model term exp(-{it:beta}*x5), and the corresponding log likelihood va
 {synopt:{cmd:r(asym)}}      estimated asymmetry of PLL function{p_end}
 
 
-{title:References}
+{title:References}{marker references}
 
 {phang}Please use this reference to cite this software:
 
@@ -442,7 +450,7 @@ profile-likelihood-based confidence intervals. Applied Statistics
 37: 87-94.
 
 
-{title:Authors}
+{title:Authors}{marker authors}
 
 {pstd}Patrick Royston, MRC Clinical Trials Unit at UCL, London, UK.{break}
 

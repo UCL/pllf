@@ -204,11 +204,11 @@ of the PLL, when searching for the PLL-based confidence limits. You
 should rarely if ever need this option. The program is prevented
 by {cmd:maxcost()} from cycling "for ever" when trying to find
 confidence limits in pathological cases (see
-{opt difference}. Default {it:#} is {cmd:n()}/2.
+{opt difference}). Default {it:#} is {cmd:n()}/2.
 
 {phang}
-{opt n_eval(#)} evaluates the PLL function at {it:#} equally spaced parameter values;
-default is 100.
+{opt n_eval(#)} evaluates the PLL function at {it:#} equally spaced parameter 
+values. Default is 100.
 
 {phang}
 {cmd:noci} suppresses calculation of the PLL-based confidence limits.

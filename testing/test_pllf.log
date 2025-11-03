@@ -2,17 +2,19 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- opened on:   1 Sep 2025, 17:47:07
-
-. version
+ opened on:   3 Nov 2025, 20:53:16
 version 19.5
+c:\ian\git\pllf\pllf.ado
+*! v1.3.5 PR 04mar2023 / IW 03nov2025
 
-. which pllf
-..\pllf.ado
-*! v1.3.3 PR 04mar2023 / IW 01sep2025
-
-. 
-. // START TESTING
+. /*
+> Main test file for pllf
+> IW 17mar2025
+> Added commands from help file 12may2025
+> Revised for the colon command 28may2025
+> Added tests of normal() and collinearity handling 1aug2025
+> Update for renaming shownormal to normal, 1sep2025
+> */
 . 
 . * from help file
 . use ../brcancer, clear
@@ -57,14 +59,14 @@ Log likelihood = -1724.5758                             Prob > chi2   = 0.0000
 . local se5 = _se[x5e]
 
 . pllf, profile(x5e) range(-3 -1) normal: stcox x1 x4a x5e x6 hormon, nohr
-Profiling...........................................................................................
-> .........
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
-          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+profile lo~d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-         x5e | -1.994528    .2259809    -2.435381   -1.549552
+         x5e | -1.994528    .2259832    -2.435385   -1.549547
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -96,7 +98,7 @@ s0           |
        _cons |   1.817123   .1132867    16.04   0.000     1.595085    2.039161
 -------------+----------------------------------------------------------------
 s1           |
-       _cons |   .3962196   .0698136     5.68   0.000     .2593875    .5330517
+       _cons |   .3962196   .0698136     5.68   0.000     .2593874    .5330517
 -------------+----------------------------------------------------------------
 xb           |
           x1 |   .0013215   .0060384     0.22   0.827    -.0105135    .0131566
@@ -113,21 +115,21 @@ Deviance =  1225.124 (686 observations.)
 . local se1 = [xb]_se[x1]
 
 . pllf, profile(x1) gen(betavar pllvar) normal: stpm x1 x4a x5e x6 hormon, df(2) scale(h) 
-Profiling...........................................................................................
-> .........
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
-          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+profile lo~d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-          x1 |  .0013215    .0060392    -.0105103    .0131631
+          x1 |  .0013215    .0060392    -.0105103     .013163
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . confirm var betavar pllvar _pllnorm
 
 . mac l _b1
-_b1:            .0013215433224158
+_b1:            .0013215433224121
 
 . di r(b)
 .00132154
@@ -144,27 +146,27 @@ _b1:            .0013215433224158
 . * with/without eqname: failed 1/8/2025
 . * note it's faster via constraints
 . pllf, profile(x5e) n_eval(20): streg x1 x4a x5e x6 hormon, dist(expo)
-Profiling....................
+Profiling:....................
 
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-         x5e | -1.839526    .2212454    -2.270783   -1.403518
+         x5e | -1.839526    .2212442    -2.270781    -1.40352
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . local ulci = r(l_ulci)
 
 . pllf, profile([_t]x5e) n_eval(20): streg x1 x4a x5e x6 hormon, dist(expo)
-Profiling....................
+Profiling:....................
 
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
 [_t]         |
-         x5e | -1.839526    .2212454    -2.270783   -1.403518
+         x5e | -1.839526    .2212442    -2.270781   -1.403519
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -184,13 +186,13 @@ Collinearity found in xvarlist: horm2 x1 x4a x5e x6 hormon
 note: hormon omitted because of collinearity.
 Collinearity found in xvarlist: horm2 x1 x4a x5e x6 hormon
 dropcollinear option --> reduced xvarlist: horm2 x1 x4a x5e x6
-Profiling....................
+Profiling:....................
 
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-         x5e | -1.839526    .2212454    -2.270783   -1.403518
+         x5e | -1.839526    .2212442    -2.270781    -1.40352
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -198,21 +200,21 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . 
 . pllf, profile([ln_p]_cons) n_eval(50): streg x1 x4a x5e x6 hormon, distribution(weibull)
-Profiling..................................................
+Profiling:..................................................
 
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
 [ln_p]       |
-       _cons |  .3416282    .0483095     .2448842    .4342541
+       _cons |  .3416282    .0483097     .2448839    .4342542
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . 
 . pllf, profile([ln_p]x4b) deviance difference n_eval(20): streg x1 x4a x5e x6 hormon, distribution(
 > weibull) ancillary(x4b) 
-Profiling....................
+Profiling:....................
 
 
 -------------------------------------------------------------
@@ -231,9 +233,9 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 > ...
 
 -------------------------------------------------------------
-          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+          _t |      Est.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-           @ |  .1369005    .0471162     .0694187    .2541106
+ Parameter @ |  .1369005    .0471161     .0694188    .2541106
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -285,9 +287,9 @@ Log likelihood = -1724.4945                             Prob > chi2   = 0.0000
 > ...
 
 -------------------------------------------------------------
-          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+          _t |      Est.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-           # |  .1369005    .0471162     .0694187    .2541106
+ Parameter # |  .1369005    .0471161     .0694188    .2541106
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -305,8 +307,9 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . gen one = 1
 
 . pllf, profile(one): reg mpg foreign rep78 one, noconstant 
-Profiling...........................................................................................
-> .........
+Warning: pllf is a likelihood-based method and will ignore variance-covariance method ols
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
@@ -319,8 +322,9 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . local asym=r(asym)
 
 . pllf, profile(_cons): reg mpg foreign rep78
-Profiling...........................................................................................
-> .........
+Warning: pllf is a likelihood-based method and will ignore variance-covariance method ols
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
@@ -360,8 +364,8 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . pllf, profile(z) range(-5 0) gropt(name(perfpred,replace)):  logit d z [fw=n]
 Warning: after MLE, _se[z] is zero
-Profiling...........................................................................................
-> .........
+Profiling:..........................................................................................
+> ..........
 Lower confidence limit not yet found: searching..................................................
 [note: failed to find lower confidence limit]
 
@@ -369,7 +373,7 @@ Lower confidence limit not yet found: searching.................................
 -------------------------------------------------------------
            d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-           z |         .           .            .   -.3892171
+           z |         .           .            .   -.3892172
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -417,17 +421,17 @@ Log likelihood = -125.70174                             Pseudo R2     = 0.0089
        _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
 ------------------------------------------------------------------------------
 
-Profiling using offset..............................................................................
-> ......................
+Profiling: using offset.............................................................................
+> .......................
 
-Drawing graph: graph twoway (line _pll _beta) (line _pllnorm _beta, lpattern(dash) lcol(red)), name(
-> blogit,replace) title("Asymmetry = -0.8%") xline(-1.055611256680831 .1366537912798056, lstyle(ci) 
-> ) yline(-127.6224738115053, lstyle(refline) )
+Drawing graph: graph twoway (line _pll _beta) (line _pllnorm _beta, lpattern(dash) lcol(red)), ytitl
+> e(profile log likelihood) name(blogit,replace) title("Asymmetry = -0.8%") xline(-1.055610821517764
+>  .1366534276068565, lstyle(ci) ) yline(-127.6224738115053, lstyle(refline) )
 
 -------------------------------------------------------------
-         d n |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+profile lo~d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-           z | -.4549134    .3041548    -1.055611    .1366538
+           z | -.4549134    .3041546    -1.055611    .1366534
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -485,11 +489,11 @@ Log likelihood   = -4.925506276                   BIC             =   1.64e-14
        _cons |  -.4895482   .2060214    -2.38   0.017    -.8933428   -.0857537
 ------------------------------------------------------------------------------
 
-Profiling using offset..............................................................................
-> ......................
+Profiling: using offset.............................................................................
+> .......................
 
-Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -0.8%") xline(-1.055610843987607
->  .1366534232930309, lstyle(ci) ) yline(-6.846235686798055, lstyle(refline) )
+Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -0.8%") xline(-1.055610821517805
+>  .1366534276068393, lstyle(ci) ) yline(-6.846235686798055, lstyle(refline) )
 
 -------------------------------------------------------------
            d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
@@ -529,8 +533,8 @@ Log likelihood = -5.1354681                            Pseudo R2     = -0.0000
 ------------------------------------------------------------------------------
 
 . pllf, profile(group): poisson events group, exposure(pyears)
-Profiling...........................................................................................
-> .........
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
@@ -541,37 +545,37 @@ Profiling.......................................................................
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . pllf, profile(group) range(-1 1): poisson events group, exposure(pyears)
-Profiling...........................................................................................
-> .........
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
       events |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-       group |  1.10e-08    .2827977     -.571238    .5373087
+       group |  1.10e-08    .2827977     -.571238    .5373086
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . local asym=r(asym)
 
 . di r(asym)
--3.0607062
+-3.0607063
 
 . pllf, profile([events]group) range(-1 1): poisson events group, exposure(pyears)
-Profiling...........................................................................................
-> .........
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
       events |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
 [events]     |
-       group |  1.10e-08    .2827977    -.5712379    .5373088
+       group |  1.10e-08    .2827977    -.5712379    .5373087
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . di r(asym)
--3.0606876
+-3.0606888
 
 . assert reldif( `asym', r(asym)) < 1E-4 // fails at 1E-7
 
@@ -597,20 +601,20 @@ Log likelihood = -5.1354681                            Pseudo R2     = -0.0000
   ln(pyears) |          1  (exposure)
 ------------------------------------------------------------------------------
 
-Profiling using offset:
-_cons=-2.04226897740474, LL=-7.5807054
-_cons=-1.95748280598834, LL=-6.6547154
-_cons=-1.872696634571941, LL=-5.9318752
-_cons=-1.787910463155542, LL=-5.4301603
-_cons=-1.703124291739142, LL=-5.1691369
-_cons=-1.618338120322743, LL=-5.1701022
-_cons=-1.533551948906344, LL=-5.4562384
-_cons=-1.448765777489945, LL=-6.0527784
-_cons=-1.363979606073545, LL=-6.9871881
-_cons=-1.279193434657146, LL=-8.2893638
+Profiling: using offset:
+_cons=-2.042269   PLL=-7.5807054
+_cons=-1.9574828  PLL=-6.6547154
+_cons=-1.8726966  PLL=-5.9318752
+_cons=-1.7879105  PLL=-5.4301603
+_cons=-1.7031243  PLL=-5.1691369
+_cons=-1.6183381  PLL=-5.1701022
+_cons=-1.5335519  PLL=-5.4562384
+_cons=-1.4487658  PLL=-6.0527784
+_cons=-1.3639796  PLL=-6.9871881
+_cons=-1.2791934  PLL=-8.2893638
 
-Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -5.1%") xline(-1.994243603483113
->  -1.359486308345403, lstyle(ci) ) yline(-7.056197538295342, lstyle(refline) )
+Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -5.1%") xline(-1.994243617473411
+>  -1.359486293743898, lstyle(ci) ) yline(-7.056197538295342, lstyle(refline) )
 
 -------------------------------------------------------------
       events |     Coef.   Std. Err.     [95% PLL Conf. Int.]
@@ -645,20 +649,20 @@ Log likelihood = -5.1354681                             Prob > chi2   = 0.0000
   ln(pyears) |          1  (exposure)
 ------------------------------------------------------------------------------
 
-Profiling using offset:
-one=-2.042268978345897, LL=-7.5807054
-one=-1.957482806895991, LL=-6.6547154
-one=-1.872696635446085, LL=-5.9318752
-one=-1.787910463996179, LL=-5.4301603
-one=-1.703124292546274, LL=-5.1691369
-one=-1.618338121096368, LL=-5.1701022
-one=-1.533551949646462, LL=-5.4562384
-one=-1.448765778196556, LL=-6.0527784
-one=-1.36397960674665, LL=-6.9871881
-one=-1.279193435296744, LL=-8.2893638
+Profiling: using offset:
+one=-2.042269   PLL=-7.5807054
+one=-1.9574828  PLL=-6.6547154
+one=-1.8726966  PLL=-5.9318752
+one=-1.7879105  PLL=-5.4301603
+one=-1.7031243  PLL=-5.1691369
+one=-1.6183381  PLL=-5.1701022
+one=-1.5335519  PLL=-5.4562384
+one=-1.4487658  PLL=-6.0527784
+one=-1.3639796  PLL=-6.9871881
+one=-1.2791934  PLL=-8.2893638
 
-Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -5.1%") xline(-1.994243603464133
->  -1.359486308343629, lstyle(ci) ) yline(-7.056197538295324, lstyle(refline) )
+Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -5.1%") xline(-1.99424361745443 
+> -1.359486293742123, lstyle(ci) ) yline(-7.056197538295324, lstyle(refline) )
 
 -------------------------------------------------------------
       events |     Coef.   Std. Err.     [95% PLL Conf. Int.]
@@ -703,12 +707,12 @@ Link function    : g(u) = u                       [Identity]
 ------------------------------------------------------------------------------
 note: valid log likelihood not returned in e(ll);
 if available, trying e(deviance) instead
-Profiling...........................................................................................
-> .........
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
-     outcome |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+profile lo~* |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
     modality | -.0178926    .0099405    -.0390899   -.0001239
 -------------------------------------------------------------
@@ -716,13 +720,86 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . 
 . 
-. di as result "*** PLLF HAS PASSED ALL THE TESTS IN `filename'.do ***"
-*** PLLF HAS PASSED ALL THE TESTS IN test_pllf.do ***
+. * TEST HANDLING INTERACTIONS
+. use ../brcancer, clear
+(German breast cancer data)
+
+. stcox x2##x4a x5e x6 hormon, nohr
+
+        Failure _d: censrec
+  Analysis time _t: rectime
+
+Iteration 0:  Log likelihood = -1788.1731
+Iteration 1:  Log likelihood = -1728.5778
+Iteration 2:  Log likelihood = -1723.7992
+Iteration 3:  Log likelihood = -1723.7108
+Iteration 4:  Log likelihood = -1723.7107
+Refining estimates:
+Iteration 0:  Log likelihood = -1723.7107
+
+Cox regression with Breslow method for ties
+
+No. of subjects =     686                               Number of obs =    686
+No. of failures =     299
+Time at risk    = 771,400
+                                                        LR chi2(6)    = 128.92
+Log likelihood = -1723.7107                             Prob > chi2   = 0.0000
+
+------------------------------------------------------------------------------
+          _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        2.x2 |   .5870545   .5007135     1.17   0.241     -.394326    1.568435
+       1.x4a |   .9569604   .4215206     2.27   0.023     .1307952    1.783126
+             |
+      x2#x4a |
+        2 1  |  -.5167128   .5151116    -1.00   0.316    -1.526313    .4928874
+             |
+         x5e |  -1.992496   .2260915    -8.81   0.000    -2.435628   -1.549365
+          x6 |  -.0022597   .0005388    -4.19   0.000    -.0033157   -.0012037
+      hormon |  -.3985667   .1279471    -3.12   0.002    -.6493383   -.1477951
+------------------------------------------------------------------------------
 
 . 
-. log close
+. * we can't profile the interaction parameter using new factor variables,
+. * but we can using xi
+. 
+. * the easy way
+. xi i.x2*i.x4a
+i.x2              _Ix2_1-2            (naturally coded; _Ix2_1 omitted)
+i.x4a             _Ix4a_0-1           (naturally coded; _Ix4a_0 omitted)
+i.x2*i.x4a        _Ix2Xx4a_#_#        (coded as above)
+
+. pllf, profile(_Ix2Xx4a_2_1) normal n_eval(20): stcox _I* x5e x6 hormon, nohr
+Profiling:....................
+
+
+-------------------------------------------------------------
+profile lo~d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+_Ix2Xx4a_2_1 | -.5167128    .5245353     -1.59685    .4592907
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. * the one-step way
+. xi: pllf, profile(_Ix2Xx4a_2_1) normal n_eval(20): stcox i.x2*i.x4a x5e x6 hormon
+i.x2              _Ix2_1-2            (naturally coded; _Ix2_1 omitted)
+i.x4a             _Ix4a_0-1           (naturally coded; _Ix4a_0 omitted)
+i.x2*i.x4a        _Ix2Xx4a_#_#        (coded as above)
+Profiling:....................
+
+
+-------------------------------------------------------------
+profile lo~d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+_Ix2Xx4a_2_1 | -.5167128    .5245353     -1.59685    .4592907
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- closed on:   1 Sep 2025, 17:48:27
+ closed on:   3 Nov 2025, 20:54:29
 ----------------------------------------------------------------------------------------------------

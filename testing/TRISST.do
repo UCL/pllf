@@ -8,6 +8,7 @@ myadopath pllf
 pda
 
 use TRISST, clear
+cs outcome modality [fw=n]
 binreg outcome modality [fw=n], rd
 rdci outcome modality [fw=n]
 
@@ -15,9 +16,9 @@ rdci outcome modality [fw=n]
 pllf, list profile(modality): binreg outcome modality [fw=n], rd
 
 * glm fails for parm<=-0.03 ...
-pllf, list profile(modality): glm outcome modality [fw=n], family(binomial) link(identity)
-pllf, list profile(modality): glm outcome modality [fw=n], family(binomial) link(identity) difficult
-pllf, list profile([outcome]modality): glm outcome modality [fw=n], family(binomial) link(identity)
+* [use iter(50) to make it fail faster]
+pllf, list profile(modality): glm outcome modality [fw=n], family(binomial) link(identity) iter(50)
+pllf, list profile([outcome]modality): glm outcome modality [fw=n], family(binomial) link(identity) iter(50)
 
 * ... unless you use irls ...
 pllf, list profile(modality): glm outcome modality [fw=n], family(binomial) link(identity) irls

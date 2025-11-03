@@ -1,26 +1,11 @@
 /*
-rudimentary test file for pllf
+Main test file for pllf
 IW 17mar2025
 Added commands from help file 12may2025
 Revised for the colon command 28may2025
 Added tests of normal() and collinearity handling 1aug2025
 Update for renaming shownormal to normal, 1sep2025
 */
-
-local filename test_pllf
-
-prog drop _all
-cd c:\ian\git\pllf\testing
-adopath ++ ..
-cap log close
-set linesize 100
-clear all 
-
-log using `filename', replace text
-version
-which pllf
-
-// START TESTING
 
 * from help file
 use ../brcancer, clear
@@ -146,6 +131,16 @@ use ../TRISST, clear
 pllf, norm verbose profile(modality): binreg outcome modality [fw=n], rd
 
 
-di as result "*** PLLF HAS PASSED ALL THE TESTS IN `filename'.do ***"
+* TEST HANDLING INTERACTIONS
+use ../brcancer, clear
+stcox x2##x4a x5e x6 hormon, nohr
 
-log close
+* we can't profile the interaction parameter using new factor variables,
+* but we can using xi
+
+* the easy way
+xi i.x2*i.x4a
+pllf, profile(_Ix2Xx4a_2_1) normal n_eval(20): stcox _I* x5e x6 hormon, nohr
+
+* the one-step way
+xi: pllf, profile(_Ix2Xx4a_2_1) normal n_eval(20): stcox i.x2*i.x4a x5e x6 hormon

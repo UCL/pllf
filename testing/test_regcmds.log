@@ -1,0 +1,817 @@
+----------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  c:\ian\git\pllf\testing\test_regcmds.log
+  log type:  text
+ opened on:   3 Nov 2025, 20:54:29
+version 19.5
+c:\ian\git\pllf\pllf.ado
+*! v1.3.5 PR 04mar2023 / IW 03nov2025
+
+. /*
+> test_regcmds.do
+> Test all the regression commands listed
+> by running the first example from each help file
+> IW 3nov2025
+> */
+. 
+. /* clogit */
+. 
+. webuse lowbirth2
+(Applied Logistic Regression, Hosmer & Lemeshow)
+
+. clogit low lwt smoke ptd ht ui i.race, group(pairid)
+
+Iteration 0:  Log likelihood = -26.768693  
+Iteration 1:  Log likelihood = -25.810476  
+Iteration 2:  Log likelihood = -25.794296  
+Iteration 3:  Log likelihood = -25.794271  
+Iteration 4:  Log likelihood = -25.794271  
+
+Conditional (fixed-effects) logistic regression         Number of obs =    112
+                                                        LR chi2(7)    =  26.04
+                                                        Prob > chi2   = 0.0005
+Log likelihood = -25.794271                             Pseudo R2     = 0.3355
+
+------------------------------------------------------------------------------
+         low | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         lwt |  -.0183757   .0100806    -1.82   0.068    -.0381333    .0013819
+       smoke |   1.400656   .6278396     2.23   0.026     .1701131    2.631199
+         ptd |   1.808009   .7886502     2.29   0.022     .2622828    3.353735
+          ht |   2.361152   1.086128     2.17   0.030     .2323796    4.489924
+          ui |   1.401929   .6961585     2.01   0.044     .0374836    2.766375
+             |
+        race |
+      Black  |   .5713643    .689645     0.83   0.407    -.7803149    1.923044
+      Other  |  -.0253148   .6992044    -0.04   0.971     -1.39573    1.345101
+------------------------------------------------------------------------------
+
+. xi: pllf, profile(lwt): clogit low lwt smoke ptd ht ui i.race, group(pairid)
+i.race            _Irace_1-3          (naturally coded; _Irace_1 omitted)
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+         low |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         lwt | -.0183757    .0102691     -.040137    .0001169
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. /* cnreg -> intreg */
+. webuse intregxmpl, clear
+(Wages of women)
+
+. intreg wage1 wage2 age c.age#c.age nev_mar rural school tenure
+
+Fitting constant-only model:
+
+Iteration 0:  Log likelihood = -967.24956  
+Iteration 1:  Log likelihood =  -967.1368  
+Iteration 2:  Log likelihood =  -967.1368  
+
+Fitting full model:
+
+Iteration 0:  Log likelihood = -856.65324  
+Iteration 1:  Log likelihood = -856.33294  
+Iteration 2:  Log likelihood = -856.33293  
+
+Interval regression                                 Number of obs     =    488
+                                                           Uncensored =      0
+                                                        Left-censored =     14
+                                                       Right-censored =      6
+                                                       Interval-cens. =    468
+
+                                                    LR chi2(6)        = 221.61
+Log likelihood = -856.33293                         Prob > chi2       = 0.0000
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         age |   .7914438   .4433604     1.79   0.074    -.0775265    1.660414
+             |
+ c.age#c.age |  -.0132624   .0073028    -1.82   0.069    -.0275757    .0010509
+             |
+     nev_mar |  -.2075022   .8119581    -0.26   0.798    -1.798911    1.383906
+       rural |  -3.043044   .7757324    -3.92   0.000    -4.563452   -1.522637
+      school |   1.334721   .1357873     9.83   0.000     1.068583    1.600859
+      tenure |   .8000664   .1045077     7.66   0.000     .5952351    1.004898
+       _cons |  -12.70238   6.367117    -1.99   0.046     -25.1817   -.2230583
+-------------+----------------------------------------------------------------
+    /lnsigma |   1.987823   .0346543    57.36   0.000     1.919902    2.055744
+-------------+----------------------------------------------------------------
+       sigma |   7.299626   .2529634                       6.82029     7.81265
+------------------------------------------------------------------------------
+
+. gen agesq=age^2
+
+. pllf, profile(age): intreg wage1 wage2 age agesq nev_mar rural school tenure
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+ wage1 wage2 |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         age |  .7914438    .4443071    -.0788669    1.662785
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. /* glm, logistic, logit, probit */
+. webuse lbw, clear
+(Hosmer & Lemeshow data)
+
+. glm low age lwt i.race smoke ptl ht ui, family(binomial)
+
+Iteration 0:  Log likelihood =  -101.0213  
+Iteration 1:  Log likelihood = -100.72519  
+Iteration 2:  Log likelihood =   -100.724  
+Iteration 3:  Log likelihood =   -100.724  
+
+Generalized linear models                         Number of obs   =        189
+Optimization     : ML                             Residual df     =        180
+                                                  Scale parameter =          1
+Deviance         =  201.4479911                   (1/df) Deviance =   1.119156
+Pearson          =  182.0233425                   (1/df) Pearson  =   1.011241
+
+Variance function: V(u) = u*(1-u)                 [Bernoulli]
+Link function    : g(u) = ln(u/(1-u))             [Logit]
+
+                                                  AIC             =     1.1611
+Log likelihood   = -100.7239956                   BIC             =  -742.0665
+
+------------------------------------------------------------------------------
+             |                 OIM
+         low | Coefficient  std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         age |  -.0271003   .0364504    -0.74   0.457    -.0985418    .0443412
+         lwt |  -.0151508   .0069259    -2.19   0.029    -.0287253   -.0015763
+             |
+        race |
+      Black  |   1.262647   .5264101     2.40   0.016     .2309024    2.294392
+      Other  |   .8620792   .4391532     1.96   0.050     .0013548    1.722804
+             |
+       smoke |   .9233448   .4008266     2.30   0.021      .137739    1.708951
+         ptl |   .5418366    .346249     1.56   0.118     -.136799    1.220472
+          ht |   1.832518   .6916292     2.65   0.008     .4769494    3.188086
+          ui |   .7585135   .4593768     1.65   0.099    -.1418484    1.658875
+       _cons |   .4612239    1.20459     0.38   0.702    -1.899729    2.822176
+------------------------------------------------------------------------------
+
+. xi: pllf, profile(age): glm low age lwt i.race smoke ptl ht ui, family(binomial)
+i.race            _Irace_1-3          (naturally coded; _Irace_1 omitted)
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+         low |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         age | -.0271003    .0366206    -.1002123    .0433377
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. xi: pllf, profile(age): logistic low age lwt i.race smoke ptl ht ui
+i.race            _Irace_1-3          (naturally coded; _Irace_1 omitted)
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+         low |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         age | -.0271003    .0366206    -.1002123    .0433377
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. xi: pllf, profile(age): probit low age lwt i.race smoke ptl ht ui
+i.race            _Irace_1-3          (naturally coded; _Irace_1 omitted)
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+         low |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+         age | -.0175445    .0216593    -.0607221    .0241808
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. /* heckman */
+. webuse womenwk
+
+. heckman wage educ age, select(married children educ age)
+
+Iteration 0:  Log likelihood = -5178.7009  
+Iteration 1:  Log likelihood = -5178.3049  
+Iteration 2:  Log likelihood = -5178.3045  
+
+Heckman selection model                         Number of obs     =      2,000
+(regression model with sample selection)              Selected    =      1,343
+                                                      Nonselected =        657
+
+                                                Wald chi2(2)      =     508.44
+Log likelihood = -5178.304                      Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+        wage | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+wage         |
+   education |   .9899537   .0532565    18.59   0.000     .8855729    1.094334
+         age |   .2131294   .0206031    10.34   0.000     .1727481    .2535108
+       _cons |   .4857752   1.077037     0.45   0.652    -1.625179     2.59673
+-------------+----------------------------------------------------------------
+select       |
+     married |   .4451721   .0673954     6.61   0.000     .3130794    .5772647
+    children |   .4387068   .0277828    15.79   0.000     .3842534    .4931601
+   education |   .0557318   .0107349     5.19   0.000     .0346917    .0767718
+         age |   .0365098   .0041533     8.79   0.000     .0283694    .0446502
+       _cons |  -2.491015   .1893402   -13.16   0.000    -2.862115   -2.119915
+-------------+----------------------------------------------------------------
+     /athrho |   .8742086   .1014225     8.62   0.000     .6754241    1.072993
+    /lnsigma |   1.792559    .027598    64.95   0.000     1.738468     1.84665
+-------------+----------------------------------------------------------------
+         rho |   .7035061   .0512264                      .5885365    .7905862
+       sigma |   6.004797   .1657202                       5.68862    6.338548
+      lambda |   4.224412   .3992265                      3.441942    5.006881
+------------------------------------------------------------------------------
+LR test of indep. eqns. (rho = 0): chi2(1) = 61.20        Prob > chi2 = 0.0000
+
+. pllf, profile(educ): heckman wage educ age, select(married children educ age)
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+        wage |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+   education |  .9899537     .053304     .8860219     1.09497
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. /* mlogit */
+. webuse sysdsn1
+(Health insurance data)
+
+. mlogit insure age male nonwhite i.site
+
+Iteration 0:  Log likelihood = -555.85446  
+Iteration 1:  Log likelihood = -534.67443  
+Iteration 2:  Log likelihood = -534.36284  
+Iteration 3:  Log likelihood = -534.36165  
+Iteration 4:  Log likelihood = -534.36165  
+
+Multinomial logistic regression                         Number of obs =    615
+                                                        LR chi2(10)   =  42.99
+                                                        Prob > chi2   = 0.0000
+Log likelihood = -534.36165                             Pseudo R2     = 0.0387
+
+------------------------------------------------------------------------------
+      insure | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+Indemnity    |  (base outcome)
+-------------+----------------------------------------------------------------
+Prepaid      |
+         age |   -.011745   .0061946    -1.90   0.058    -.0238862    .0003962
+        male |   .5616934   .2027465     2.77   0.006     .1643175    .9590693
+    nonwhite |   .9747768   .2363213     4.12   0.000     .5115955    1.437958
+             |
+        site |
+          2  |   .1130359   .2101903     0.54   0.591    -.2989296    .5250013
+          3  |  -.5879879   .2279351    -2.58   0.010    -1.034733   -.1412433
+             |
+       _cons |   .2697127   .3284422     0.82   0.412    -.3740222    .9134476
+-------------+----------------------------------------------------------------
+Uninsure     |
+         age |  -.0077961   .0114418    -0.68   0.496    -.0302217    .0146294
+        male |   .4518496   .3674867     1.23   0.219     -.268411     1.17211
+    nonwhite |   .2170589   .4256361     0.51   0.610    -.6171725     1.05129
+             |
+        site |
+          2  |  -1.211563   .4705127    -2.57   0.010    -2.133751   -.2893747
+          3  |  -.2078123   .3662926    -0.57   0.570    -.9257327     .510108
+             |
+       _cons |  -1.286943   .5923219    -2.17   0.030    -2.447872   -.1260134
+------------------------------------------------------------------------------
+
+. xi: pllf, profile([Prepaid]age): mlogit insure age male nonwhite i.site
+i.site            _Isite_1-3          (naturally coded; _Isite_1 omitted)
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+      insure |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+[Prepaid]    |
+         age |  -.011745     .006203    -.0239853    .0003298
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. /* nbreg, gnbreg */
+. webuse rod93, clear
+
+. generate logexp=ln(exposure)
+
+. nbreg deaths i.cohort, exposure(exp)
+
+Fitting Poisson model:
+
+Iteration 0:  Log likelihood = -2160.0542  
+Iteration 1:  Log likelihood =  -2159.516  
+Iteration 2:  Log likelihood = -2159.5158  
+Iteration 3:  Log likelihood = -2159.5158  
+
+Fitting constant-only model:
+
+Iteration 0:  Log likelihood = -187.06699  
+Iteration 1:  Log likelihood = -151.29069  
+Iteration 2:  Log likelihood = -131.82867  
+Iteration 3:  Log likelihood = -131.58459  
+Iteration 4:  Log likelihood = -131.58186  
+Iteration 5:  Log likelihood = -131.58186  
+
+Fitting full model:
+
+Iteration 0:  Log likelihood = -131.58186  
+Iteration 1:  Log likelihood = -131.38447  
+Iteration 2:  Log likelihood =  -131.3799  
+Iteration 3:  Log likelihood =  -131.3799  
+
+Negative binomial regression                            Number of obs =     21
+                                                        LR chi2(2)    =   0.40
+Dispersion: mean                                        Prob > chi2   = 0.8171
+Log likelihood = -131.3799                              Pseudo R2     = 0.0015
+
+------------------------------------------------------------------------------
+      deaths | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      cohort |
+  1960–1967  |  -.2676187   .7237203    -0.37   0.712    -1.686085    1.150847
+  1968–1976  |  -.4573957   .7236651    -0.63   0.527    -1.875753    .9609618
+             |
+       _cons |  -2.086731   .5118559    -4.08   0.000     -3.08995   -1.083511
+ln(exposure) |          1  (exposure)
+-------------+----------------------------------------------------------------
+    /lnalpha |   .5939963   .2583615                       .087617    1.100376
+-------------+----------------------------------------------------------------
+       alpha |   1.811212   .4679475                       1.09157    3.005294
+------------------------------------------------------------------------------
+LR test of alpha=0: chibar2(01) = 4056.27              Prob >= chibar2 = 0.000
+
+. xi: pllf, profile(_Icohort_2): nbreg deaths i.cohort, exposure(exp)
+i.cohort          _Icohort_1-3        (naturally coded; _Icohort_1 omitted)
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+      deaths |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+  _Icohort_2 | -.2676187    .7795252    -1.795496    1.260186
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. gnbreg deaths age_mos, lnalpha(i.cohort) offset(logexp)
+
+Fitting constant-only model:
+
+Iteration 0:  Log likelihood =   -187.067  (not concave)
+Iteration 1:  Log likelihood = -138.13047  
+Iteration 2:  Log likelihood = -133.83164  
+Iteration 3:  Log likelihood = -131.59551  
+Iteration 4:  Log likelihood =  -131.5795  
+Iteration 5:  Log likelihood = -131.57948  
+Iteration 6:  Log likelihood = -131.57948  
+
+Fitting full model:
+
+Iteration 0:  Log likelihood = -124.34327  
+Iteration 1:  Log likelihood = -117.76613  
+Iteration 2:  Log likelihood = -117.56424  
+Iteration 3:  Log likelihood = -117.56164  
+Iteration 4:  Log likelihood = -117.56164  
+
+Generalized negative binomial regression                Number of obs =     21
+                                                        LR chi2(1)    =  28.04
+                                                        Prob > chi2   = 0.0000
+Log likelihood = -117.56164                             Pseudo R2     = 0.1065
+
+------------------------------------------------------------------------------
+      deaths | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+deaths       |
+     age_mos |  -.0516657   .0051747    -9.98   0.000     -.061808   -.0415233
+       _cons |  -1.867225   .2227944    -8.38   0.000    -2.303894   -1.430556
+      logexp |          1  (offset)
+-------------+----------------------------------------------------------------
+lnalpha      |
+      cohort |
+  1960–1967  |   .0939546   .7187748     0.13   0.896    -1.314818    1.502727
+  1968–1976  |   .0815279   .7365477     0.11   0.912    -1.362079    1.525135
+             |
+       _cons |  -.4759581   .5156502    -0.92   0.356    -1.486614    .5346978
+------------------------------------------------------------------------------
+
+. xi: pllf, verbose profile(age_mos): gnbreg deaths age_mos, lnalpha(i.cohort) offset(logexp)
+i.cohort          _Icohort_1-3        (naturally coded; _Icohort_1 omitted)
+Finding MLE using: gnbreg deaths age_mos , lnalpha(_Icohort_*) offset(logexp)
+
+Fitting constant-only model:
+
+Iteration 0:  Log likelihood =   -187.067  (not concave)
+Iteration 1:  Log likelihood = -138.13047  
+Iteration 2:  Log likelihood = -136.05314  
+Iteration 3:  Log likelihood = -131.70022  
+Iteration 4:  Log likelihood = -131.58001  
+Iteration 5:  Log likelihood = -131.57948  
+Iteration 6:  Log likelihood = -131.57948  
+
+Fitting full model:
+
+Iteration 0:  Log likelihood = -124.34327  
+Iteration 1:  Log likelihood = -117.79874  
+Iteration 2:  Log likelihood = -117.56385  
+Iteration 3:  Log likelihood = -117.56164  
+Iteration 4:  Log likelihood = -117.56164  
+
+Generalized negative binomial regression                Number of obs =     21
+                                                        LR chi2(1)    =  28.04
+                                                        Prob > chi2   = 0.0000
+Log likelihood = -117.56164                             Pseudo R2     = 0.1065
+
+------------------------------------------------------------------------------
+      deaths | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+deaths       |
+     age_mos |  -.0516657   .0051747    -9.98   0.000     -.061808   -.0415233
+       _cons |  -1.867225   .2227944    -8.38   0.000    -2.303894   -1.430556
+      logexp |          1  (offset)
+-------------+----------------------------------------------------------------
+lnalpha      |
+  _Icohort_2 |   .0939546   .7187747     0.13   0.896    -1.314818    1.502727
+  _Icohort_3 |   .0815279   .7365476     0.11   0.912    -1.362079    1.525135
+       _cons |  -.4759581   .5156503    -0.92   0.356    -1.486614    .5346978
+------------------------------------------------------------------------------
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+      deaths |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+     age_mos | -.0516657    .0054312    -.0616058   -.0403159
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. /* ologit, oprobit */
+. webuse fullauto, clear
+(Automobile models)
+
+. ologit rep77 foreign length mpg
+
+Iteration 0:  Log likelihood = -89.895098  
+Iteration 1:  Log likelihood = -78.775147  
+Iteration 2:  Log likelihood = -78.254294  
+Iteration 3:  Log likelihood = -78.250719  
+Iteration 4:  Log likelihood = -78.250719  
+
+Ordered logistic regression                             Number of obs =     66
+                                                        LR chi2(3)    =  23.29
+                                                        Prob > chi2   = 0.0000
+Log likelihood = -78.250719                             Pseudo R2     = 0.1295
+
+------------------------------------------------------------------------------
+       rep77 | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     foreign |   2.896807   .7906411     3.66   0.000     1.347179    4.446435
+      length |   .0828275     .02272     3.65   0.000     .0382972    .1273579
+         mpg |   .2307677   .0704548     3.28   0.001     .0926788    .3688566
+-------------+----------------------------------------------------------------
+       /cut1 |   17.92748   5.551191                      7.047344    28.80761
+       /cut2 |   19.86506    5.59648                      8.896161    30.83396
+       /cut3 |   22.10331   5.708936                        10.914    33.29262
+       /cut4 |   24.69213   5.890754                      13.14647     36.2378
+------------------------------------------------------------------------------
+
+. pllf, profile(foreign): ologit rep77 foreign length mpg
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+       rep77 |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+     foreign |  2.896807    .7954622     1.411127    4.529282
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. pllf, profile(foreign): oprobit rep77 foreign length mpg
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+       rep77 |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+     foreign |  1.704861    .4250729     .8828381    2.549093
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. /* poisson */
+. webuse dollhill3, clear
+(Doll and Hill (1966))
+
+. poisson deaths smokes i.agecat, exposure(pyears)
+
+Iteration 0:  Log likelihood = -33.823284  
+Iteration 1:  Log likelihood = -33.600471  
+Iteration 2:  Log likelihood = -33.600153  
+Iteration 3:  Log likelihood = -33.600153  
+
+Poisson regression                                      Number of obs =     10
+                                                        LR chi2(5)    = 922.93
+                                                        Prob > chi2   = 0.0000
+Log likelihood = -33.600153                             Pseudo R2     = 0.9321
+
+------------------------------------------------------------------------------
+      deaths | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      smokes |   .3545356   .1073741     3.30   0.001     .1440862     .564985
+             |
+      agecat |
+      45–54  |   1.484007   .1951034     7.61   0.000     1.101611    1.866403
+      55–64  |   2.627505   .1837273    14.30   0.000     2.267406    2.987604
+      65–74  |   3.350493   .1847992    18.13   0.000     2.988293    3.712693
+      75–84  |   3.700096   .1922195    19.25   0.000     3.323353     4.07684
+             |
+       _cons |  -7.919326   .1917618   -41.30   0.000    -8.295172   -7.543479
+  ln(pyears) |          1  (exposure)
+------------------------------------------------------------------------------
+
+. xi: pllf, profile(smokes): poisson deaths smokes i.agecat, exposure(pyears)
+i.agecat          _Iagecat_1-5        (naturally coded; _Iagecat_1 omitted)
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+      deaths |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+      smokes |  .3545356    .1074845     .1491828    .5705143
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. /* regress */
+. sysuse auto, clear
+(1978 automobile data)
+
+. regress mpg weight foreign
+
+      Source |       SS           df       MS      Number of obs   =        74
+-------------+----------------------------------   F(2, 71)        =     69.75
+       Model |   1619.2877         2  809.643849   Prob > F        =    0.0000
+    Residual |  824.171761        71   11.608053   R-squared       =    0.6627
+-------------+----------------------------------   Adj R-squared   =    0.6532
+       Total |  2443.45946        73  33.4720474   Root MSE        =    3.4071
+
+------------------------------------------------------------------------------
+         mpg | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      weight |  -.0065879   .0006371   -10.34   0.000    -.0078583   -.0053175
+     foreign |  -1.650029   1.075994    -1.53   0.130      -3.7955    .4954422
+       _cons |    41.6797   2.165547    19.25   0.000     37.36172    45.99768
+------------------------------------------------------------------------------
+
+. pllf, profile(weight): regress mpg weight foreign
+Warning: pllf is a likelihood-based method and will ignore variance-covariance method ols
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+         mpg |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+      weight | -.0065879    .0006325    -.0078491   -.0053267
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. /* reg3: NOT SUPPORTED */
+. /*
+> webuse klein, clear
+> reg3 (consump wagepriv wagegovt) (wagepriv consump govt capital1)
+> pllf, profile(wagepriv): reg3 (consump wagepriv wagegovt) (wagepriv consump govt capital1)
+> */
+. 
+. /* stcox, streg, stpm, stpm2 */
+. webuse brcancer, clear
+(German breast cancer data)
+
+. stset rectime, failure(censrec = 1)
+
+Survival-time data settings
+
+         Failure event: censrec==1
+Observed time interval: (0, rectime]
+     Exit on or before: failure
+
+--------------------------------------------------------------------------
+        686  total observations
+          0  exclusions
+--------------------------------------------------------------------------
+        686  observations remaining, representing
+        299  failures in single-record/single-failure data
+    771,400  total analysis time at risk and under observation
+                                                At risk from t =         0
+                                     Earliest observed entry t =         0
+                                          Last observed exit t =     2,659
+
+. stcox hormon, nohr
+
+        Failure _d: censrec==1
+  Analysis time _t: rectime
+
+Iteration 0:  Log likelihood = -1788.1731
+Iteration 1:  Log likelihood =  -1783.774
+Iteration 2:  Log likelihood =  -1783.765
+Iteration 3:  Log likelihood =  -1783.765
+Refining estimates:
+Iteration 0:  Log likelihood =  -1783.765
+
+Cox regression with Breslow method for ties
+
+No. of subjects =     686                               Number of obs =    686
+No. of failures =     299
+Time at risk    = 771,400
+                                                        LR chi2(1)    =   8.82
+Log likelihood = -1783.765                              Prob > chi2   = 0.0030
+
+------------------------------------------------------------------------------
+          _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      hormon |  -.3638988   .1250441    -2.91   0.004    -.6089808   -.1188167
+------------------------------------------------------------------------------
+
+. pllf, profile(hormon): stcox hormon, nohr
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+      hormon | -.3638988    .1251974    -.6129645   -.1221999
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. streg hormon, dist(weibull) nohr
+
+        Failure _d: censrec==1
+  Analysis time _t: rectime
+
+Fitting constant-only model:
+Iteration 0:  Log likelihood = -710.24321
+Iteration 1:  Log likelihood = -699.79737
+Iteration 2:  Log likelihood = -699.71947
+Iteration 3:  Log likelihood = -699.71947
+
+Fitting full model:
+Iteration 0:  Log likelihood = -699.71947  
+Iteration 1:  Log likelihood = -694.59057  
+Iteration 2:  Log likelihood = -694.53926  
+Iteration 3:  Log likelihood = -694.53925  
+
+Weibull PH regression
+
+No. of subjects =     686                               Number of obs =    686
+No. of failures =     299
+Time at risk    = 771,400
+                                                        LR chi2(1)    =  10.36
+Log likelihood = -694.53925                             Prob > chi2   = 0.0013
+
+------------------------------------------------------------------------------
+          _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+      hormon |  -.3932402   .1248267    -3.15   0.002     -.637896   -.1485844
+       _cons |  -9.779186   .4663281   -20.97   0.000    -10.69317     -8.8652
+-------------+----------------------------------------------------------------
+       /ln_p |    .250997   .0496958     5.05   0.000     .1535949     .348399
+-------------+----------------------------------------------------------------
+           p |   1.285306   .0638744                      1.166018    1.416798
+         1/p |   .7780247   .0386646                      .7058172    .8576193
+------------------------------------------------------------------------------
+
+. pllf, profile(hormon): streg hormon, dist(weibull) nohr
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+      hormon | -.3932402    .1249807     -.641874   -.1519586
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. stpm hormon, scale(hazard) df(4) 
+
+Initial:      Log likelihood = -668.99968
+Rescale:      Log likelihood = -668.99968
+Rescale eq:   Log likelihood = -668.99968
+Iteration 0:  Log likelihood = -668.99968  
+Iteration 1:  Log likelihood = -668.91067  
+Iteration 2:  Log likelihood = -668.91043  
+Iteration 3:  Log likelihood = -668.91043  
+
+                                                  Number of obs   =        686
+                                                  Wald chi2(1)    =       8.50
+Log likelihood = -668.91043                       Prob > chi2     =     0.0036
+
+------------------------------------------------------------------------------
+          _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+s0           |
+       _cons |   1.802873   .1635112    11.03   0.000     1.482397    2.123349
+-------------+----------------------------------------------------------------
+s1           |
+       _cons |   .4834827   .1341058     3.61   0.000     .2206402    .7463252
+-------------+----------------------------------------------------------------
+s2           |
+       _cons |   .0111832   .0466234     0.24   0.810     -.080197    .1025633
+-------------+----------------------------------------------------------------
+s3           |
+       _cons |  -.0368537   .0173904    -2.12   0.034    -.0709383   -.0027691
+-------------+----------------------------------------------------------------
+xb           |
+      hormon |  -.3640818   .1249151    -2.91   0.004    -.6089109   -.1192528
+       _cons |  -13.39668   1.152208   -11.63   0.000    -15.65497    -11.1384
+------------------------------------------------------------------------------
+Deviance =  1337.821 (686 observations.)
+
+. pllf, profile(hormon): stpm hormon, scale(hazard) df(4) 
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+      hormon | -.3640818    .1250687    -.6128875   -.1226272
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. stpm2 hormon, scale(hazard) df(4)
+
+Iteration 0:  Log likelihood = -668.99968  
+Iteration 1:  Log likelihood = -668.91067  
+Iteration 2:  Log likelihood = -668.91043  
+Iteration 3:  Log likelihood = -668.91043  
+
+Log likelihood = -668.91043                                Number of obs = 686
+
+------------------------------------------------------------------------------
+             | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+xb           |
+      hormon |  -.3640818   .1249151    -2.91   0.004    -.6089109   -.1192528
+       _rcs1 |   1.512731   .1371934    11.03   0.000     1.243837    1.781625
+       _rcs2 |   .4834828   .1341029     3.61   0.000      .220646    .7463196
+       _rcs3 |   .0111831   .0466229     0.24   0.810     -.080196    .1025623
+       _rcs4 |  -.0368537   .0173904    -2.12   0.034    -.0709382   -.0027691
+       _cons |  -1.173031   .0820297   -14.30   0.000    -1.333806   -1.012256
+------------------------------------------------------------------------------
+
+. pllf, profile(hormon): stpm2 hormon, scale(hazard) df(4) 
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+       _d _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+      hormon | -.3640818    .1250687    -.6128875   -.1226272
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. 
+. /* stpm3: not supported by pllf at present
+> since stpm3 doesn't support offset() */
+. * pllf, profile(hormon): stpm3 hormon, scale(lnhazard) df(4) 
+. 
+. 
+end of do-file
+      name:  <unnamed>
+       log:  c:\ian\git\pllf\testing\test_regcmds.log
+  log type:  text
+ closed on:   3 Nov 2025, 20:56:05
+----------------------------------------------------------------------------------------------------

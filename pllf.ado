@@ -1,5 +1,7 @@
 /*
-*! v1.3.4 PR 04mar2023 / IW 12sep2025
+*! v1.3.5 PR 04mar2023 / IW 03nov2025
+	drop collinearity check in syntax 2: correctly allows progress even when formula is constant
+v1.3.4 PR 04mar2023 / IW 12sep2025
 	works for stcox with one covariate
 	PLLF stored as double - matters for very large samples
 	make trace work with syntax 2
@@ -122,7 +124,7 @@ if substr("`cmd'", -1, .) == "," {
 else if ("`cmd'"=="fit") | ("`cmd'"=="reg") | (substr("`cmd'",1,4)=="regr") local cmd regress
 
 local 0 `statacmd'
-syntax [varlist] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) exposure(varname) NOCONStant *]
+syntax [varlist(default=none)] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) exposure(varname) NOCONStant *]
 if "`cmd'"=="logistic" & !missing("`coef'") local or or
 if "`cmd'"=="stcox"  & !missing("`nohr'") local hr hr
 if !missing("`irr'`or'`hr'") {
@@ -578,8 +580,8 @@ else {	// --------------- begin non-linear profiling ---------------
 			CheckCollin `result'
 			if "`s(result)'" == "" {
 				noi di as err "collinearity detected with parameter value = " `A'
-				noi di as err "we recommend you exclude this value from the parameter range"
-				exit 198
+				noi di as err "you may need to exclude this value from the parameter range"
+				*exit 198
 			}
 			cap `noisily' `cmd' `result' `if' `in' `wt', `options' `constant' `useroffset'
 			if _rc {

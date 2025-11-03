@@ -1,5 +1,5 @@
 {smcl}
-{* 30sep2025}{...}
+{* 03nov2025}{...}
 {viewerjumpto "Description" "pllf##description"}{...}
 {viewerjumpto "Options" "pllf##options"}{...}
 {viewerjumpto "Remarks" "pllf##remarks"}{...}
@@ -75,9 +75,9 @@ if {cmd:normal()} is specified, also the Normal approximation to the PLL{p_end}
 Any {it:regression_cmd} for which the parameters are estimated
 by maximum likelihood may be used. This includes
 {help clogit},
-{help cnreg},
 {help glm},
 {help heckman},
+{help intreg},
 {help logistic},
 {help logit},
 {help mlogit},
@@ -88,7 +88,6 @@ by maximum likelihood may be used. This includes
 {help poisson},
 {help probit},
 {help regress},
-{help reg3},
 {help stcox},
 {help streg},
 {help stpm},
@@ -105,12 +104,12 @@ All weight types supported by {it:regression_cmd} are allowed; see help
 {pstd}
 {opt pllf} computes and plots the profile log likelihood function for a
 single predictor in a regression model. The term "profile" implies
-adjustment for other predictor(s) in the model, if any. It is assumed that
+maximisation over other parameters in the model, if any. It is assumed that
 the likelihood function exists.
 
 {pstd}
 Plentiful general material on the PLLF is available on the Internet.
-For example, search "profile likelihood method".
+This article was inspired by {help pllf##VenzonMoolgavkar1988:Venzon and Moolgavkar (1988)}.
 
 {pstd}
 {opt pllf} has two basic syntaxes, depending on which of the options
@@ -304,7 +303,8 @@ distribution of the parameter estimate of interest.
 {pstd}
 Note that sometimes, the MLE cannot be found at some values of the parameter
 being profiled. In those cases, the maximization continues by default for
-16000 iterations, and that can take a very long time. If the program appears
+many iterations (see {help set iter}), 
+and that can take a very long time. If the program appears
 to "freeze" in this way, it is best to halt it by pressing ctrl/break. Then
 restart it with a more suitable range of values (see the {cmd:range()}
 option).
@@ -328,6 +328,25 @@ log pseudo-likelihood, defined as -0.5*{cmd:e(deviance)}, for
 estimating confidence intervals. An example is {cmd:binreg}; if
 the {opt ml} option is not specified, it returns {cmd:e(deviance)}
 but not {cmd:e(ll)}.
+
+{title:Limitations}{marker limitations}
+
+{pstd}
+{cmd:pllf} only handles models with factor variables and interactions 
+if the prefix command {help xi} is used,
+and not if the {help fvarlist} syntax is used.
+
+{pstd}
+Profile likelihood calculation is a likelihood-based method, so it 
+does not respect non-likelihood-based variance calculations such as
+the robust (sandwich) or cluster-robust variance. 
+
+{pstd}
+{cmd:pllf} is unable to profile over a variance component.
+
+{pstd}
+Some commands may not be supported. These include {help reg3} and (at the time of writing)
+{help stpm3}.
 
 
 {title:Examples}{marker examples}
@@ -438,16 +457,11 @@ Seminoma Testicular Cancer: Results From a Randomized, Phase III, Noninferiority
 Trial (TRISST). Journal of Clinical Oncology 40, 2468–2478. 
 {browse "https://doi.org/10.1200/JCO.21.01199"}.
 
-{phang}
-M. S. Pearce. 2000. Profile likelihood confidence intervals
-for explanatory variables in logistic regression. 
-Stata Technical Bulletin STB-56, 45-47; STB reprints
-vol 10, 211-214.
-
-{phang}
+{phang}{marker VenzonMoolgavkar1988}
 D. J. Venzon and S. H. Moolgavkar. 1988. A method for computing
 profile-likelihood-based confidence intervals. Applied Statistics
 37: 87-94.
+{browse "https://www.jstor.org/stable/10.2307/2347496"}
 
 
 {title:Authors}{marker authors}

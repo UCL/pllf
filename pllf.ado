@@ -1,6 +1,9 @@
 /*
 *! v1.3.5 PR 04mar2023 / IW 03nov2025
 	drop collinearity check in syntax 2: correctly allows progress even when formula is constant
+	new normcoll option
+	corrected bug that made commands with offset() fail
+	new warning if e(vce) is not "oim" or "eim"
 v1.3.4 PR 04mar2023 / IW 12sep2025
 	works for stcox with one covariate
 	PLLF stored as double - matters for very large samples
@@ -56,7 +59,7 @@ syntax [, ///
  LEVLINe(string asis) CILINes(string asis) ///
  TRace VERbose eform EFORM2(string) ///
  MLELine DROPCollinear NORMal NORMal2(string) /// to be documented
- debug debug2 LIst tol(real 1E-4) pause PROFILEOptions(string) /// to remain undocumented
+ debug debug2 LIst tol(real 1E-4) pause PROFILEOptions(string) noRMColl /// to remain undocumented
  ]
 
 if `maxcost'<0 local maxcost = int(`n_eval'/2)
@@ -114,17 +117,17 @@ if substr("`cmd'", -1, .) == "," {
 }
 
 /*
-	Currently supported commands include at least the following:
-
-	clogit cnreg cox ereg fit glm gnbreg heckman logistic logit	///
-	mlogit nbreg ologit oprobit poisson probit regress reg3	///
-	streg stcox stpm stpm2 weibull
+	Currently supported commands are listed in help file and tested in test_regcmds.do
 */
 
 else if ("`cmd'"=="fit") | ("`cmd'"=="reg") | (substr("`cmd'",1,4)=="regr") local cmd regress
+if "`cmd'"=="reg3" {
+	di as error "Sorry, reg3 is not supported"
+	exit 498
+}
 
 local 0 `statacmd'
-syntax [varlist(default=none)] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) exposure(varname) NOCONStant *]
+syntax [anything] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) exposure(varname) NOCONStant *]
 if "`cmd'"=="logistic" & !missing("`coef'") local or or
 if "`cmd'"=="stcox"  & !missing("`nohr'") local hr hr
 if !missing("`irr'`or'`hr'") {
@@ -154,31 +157,36 @@ if "`offset'"!="" {
 	local plusoffset + `offset'
 	local useroffset offset(`offset')
 	local offset
-	local niceuseroffset = cond(missing("`exposure'"),"offset(`offset')","exposure(`exposure')")
+	local niceuseroffset = cond(missing("`exposure'"), "`useroffset'", "exposure(`exposure')")
 }
 
 if "`weight'" != "" local wt [`weight'`exp']
 
-* attempt to detect collinearity in xvars
-if inlist("`cmd'", "streg", "stcox", "stpm", "stpm2") {
-	local yvar
-	local xvars `varlist'
-}
-else gettoken yvar xvars : varlist
-if inlist("`cmd'","blogit") {
-	gettoken yvar2 xvars : xvars
-	local yvar `yvar' `yvar2'
-}
-_rmcoll `xvars' `if' `in' `wt', forcedrop `constant'
-if r(k_omitted)>0 {
-	di as error "Collinearity found in xvarlist: `xvars'"
-	if !missing("`dropcollinear'") {
-		local xvars = r(varlist)
-		di as error "dropcollinear option --> reduced xvarlist: `xvars'"
-		local varlist `yvar' `xvars'
+if missing("`rmcoll'") & !missing("`anything'") { // -normcoll- not specified 
+	unab varlist : `anything'
+	* attempt to detect collinearity in xvars
+	if inlist("`cmd'", "streg", "stcox", "stpm", "stpm2") {
+		local yvar
+		local xvars `varlist'
 	}
-	else exit 498
+	else gettoken yvar xvars : varlist
+	if inlist("`cmd'","blogit") {
+		gettoken yvar2 xvars : xvars
+		local yvar `yvar' `yvar2'
+	}
+	_rmcoll `xvars' `if' `in' `wt', forcedrop `constant'
+	if r(k_omitted)>0 {
+		di as error "Collinearity found in xvarlist: `xvars'"
+		if !missing("`dropcollinear'") {
+			local xvars = r(varlist)
+			di as error "dropcollinear option --> reduced xvarlist: `xvars'"
+			local varlist `yvar' `xvars'
+		}
+		else if !missing("`allowcollinear'") di as text "proceeding with caution"
+		else exit 498
+	}
 }
+else local varlist `anything' // may include punctuation
 
 *** END OF PARSING REGRESSION COMMAND
 
@@ -261,6 +269,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		exit _rc
 	}
 	local ytitle `e(depvar)'
+	if !inlist(e(vce),"oim","eim") di as text "Warning: pllf is a likelihood-based method and will ignore variance-covariance method `=e(vce)'"
 	quietly {
 		// Check that alleged parameter exists. 
 		capture local b0 = `eq'_b[`profile']
@@ -346,14 +355,16 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		gen long `order' = _n
 		local stepsize = (`to'-`from')/(`n_eval'-1)
 		if !missing("`debug'") noisily di
-		noisily di as text "Profiling" _c
+		noisily di as text "Profiling:" _c
+		local anyerror1 0
+		local anyerror2 0
 		forvalues i=1/`n_eval' { // MAIN LOOP FOR PROFILE()
 			local b = `from'+(`i'-1)*`stepsize'
 			if "`eq'"!="" {
 				// Use constrained regression
 				if !missing("`debug'") & `i'==1 noi di as text " using constraint" _c
 				constraint define `cuse' `eq'`profile'=`b'
-				`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset' `profileoptions'
+				cap `cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset' `profileoptions'
 			}
 			else {
 				if `i'==1 {
@@ -363,15 +374,19 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 				if "`cmd'"=="regress" {
 					if !missing("`debug'") & `i'==1 noi di as text " using modified outcome" _c
 					replace `offset' = `yvar' - `b'*`profilevar'
-					regress `offset' `varlist' `if' `in' `wt', `options' `constant' `profileoptions'
+					cap regress `offset' `varlist' `if' `in' `wt', `options' `constant' `profileoptions'
 				}
 				else {
 					if !missing("`debug'") & `i'==1 noi di as text " using offset" _c
 					replace `offset' = `b'*`profilevar' `plusoffset'
 					if "`cmd'"=="stcox" & missing("`varlist'") local estimate estimate
-					`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant' `estimate' `profileoptions'
+					cap `cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant' `estimate' `profileoptions'
 				}
 			}
+			if _rc==1 exit 1
+			local error 0
+			if _rc local error 2
+			else if e(converged)==0 local error 1
 			if !missing("`debug2'") {
 				noisily di as input "coeff=`b'"
 				noisily `cmd'
@@ -380,7 +395,17 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 			sort `order'
 			replace `X' = `b' in `i'
 			replace `Y' = cond(`use_deviance', -e(deviance)/2, e(ll)) in `i'
-			if "`dots'"!="nodots" noi di as text "." _c
+			if "`dots'"!="nodots" {
+				if `error'==2 {
+					noi di as error "x" _c
+					local anyerror2 1
+				}
+				else if `error'==1 {
+					noi di as error "?" _c
+					local anyerror1 1
+				}
+				else noi di as text "." _c
+			}
 			if !missing("`trace'") {
 				local col = length("`profile'")+14
 				noi di as text "`profile'=" as result `b' _c _col(`col')
@@ -388,7 +413,9 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 				else noi di as text "deviance=" as result e(deviance)
 			}
 		}
-		noi di
+		if `anyerror1' noi di as error _n "?" as text " means `cmd' did not converge for this parameter value"
+		if `anyerror2' noi di as error _n "x" as text " means `cmd' failed for this parameter value"
+		if !`anyerror1' & !`anyerror2' noi di
 		summ `Y', meanonly
 		if r(max)-r(min) < `tol' {
 			di as error "Warning: PLL does not seem to vary over this range"
@@ -588,6 +615,7 @@ else {	// --------------- begin non-linear profiling ---------------
 				noi di as err "model fit failed at parameter = " `A'
 				exit 198
 			}
+			if `i'==1 & !inlist(e(vce),"oim","eim") di as error "{p 0 2}Warning: pllf is a likelihood-based method and will ignore the variance-covariance method calculated by method `=e(vce)'{p_end}"
 			local y3 = e(ll)
 			if !missing(`y1') & !missing(`y2') {
 				if `y1'<`y2' & `y2'>`y3' {

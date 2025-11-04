@@ -1,5 +1,7 @@
 /*
-*! v1.3.5 PR 04mar2023 / IW 03nov2025
+*! v1.3.6 PR 04mar2023 / IW 04nov2025
+	Syntax 2: if formula evaluates to constant, replace with its first derivative.
+v1.3.5 PR 04mar2023 / IW 03nov2025
 	drop collinearity check in syntax 2: correctly allows progress even when formula is constant
 	new normcoll option
 	corrected bug that made commands with offset() fail
@@ -561,13 +563,14 @@ else {	// --------------- begin non-linear profiling ---------------
 	qui gen `xx' = .
 	// Trial fit of model with central value of param. Program terminates if invalid cmd attempted.
 	local A = (`to'+`from')/2 // IW 
+	local stepsize = (`to'-`from')/(`n_eval'-1)
 	local varlist `varlist' `placeholder'
-	parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+	parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
 	local result `r(result)'
 	CheckCollin `result'
 	if ("`s(result)'" == "") {
 		local A = `A' * 1.05 // adjust a bit
-		parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+		parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
 	}
 	if !missing("`debug'") di as input "Starting with parm = `A'"
 	if !missing("`debug'") di as input `"MLE: `cmd' `result' `if' `in' `wt', `options' `constant' `useroffset'"'
@@ -591,7 +594,6 @@ else {	// --------------- begin non-linear profiling ---------------
 		gen `X' = .
 		gen double `Y' = .
 		gen long `order' = _n
-		local stepsize = (`to'-`from')/(`n_eval'-1)
 		local y1 .
 		local y2 .
 		local y3 .
@@ -601,9 +603,11 @@ else {	// --------------- begin non-linear profiling ---------------
 		forvalues i=1/`n_eval' { // MAIN LOOP FOR FORMULA()
 			local A = `from'+(`i'-1)*`stepsize'
 			// Substitute A in `formula' and fit model
-			parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+			parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
 			// Search for collinearity in expression, e.g. caused by x and x^p with p = 1.
 			local result `r(result)'
+summ `xx'
+if r(sd)==0 noi di as error "formula gives SD=0 for parm=`A'"
 			CheckCollin `result'
 			if "`s(result)'" == "" {
 				noi di as err "collinearity detected with parameter value = " `A'
@@ -694,7 +698,7 @@ else {	// --------------- begin non-linear profiling ---------------
 				while missing(`left_limit') & `i'<=`maxcost' {
 					local A = `from'-`i'*`stepsize'
 					// evaluate pll
-					parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+					parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
 					cap `cmd' `r(result)' `if' `in' `wt', `options' `constant' `useroffset'
 					if _rc {
 						noi di as err "model fit failed at parameter = " `A'
@@ -724,7 +728,7 @@ else {	// --------------- begin non-linear profiling ---------------
 				while missing(`right_limit') & `i'<=`maxcost' {
 					local A = `to'+`i'*`stepsize'
 					// evaluate pll
-					parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder')
+					parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
 					cap `cmd' `r(result)' `if' `in' `wt', `options' `constant' `useroffset'
 					if _rc {
 						noi di as err "model fit failed at parameter = " `A'
@@ -829,8 +833,8 @@ if "`graph'"!="nograph" {
 	if !missing(`right_limit') local rrr `right_limit'
 	if !missing("`eform'") {
 		qui replace `gen1'=exp(`gen1') // will be reversed later
-		if !missing(`lll') local lll = exp(`lll')
-		if !missing(`rrr') local rrr = exp(`rrr')
+		if !missing("`lll'") local lll = exp(`lll')
+		if !missing("`rrr'") local rrr = exp(`rrr')
 		cap niceloglabels `gen1', local(betalabel) style(125)
 		if !_rc local gropt xscale(log) xlabel(`betalabel') `gropt'
 		if _rc==199 di as text as smcl "To improve xlabels, please use {stata ssc install niceloglabels}"
@@ -924,7 +928,7 @@ end
 
 program define parsat, rclass
 version 9.0
-syntax anything [if], Formula(string) var(varname) VALue(string) Placeholder(string)
+syntax anything [if], Formula(string) var(varname) VALue(string) Placeholder(string) step(real)
 
 // Replace placeholder with var and update var
 local result: subinstr local anything "`placeholder'" " `var' ", all
@@ -932,6 +936,18 @@ local result: subinstr local anything "`placeholder'" " `var' ", all
 // Substitute `placeholder' with `value' in `formula'
 local f = subinstr(`"`formula'"', `"`placeholder'"' , "`value'", .)
 quietly replace `var' = `f' `if'
+
+// check if no variance
+quietly summ `var'
+if r(sd)==0 { // replace with first (numerical) derivative
+	local eps = `step'/1000
+	local vl = `value'-`eps'
+	local fl = subinstr(`"`formula'"', `"`placeholder'"' , "`vl'", .)
+	local vu = `value'+`eps'
+	local fu = subinstr(`"`formula'"', `"`placeholder'"' , "`vu'", .)
+	quietly replace `var' = ((`fu')-(`fl'))/(2*`eps') `if'	
+}
+
 return local result `result'
 end
 

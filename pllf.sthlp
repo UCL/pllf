@@ -1,5 +1,5 @@
 {smcl}
-{* 03nov2025}{...}
+{* 04nov2025}{...}
 {viewerjumpto "Description" "pllf##description"}{...}
 {viewerjumpto "Options" "pllf##options"}{...}
 {viewerjumpto "Remarks" "pllf##remarks"}{...}
@@ -328,6 +328,17 @@ log pseudo-likelihood, defined as -0.5*{cmd:e(deviance)}, for
 estimating confidence intervals. An example is {cmd:binreg}; if
 the {opt ml} option is not specified, it returns {cmd:e(deviance)}
 but not {cmd:e(ll)}.
+
+{pstd}
+In syntax 2, there may be a particular parameter value that yields 
+a non-varying covariate. For example, with {cmd:formula(x^@)}, 
+the value @=0 yields a covariate 
+whose value is 1 for all observations. {cmd:pllf} detects this case 
+and replaces the formula, for this parameter value only, 
+with its first derivative with respect to the 
+parameter. In the example, this is like using {cmd:ln(x)} 
+(see {help fracpoly}). 
+
 
 {title:Limitations}{marker limitations}
 

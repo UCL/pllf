@@ -2,34 +2,39 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\TRISST.log
   log type:  text
- opened on:   3 Nov 2025, 20:56:16
+ opened on:   4 Nov 2025, 18:45:54
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.5 PR 04mar2023 / IW 03nov2025
+*! v1.3.6 PR 04mar2023 / IW 04nov2025
 
 . /*
 > various ways to analyse TRISST
 > IW 16sep2025
 > */
 . 
-. cd "C:\ian\git\pllf"
-C:\ian\git\pllf
-
-. myadopath pllf
-  [1]              "c:\ian\git\pllf"
-  [2]              ".."
-  [3]  (BASE)      "C:\Program Files\StataNow19\ado\base/"
-  [4]  (SITE)      "C:\Program Files\StataNow19\ado\site/"
-  [5]              "."
-  [6]  (PERSONAL)  "c:\ian\ado\personal/"
-  [7]  (PLUS)      "c:\ian\ado\plus/"
-  [8]  (OLDPLACE)  "c:\ado/"
-
-. pda
-
-. 
-. use TRISST, clear
+. use ../TRISST, clear
 (NI trial of MRI vs CT after testicular cancer. Margin: RD = +0.057. Joffe 2022.)
+
+. cs outcome modality [fw=n]
+
+                 |        modality        |
+                 |   Exposed   Unexposed  |      Total
+-----------------+------------------------+-----------
+           Cases |         2           8  |         10
+        Noncases |       332         327  |        659
+-----------------+------------------------+-----------
+           Total |       334         335  |        669
+                 |                        |
+            Risk |   .005988    .0238806  |   .0149477
+                 |                        |
+                 |      Point estimate    |    [95% conf. interval]
+                 |------------------------+------------------------
+ Risk difference |        -.0178926       |   -.0362163    .0004311 
+      Risk ratio |         .2507485       |    .0536452    1.172049 
+ Prev. frac. ex. |         .7492515       |   -.1720488    .9463548 
+ Prev. frac. pop |         .3740658       |
+                 +-------------------------------------------------
+                               chi2(1) =     3.64  Pr>chi2 = 0.0565
 
 . binreg outcome modality [fw=n], rd
 
@@ -777,5 +782,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\TRISST.log
   log type:  text
- closed on:   3 Nov 2025, 20:57:21
+ closed on:   4 Nov 2025, 18:47:38
 ----------------------------------------------------------------------------------------------------

@@ -3,11 +3,7 @@ various ways to analyse TRISST
 IW 16sep2025
 */
 
-cd "C:\ian\git\pllf"
-myadopath pllf
-pda
-
-use TRISST, clear
+use ../TRISST, clear
 cs outcome modality [fw=n]
 binreg outcome modality [fw=n], rd
 rdci outcome modality [fw=n]

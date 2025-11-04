@@ -81,3 +81,11 @@ pllf, profile(hormon): stpm2 hormon, scale(hazard) df(4)
 since stpm3 doesn't support offset() */
 * pllf, profile(hormon): stpm3 hormon, scale(lnhazard) df(4) 
 
+/* mixed: FAILS */
+/*
+webuse nlswork, clear
+mixed ln_w grade age c.age#c.age ttl_exp tenure c.tenure#c.tenure || id:
+gen agesq=age^2
+gen tenuresq=tenure^2
+pllf, profile(grade): mixed ln_w grade age agesq ttl_exp tenure tenuresq || id:
+*/

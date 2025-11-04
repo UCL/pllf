@@ -83,7 +83,7 @@ input z d n
 end
 tab d z [fw=n], chi2
 pllf, profile(z) range(-5 0) gropt(name(perfpred,replace)):  logit d z [fw=n]
-
+pllf, profile(z) range(-5 0) eform: logit d z [fw=n]
 
 
 * blogit and glm

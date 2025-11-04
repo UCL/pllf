@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_regcmds.log
   log type:  text
- opened on:   3 Nov 2025, 20:54:29
+ opened on:   4 Nov 2025, 18:42:29
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.5 PR 04mar2023 / IW 03nov2025
+*! v1.3.6 PR 04mar2023 / IW 04nov2025
 
 . /*
 > test_regcmds.do
@@ -808,10 +808,18 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 > since stpm3 doesn't support offset() */
 . * pllf, profile(hormon): stpm3 hormon, scale(lnhazard) df(4) 
 . 
+. /* mixed: FAILS */
+. /*
+> webuse nlswork, clear
+> mixed ln_w grade age c.age#c.age ttl_exp tenure c.tenure#c.tenure || id:
+> gen agesq=age^2
+> gen tenuresq=tenure^2
+> pllf, profile(grade): mixed ln_w grade age agesq ttl_exp tenure tenuresq || id:
+> */
 . 
 end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_regcmds.log
   log type:  text
- closed on:   3 Nov 2025, 20:56:05
+ closed on:   4 Nov 2025, 18:45:33
 ----------------------------------------------------------------------------------------------------

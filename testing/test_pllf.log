@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- opened on:   3 Nov 2025, 20:53:16
+ opened on:   4 Nov 2025, 18:40:01
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.5 PR 04mar2023 / IW 03nov2025
+*! v1.3.6 PR 04mar2023 / IW 04nov2025
 
 . /*
 > Main test file for pllf
@@ -98,7 +98,7 @@ s0           |
        _cons |   1.817123   .1132867    16.04   0.000     1.595085    2.039161
 -------------+----------------------------------------------------------------
 s1           |
-       _cons |   .3962196   .0698136     5.68   0.000     .2593874    .5330517
+       _cons |   .3962196   .0698136     5.68   0.000     .2593875    .5330517
 -------------+----------------------------------------------------------------
 xb           |
           x1 |   .0013215   .0060384     0.22   0.827    -.0105135    .0131566
@@ -129,7 +129,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . confirm var betavar pllvar _pllnorm
 
 . mac l _b1
-_b1:            .0013215433224121
+_b1:            .0013215433224169
 
 . di r(b)
 .00132154
@@ -377,7 +377,21 @@ Lower confidence limit not yet found: searching.................................
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
-. 
+. pllf, profile(z) range(-5 0) eform: logit d z [fw=n]
+Warning: after MLE, _se[z] is zero
+Profiling:..........................................................................................
+> ..........
+Lower confidence limit not yet found: searching..................................................
+[note: failed to find lower confidence limit]
+
+
+-------------------------------------------------------------
+           d |exp(parmname)   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z |         .           .            .    .6775871
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
 . 
 . 
 . * blogit and glm
@@ -801,5 +815,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- closed on:   3 Nov 2025, 20:54:29
+ closed on:   4 Nov 2025, 18:42:29
 ----------------------------------------------------------------------------------------------------

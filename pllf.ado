@@ -271,7 +271,8 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		exit _rc
 	}
 	local ytitle `e(depvar)'
-	if !inlist(e(vce),"oim","eim") di as text "Warning: pllf is a likelihood-based method and will ignore variance-covariance method `=e(vce)'"
+	local vcetype=e(vce)
+	if !inlist("`vcetype'","oim","eim") di as text "Warning: pllf is a likelihood-based method and will ignore variance-covariance method `=e(vce)'"
 	quietly {
 		// Check that alleged parameter exists. 
 		capture local b0 = `eq'_b[`profile']
@@ -331,7 +332,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 
 		// If no equation specified, unabbreviate varlist and remove `profile' from it
 		if "`eq'"=="" {
-			unab varlist: `varlist'
+			// unab varlist: `varlist' // not needed, and fails with mixed
 			if "`profile'"!="_cons" {
 				local varlist: list varlist - profile
 			}
@@ -619,7 +620,8 @@ if r(sd)==0 noi di as error "formula gives SD=0 for parm=`A'"
 				noi di as err "model fit failed at parameter = " `A'
 				exit 198
 			}
-			if `i'==1 & !inlist(e(vce),"oim","eim") di as error "{p 0 2}Warning: pllf is a likelihood-based method and will ignore the variance-covariance method calculated by method `=e(vce)'{p_end}"
+			local vcetype=e(vce)
+			if `i'==1 & !inlist("`vcetype'","oim","eim") di as error "{p 0 2}Warning: pllf is a likelihood-based method and will ignore the variance-covariance method calculated by method `=e(vce)'{p_end}"
 			local y3 = e(ll)
 			if !missing(`y1') & !missing(`y2') {
 				if `y1'<`y2' & `y2'>`y3' {

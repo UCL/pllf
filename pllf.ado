@@ -1,5 +1,9 @@
 /*
-*! v1.3.6 PR 04mar2023 / IW 04nov2025
+*! v1.3.7 PR 04mar2023 / IW 20nov2025
+	better reporting of within-loop errors
+	doesn't leave constraints lying around 
+	advises replacing mixed with meglm 
+v1.3.6 PR 04mar2023 / IW 04nov2025
 	Syntax 2: if formula evaluates to constant, replace with its first derivative.
 v1.3.5 PR 04mar2023 / IW 03nov2025
 	drop collinearity check in syntax 2: correctly allows progress even when formula is constant
@@ -125,6 +129,10 @@ if substr("`cmd'", -1, .) == "," {
 else if ("`cmd'"=="fit") | ("`cmd'"=="reg") | (substr("`cmd'",1,4)=="regr") local cmd regress
 if "`cmd'"=="reg3" {
 	di as error "Sorry, reg3 is not supported"
+	exit 498
+}
+if "`cmd'"=="mixed" {
+	di as error "Sorry, mixed is not supported. Try meglm with the same syntax"
 	exit 498
 }
 
@@ -362,12 +370,13 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		local anyerror1 0
 		local anyerror2 0
 		forvalues i=1/`n_eval' { // MAIN LOOP FOR PROFILE()
+			ereturn clear // to avoid picking up old results
 			local b = `from'+(`i'-1)*`stepsize'
 			if "`eq'"!="" {
 				// Use constrained regression
 				if !missing("`debug'") & `i'==1 noi di as text " using constraint" _c
 				constraint define `cuse' `eq'`profile'=`b'
-				cap `cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset' `profileoptions'
+				local thiscmd `cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset' `profileoptions'
 			}
 			else {
 				if `i'==1 {
@@ -377,19 +386,30 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 				if "`cmd'"=="regress" {
 					if !missing("`debug'") & `i'==1 noi di as text " using modified outcome" _c
 					replace `offset' = `yvar' - `b'*`profilevar'
-					cap regress `offset' `varlist' `if' `in' `wt', `options' `constant' `profileoptions'
+					local thiscmd regress `offset' `varlist' `if' `in' `wt', `options' `constant' `profileoptions'
 				}
 				else {
 					if !missing("`debug'") & `i'==1 noi di as text " using offset" _c
 					replace `offset' = `b'*`profilevar' `plusoffset'
 					if "`cmd'"=="stcox" & missing("`varlist'") local estimate estimate
-					cap `cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant' `estimate' `profileoptions'
+					local thiscmd `cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant' `estimate' `profileoptions'
 				}
 			}
+			if mi("`debug'") cap `thiscmd'
+			else {
+				noi di as input _new(2) "Parm: `profile' = `b'"
+				noi di `"Command is: `thiscmd'"'
+				if !mi("`cuse'") noi constraint dir `cuse'
+				cap noi `thiscmd'
+			}
 			if _rc==1 exit 1
-			local error 0
-			if _rc local error 2
-			else if e(converged)==0 local error 1
+			if _rc==198 {
+				noi di as error "pllf error: syntax error when fixing parameter value using:"
+				noi di as error `"`thiscmd'"'				
+				exit 198
+			}
+			local error = _rc
+			if _rc==0 & e(converged)==0 local error 1
 			if !missing("`debug2'") {
 				noisily di as input "coeff=`b'"
 				noisily `cmd'
@@ -399,8 +419,8 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 			replace `X' = `b' in `i'
 			replace `Y' = cond(`use_deviance', -e(deviance)/2, e(ll)) in `i'
 			if "`dots'"!="nodots" {
-				if `error'==2 {
-					noi di as error "x" _c
+				if `error'>1 {
+					noi di as error "x[`error']" _c
 					local anyerror2 1
 				}
 				else if `error'==1 {
@@ -412,8 +432,11 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 			if !missing("`trace'") {
 				local col = length("`profile'")+14
 				noi di as text "`profile'=" as result `b' _c _col(`col')
-				if !`use_deviance' noi di as text "PLL=" as result e(ll)
-				else noi di as text "deviance=" as result e(deviance)
+				local resultfmt = cond(`error',"error","result")
+				if !`use_deviance' noi di as text "PLL=" as `resultfmt' e(ll) _c
+				else noi di as text "deviance=" as `resultfmt' e(deviance) _c
+				if `error'>2 noi di " [error `error']"
+				noi di
 			}
 		}
 		if `anyerror1' noi di as error _n "?" as text " means `cmd' did not converge for this parameter value"
@@ -557,6 +580,8 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		else lab var `X' "exp(`eq'_b[`profile'])"
 	}
 }
+cap constraint drop `cuse'
+
 *** END OF CODE FOR LINEAR PROFILING
 *** START OF CODE FOR NON-LINEAR PROFILING - FORMULA() OPTION
 else {	// --------------- begin non-linear profiling ---------------

@@ -1,5 +1,8 @@
 /*
-*! v1.3.7 PR 04mar2023 / IW 20nov2025
+*! v1.3.8 PR 04mar2023 / IW 24nov2025
+	allow abbreviated eqname in syntax 1
+	explain * in output table
+v1.3.7 PR 04mar2023 / IW 20nov2025
 	better reporting of within-loop errors
 	doesn't leave constraints lying around 
 	advises replacing mixed with meglm 
@@ -226,6 +229,7 @@ else if "`profile'"!="" {
 			exit 198
 		}
 		local profile `4'
+		cap unab 2 : `2' // user may have abbreviated eqname
 		local eq [`2']
 		constraint free
 		local cuse `r(free)'
@@ -916,6 +920,7 @@ di _col(14) "{c |}" as res ///
   _col(53) %9.0g `right_limit_display'
 di as txt "{hline 13}{c BT}{hline 47}"
 di as txt "Note: Std. Err. is pseudo standard error, derived from PLL CI"
+if !mi("`star'") di as txt "* defining log likelihood = -0.5*e(deviance)"
 
 *** RETURN RESULTS
 

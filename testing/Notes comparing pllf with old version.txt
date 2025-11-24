@@ -1,0 +1,25 @@
+pllf: Notes cf 2023 version
+===========================
+
+PAPER EXAMPLES
+
+TRISST: failed (_pll computed but missing)
+
+perfect prediction: computed pllf and drew graph, then crashed
+
+
+HELP FILE EXAMPLES
+
+1st example (3 vs 8): failed
+
+brcancer examples: succeeded
+
+
+VARIOUS COMMANDS
+
+it didn't work with mixed
+
+it claimed to work with reg3, but it didn't:
+webuse klein, clear
+reg3 (consump wagepriv wagegovt) (wagepriv consump govt capital1)
+pllf reg3 (consump wagepriv wagegovt) (wagepriv consump govt capital1), profile(wagepriv)

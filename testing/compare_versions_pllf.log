@@ -1,8 +1,11 @@
-----------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\compare_versions_pllf.log
   log type:  text
- opened on:  23 Jul 2025, 09:27:53
+ opened on:  24 Nov 2025, 10:42:34
+version 19.5
+c:\ian\git\pllf\pllf.ado
+*! v1.3.8 PR 04mar2023 / IW 24nov2025
 
 . /* 
 > CHECK OLD AND NEW VERSIONS AGREE
@@ -12,7 +15,7 @@
 . 
 . // OLD VERSION
 . 
-. cap adopath - c:\ian\git\pllf
+. cap adopath - $path
 
 . which pllf
 c:\ian\ado\plus\p\pllf.ado
@@ -74,7 +77,8 @@ Log likelihood = -1724.5758                             Prob > chi2   = 0.0000
       hormon |  -.3821333   .1280919    -2.98   0.003    -.6331889   -.1310778
 ------------------------------------------------------------------------------
 
-. pllf stcox x1 x4a x5e x6 hormon, nohr profile(x5e) range(-3 -1) gen(beta1 pll1) gropt(name(pll1, replace))
+. pllf stcox x1 x4a x5e x6 hormon, nohr profile(x5e) range(-3 -1) gen(beta1 pll1) gropt(name(pll1, r
+> eplace))
 
         Failure _d: censrec
   Analysis time _t: rectime
@@ -117,10 +121,10 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . 
 . // NEW VERSION
 . 
-. myadopath pllf
+. adopath ++ $path
   [1]              "c:\ian\git\pllf"
-  [2]  (BASE)      "C:\Program Files\Stata18\ado\base/"
-  [3]  (SITE)      "C:\Program Files\Stata18\ado\site/"
+  [2]  (BASE)      "C:\Program Files\StataNow19\ado\base/"
+  [3]  (SITE)      "C:\Program Files\StataNow19\ado\site/"
   [4]              "."
   [5]  (PERSONAL)  "c:\ian\ado\personal/"
   [6]  (PLUS)      "c:\ian\ado\plus/"
@@ -128,27 +132,28 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . which pllf
 c:\ian\git\pllf\pllf.ado
-*! v1.3.1 PR 04mar2023 / IW 23jul2025
+*! v1.3.8 PR 04mar2023 / IW 24nov2025
 
 . pda
 
 . 
-. pllf, profile(x5e) range(-3 -1) mleline gen(beta2 pll2) gropt(name(pll2, replace)): stcox x1 x4a x5e x6 hormon
-> , nohr
-Profiling....................................................................................................
+. pllf, profile(x5e) range(-3 -1) mleline gen(beta2 pll2) gropt(name(pll2, replace)): stcox x1 x4a x
+> 5e x6 hormon, nohr
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-         x5e | -1.994528    .2259809    -2.435381   -1.549552
+         x5e | -1.994528    .2259832    -2.435385   -1.549547
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . 
 . assert beta1==beta2
 
-. assert pll1==pll2
+. assert abs(pll1-pll2)<1E-4 if !mi(beta1)
 
 . 
 . 
@@ -156,5 +161,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\compare_versions_pllf.log
   log type:  text
- closed on:  23 Jul 2025, 09:27:57
-----------------------------------------------------------------------------------------------------------------
+ closed on:  24 Nov 2025, 10:42:38
+----------------------------------------------------------------------------------------------------

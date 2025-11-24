@@ -2,7 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\pllf_examples.log
   log type:  text
- opened on:   1 Aug 2025, 19:45:52
+ opened on:  24 Nov 2025, 10:41:52
+version 19.5
+c:\ian\git\pllf\pllf.ado
+*! v1.3.8 PR 04mar2023 / IW 24nov2025
 
 . clear
 
@@ -18,16 +21,16 @@
 . 
 . poisson events group, exposure(pyears)
 
-Iteration 0:   log likelihood = -5.1354684  
-Iteration 1:   log likelihood = -5.1354681  
+Iteration 0:  Log likelihood = -5.1354684  
+Iteration 1:  Log likelihood = -5.1354681  
 
-Poisson regression                              Number of obs     =          2
-                                                LR chi2(1)        =      -0.00
-                                                Prob > chi2       =     1.0000
-Log likelihood = -5.1354681                     Pseudo R2         =    -0.0000
+Poisson regression                                     Number of obs =       2
+                                                       LR chi2(1)    =   -0.00
+                                                       Prob > chi2   =  1.0000
+Log likelihood = -5.1354681                            Pseudo R2     = -0.0000
 
 ------------------------------------------------------------------------------
-      events |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+      events | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
 -------------+----------------------------------------------------------------
        group |   1.10e-08   .2809757     0.00   1.000    -.5507023    .5507023
        _cons |  -1.660731   .1622214   -10.24   0.000    -1.978679   -1.342783
@@ -38,8 +41,8 @@ Log likelihood = -5.1354681                     Pseudo R2         =    -0.0000
 . * Explore profile likelihood for the coefficient of group
 . 
 . pllf, profile(group): poisson events group, exposure(pyears)
-Profiling...........................................................................................
-> .........
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
@@ -59,42 +62,20 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . use TRISST, clear
 (NI trial of MRI vs CT after testicular cancer. Margin: RD = +0.057. Joffe 2022.)
 
-. pllf, shownorm verbose profile(modality): binreg outcome modality [fw=n], rd
-Finding MLE using: binreg outcome modality [fweight= n], rd  
-
-Iteration 1:   deviance =  100.0224
-Iteration 2:   deviance =  100.0224
-
-Generalized linear models                         No. of obs      =        669
-Optimization     : MQL Fisher scoring             Residual df     =        667
-                   (IRLS EIM)                     Scale parameter =          1
-Deviance         =  100.0224151                   (1/df) Deviance =   .1499586
-Pearson          =          669                   (1/df) Pearson  =   1.002999
-
-Variance function: V(u) = u*(1-u)                 [Bernoulli]
-Link function    : g(u) = u                       [Identity]
-
-                                                  BIC             =  -4239.336
-
-------------------------------------------------------------------------------
-             |                 EIM
-     outcome | Risk Diff.   Std. Err.      z    P>|z|     [95% Conf. Interval]
--------------+----------------------------------------------------------------
-    modality |  -.0178926    .009349    -1.91   0.056    -.0362163    .0004311
-       _cons |   .0238806   .0083416     2.86   0.004     .0075313    .0402299
-------------------------------------------------------------------------------
+. pllf, profile(modality) normal: binreg outcome modality [fw=n], rd
 note: valid log likelihood not returned in e(ll);
 if available, trying e(deviance) instead
-Profiling...........................................................................................
-> .........
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
-     outcome |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+profile lo~* |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
     modality | -.0178926    .0099405    -.0390899   -.0001239
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+* defining log likelihood = -0.5*e(deviance)
 
 . 
 . * Load breast cancer data
@@ -104,34 +85,36 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . stset rectime, failure(censrec) scale(365.24)
 
-     failure event:  censrec != 0 & censrec < .
-obs. time interval:  (0, rectime]
- exit on or before:  failure
-    t for analysis:  time/365.24
+Survival-time data settings
 
-------------------------------------------------------------------------------
+         Failure event: censrec!=0 & censrec<.
+Observed time interval: (0, rectime]
+     Exit on or before: failure
+     Time for analysis: time/365.24
+
+--------------------------------------------------------------------------
         686  total observations
           0  exclusions
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------
         686  observations remaining, representing
         299  failures in single-record/single-failure data
   2,112.036  total analysis time at risk and under observation
-                                                at risk from t =         0
-                                     earliest observed entry t =         0
-                                          last observed exit t =  7.280145
+                                                At risk from t =         0
+                                     Earliest observed entry t =         0
+                                          Last observed exit t =  7.280145
 
 . 
 . * Explore profile likelihood for coefficient of x5e
 . 
 . pllf, profile(x5e) range(-3 -1): stcox x1 x4a x5e x6 hormon
-Profiling...........................................................................................
-> .........
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-         x5e | -1.994528    .2259809    -2.435381   -1.549552
+         x5e | -1.994528    .2259832    -2.435385   -1.549547
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -139,14 +122,14 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . * Explore profile likelihood for coefficient of x1
 . 
 . pllf, profile(x1) gen(X Y): stpm2 x1 x4a x5e x6 hormon, df(2) scale(hazard) 
-Profiling...........................................................................................
-> .........
+Profiling:..........................................................................................
+> ..........
 
 
 -------------------------------------------------------------
        _d _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-          x1 |  .0013215    .0060392    -.0105103    .0131631
+          x1 |  .0013215    .0060392    -.0105103     .013163
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -154,13 +137,13 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . * Explore profile likelihood for the constant
 . 
 . pllf, profile(_cons) n(50): streg x1 x4a x5e x6 hormon, distribution(weibull)
-Profiling..................................................
+Profiling:..................................................
 
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-       _cons | -1.536981    .4257849    -2.387185   -.7181386
+       _cons | -1.536981    .4257861     -2.38719   -.7181392
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -168,14 +151,14 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . * Explore profile likelihood for Weibull shape parameter
 . 
 . pllf, profile([ln_p]_cons) n(50): streg x1 x4a x5e x6 hormon, distribution(weibull)
-Profiling..................................................
+Profiling:..................................................
 
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
 [ln_p]       |
-       _cons |  .3416282    .0483095     .2448842    .4342541
+       _cons |  .3416282    .0483097     .2448839    .4342542
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -184,14 +167,14 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . 
 . pllf, profile([ln_p]x4b) deviance difference n(20): streg x1 x4a x5e x6 hormon, distribution(weibu
 > ll) ancillary(x4b) 
-Profiling....................
+Profiling:....................
 
 
 -------------------------------------------------------------
           _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
 [ln_p]       |
-         x4b | -.0167018    .0664792    -.1529501    .1076437
+         x4b | -.0167018     .066479    -.1529494    .1076434
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
@@ -200,32 +183,33 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . 
 . * The following two commands are equivalent.
 . 
-. pllf, formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a X x6 hormon
+. pllf, formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a x6 hormon
 ....................................................................................................
 > ...
 
 -------------------------------------------------------------
-          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+          _t |      Est.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-           X |  .1369005    .0471162     .0694187    .2541106
+ Parameter @ |  .1369005    .0471161     .0694188    .2541106
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
-. pllf, placeholder(@) formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a @ x6 hormon
+. pllf, placeholder(X) formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a x6 hormon
 ....................................................................................................
 > ...
 
 -------------------------------------------------------------
-          _t |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+          _t |      Est.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
-           @ |  .1369005    .0471162     .0694187    .2541106
+ Parameter X |  .1369005    .0471161     .0694188    .2541106
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 
+. 
 . 
 end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\pllf_examples.log
   log type:  text
- closed on:   1 Aug 2025, 19:46:22
+ closed on:  24 Nov 2025, 10:42:34
 ----------------------------------------------------------------------------------------------------

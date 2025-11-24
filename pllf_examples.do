@@ -19,7 +19,7 @@ pllf, profile(group): poisson events group, exposure(pyears)
 * clearly establish non-inferiority.
 
 use TRISST, clear
-pllf, shownorm verbose profile(modality): binreg outcome modality [fw=n], rd
+pllf, profile(modality) normal: binreg outcome modality [fw=n], rd
 
 * Load breast cancer data
 
@@ -50,5 +50,6 @@ pllf, profile([ln_p]x4b) deviance difference n(20): streg x1 x4a x5e x6 hormon, 
 
 * The following two commands are equivalent.
 
-pllf, formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a X x6 hormon
-pllf, placeholder(@) formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a @ x6 hormon
+pllf, formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a x6 hormon
+pllf, placeholder(X) formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a x6 hormon
+

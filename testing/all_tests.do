@@ -10,8 +10,9 @@ global path c:\ian\git\pllf
 adopath ++ $path
 prog drop _all
 cap log close
-foreach filename in test_pllf test_regcmds test_new_rmcoll TRISST {
-	cd $path\testing
+foreach filename in test_pllf test_regcmds test_new_rmcoll TRISST pllf_examples compare_versions_pllf {
+	if "`filename'"=="pllf_examples" cd $path
+	else cd $path\testing
 	set linesize 100
 	clear all 
 

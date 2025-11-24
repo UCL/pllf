@@ -1,5 +1,5 @@
 {smcl}
-{* 04nov2025}{...}
+{* 24nov2025}{...}
 {viewerjumpto "Description" "pllf##description"}{...}
 {viewerjumpto "Options" "pllf##options"}{...}
 {viewerjumpto "Remarks" "pllf##remarks"}{...}
@@ -72,7 +72,7 @@ if {cmd:normal()} is specified, also the Normal approximation to the PLL{p_end}
 
 
 {pstd}
-Any {it:regression_cmd} for which the parameters are estimated
+Almost any {it:regression_cmd} for which the parameters are estimated
 by maximum likelihood may be used. This includes
 {help clogit},
 {help glm},
@@ -92,6 +92,12 @@ by maximum likelihood may be used. This includes
 {help streg},
 {help stpm},
 {help stpm2}, and probably others.
+However, {help mixed} may not be used (this is because neither offset nor constraint is allowed,
+even though the help file says constraint is allowed). {help meglm} can be used 
+as an alternative in syntax 1, provided the [eqname] is specified: 
+at present the normcoll option is also required. 
+[*** WHAT ABOUT SYNTAX 2 AND FIXING RMCOLL?]
+
 
 {pstd}
 All weight types supported by {it:regression_cmd} are allowed; see help

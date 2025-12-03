@@ -195,7 +195,6 @@ if missing("`rmcoll'") & !missing("`anything'") { // -normcoll- not specified
 			di as error "dropcollinear option --> reduced xvarlist: `xvars'"
 			local varlist `yvar' `xvars'
 		}
-		else if !missing("`allowcollinear'") di as text "proceeding with caution"
 		else exit 498
 	}
 }
@@ -276,10 +275,11 @@ else {
 if "`profile'" != "" { // ------------ begin linear profiling --------
 	// Fit model and get level% ci. Program terminates if invalid cmd attempted.
 	if "`cmd'"=="stpm" local eq [xb]
-	`noisily' di as text "Finding MLE using: " stritrim(`"`cmd' `varlist' `if' `in' `wt', `options' `constant' `niceuseroffset'"')
-	capture `noisily' `cmd' `varlist' `if' `in' `wt', `options' `constant' `niceuseroffset'
+	local thiscmd = stritrim(`"`cmd' `varlist' `if' `in' `wt', `options' `constant' `niceuseroffset'"')
+	`noisily' di as text `"Finding MLE using: `thiscmd'"'
+	capture `noisily' `thiscmd' 
 	if _rc {
-		di as error "Command failed: " stritrim(`"`cmd' `varlist' `if' `in' `wt', `options' `constant' `niceuseroffset'"')
+		di as error `"Command failed: `thiscmd'"' 
 		exit _rc
 	}
 	local ytitle `e(depvar)'

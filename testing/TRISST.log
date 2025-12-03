@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\TRISST.log
   log type:  text
- opened on:   3 Dec 2025, 09:12:23
+ opened on:   3 Dec 2025, 17:55:22
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.8 PR 04mar2023 / IW 24nov2025
+*! v1.3.9 PR 04mar2023 / IW 03dec2025
 
 . /*
 > various ways to analyse TRISST
@@ -784,5 +784,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\TRISST.log
   log type:  text
- closed on:   3 Dec 2025, 09:13:20
+ closed on:   3 Dec 2025, 17:56:27
 ----------------------------------------------------------------------------------------------------

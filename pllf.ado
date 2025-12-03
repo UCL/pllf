@@ -1,5 +1,11 @@
 /*
-*! v1.3.8 PR 04mar2023 / IW 24nov2025
+*! v1.3.9 PR 04mar2023 / IW 03dec2025
+	correctly handle -me- commands by splitting command from "||" into `re_part'
+	parsat tests for collinearity and if found differentiates 
+		- max twice
+		- its varlist is now unquoted
+	-constrain- option forces use of constraint method even without [eq]
+v1.3.8 PR 04mar2023 / IW 24nov2025
 	allow abbreviated eqname in syntax 1
 	explain * in output table
 v1.3.7 PR 04mar2023 / IW 20nov2025
@@ -64,13 +70,22 @@ if !`hascolon' {
 // PARSE PLLF OPTIONS FROM FIRST ARGUMENT
 
 syntax [, ///
- DEViance FORMula(string) gen(string) DIFFerence LEVel(cilevel) ///
- PLaceholder(string) PROfile(string) range(string) ///
- MAXCost(int -1) N_eval(integer 100) noci noDOTs nograph gropt(string asis) ///
- LEVLINe(string asis) CILINes(string asis) ///
- TRace VERbose eform EFORM2(string) ///
- MLELine DROPCollinear NORMal NORMal2(string) /// to be documented
- debug debug2 LIst tol(real 1E-4) pause PROFILEOptions(string) noRMColl /// to remain undocumented
+ /// Syntax 1 options:
+ PROfile(string) /// 
+ /// Syntax 2 options:
+ FORMula(string) PLaceholder(string) ///
+ /// Evaluation options
+ DROPCollinear LEVel(cilevel) MAXCost(int -1) ///
+ N_eval(integer 100) noci range(string) /// 
+ /// Output options
+ DEViance DIFFerence eform EFORM2(string) gen(string) ///
+ noDOTs TRace VERbose /// 
+ /// Graph options
+ CILINes(string asis) gropt(string asis) LEVLINe(string asis) ///
+ MLELine nograph NORMal NORMal2(string) /// 
+ /// Options to remain undocumented
+ debug debug2 LIst tol(real 1E-4) pause PROFILEOptions(string) ///
+ noRMColl CONSTRain /// 
  ]
 
 if `maxcost'<0 local maxcost = int(`n_eval'/2)
@@ -143,14 +158,16 @@ else if "`cmd'"=="mixed" {
 }
 
 /* 3/12/2025
-NOW SPLIT STATACMD AT "||" INTO STATACMD AND STATACMDRE 
-SHOULD WE PARSE ON VARLIST NOW?
-OR STICK WITH ANYTHING BUT ISSUE A WARNING IF NOT VARLIST?
-COULD ALLOW FVVARLIST? NOT WITH UNAB
+	now split statacmd at "||" into statacmd and re_part 
+	this allows us to parse on varlist now
 */
 
+if substr("`cmd'",1,2)=="me" {
+	gettoken statacmd re_part : statacmd, parse("|")
+}	
+
 local 0 `statacmd'
-syntax [anything] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) exposure(varname) NOCONStant *]
+syntax [varlist] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) exposure(varname) NOCONStant *]
 if "`cmd'"=="logistic" & !missing("`coef'") local or or
 if "`cmd'"=="stcox"  & !missing("`nohr'") local hr hr
 if !missing("`irr'`or'`hr'") {
@@ -185,9 +202,9 @@ if "`offset'"!="" {
 
 if "`weight'" != "" local wt [`weight'`exp']
 
-if missing("`rmcoll'") & !missing("`anything'") { // -normcoll- not specified 
-	unab varlist : `anything'
-	* attempt to detect collinearity in xvars
+if missing("`rmcoll'") & !missing("`varlist'") { // -normcoll- not specified 
+	unab varlist : `varlist'
+	* detect collinearity in xvars
 	if inlist("`cmd'", "streg", "stcox", "stpm", "stpm2") {
 		local yvar
 		local xvars `varlist'
@@ -208,7 +225,6 @@ if missing("`rmcoll'") & !missing("`anything'") { // -normcoll- not specified
 		else exit 498
 	}
 }
-else local varlist `anything' // may include punctuation
 
 // END OF PARSING REGRESSION COMMAND
 
@@ -227,20 +243,15 @@ if "`formula'"!="" {
 }
 else if "`profile'"!="" {
 	// Disentangle profile; extract eq from it, if present
-	tokenize `profile', parse("[]")
-	if "`5'"!="" {
-		di as err "syntax error in profile(`profile'), invalid equation name"
-		exit 198
+	if strpos("`profile'","[")==1 { // [eq]parm format
+		local pos = strpos("`profile'","]")
+		local eq = substr("`profile'",2,`pos'-2)
+		local profile = substr("`profile'",`pos'+1,.)
+		cap unab eq : `eq'
+		local eq [`eq']
+		local constrain constrain
 	}
-	if "`2'"!="" {
-		// Rudimentary check that user has entered the eq correctly
-		if "`1'"!="[" | "`3'"!="]" {
-			di as err "syntax error in profile(`profile'), invalid equation name"
-			exit 198
-		}
-		local profile `4'
-		cap unab 2 : `2' // user may have abbreviated eqname
-		local eq [`2']
+	if "`constrain'"!="" {
 		constraint free
 		local cuse `r(free)'
 		if "`cmd'"=="stpm" {
@@ -248,12 +259,14 @@ else if "`profile'"!="" {
 			exit 498
 		}
 	}
-	if "`profile'"!="_cons"{
-		unab profile: `profile'
+	cap unab profile : `profile' 
+		// might be an expression like var(_cons[idcode])
+		
+	if "`profile'"!="_cons" {
 		local profilevar `profile'
 	}
 	else {
-		local profilevar 1
+		local profilevar 1 // used to calculate an offset
 	}
 	* check `profile' is in `varlist'
 	if "`profile'"=="_cons" & "`cmd'"=="stcox" {
@@ -272,7 +285,7 @@ else if "`profile'"!="" {
 	if !missing("`debug'") {
 		di as input "Debug: " _c
 		if !missing("`eq'") di as input "equation is `eq'; " _c
-		di as input "coefficient is `profile'"
+		di as input "parameter is `profile'"
 	}
 }
 else {
@@ -288,7 +301,7 @@ else {
 if "`profile'" != "" { // ------------ begin linear profiling --------
 	// Fit model and get level% ci. Program terminates if invalid cmd attempted.
 	if "`cmd'"=="stpm" local eq [xb]
-	local thiscmd = stritrim(`"`cmd' `varlist' `if' `in' `wt', `options' `constant' `niceuseroffset'"')
+	local thiscmd = stritrim(`"`cmd' `varlist' `if' `in' `wt', `options' `constant' `niceuseroffset' `re_part'"')
 	`noisily' di as text `"Finding MLE using: `thiscmd'"'
 	capture `noisily' `thiscmd' 
 	if _rc {
@@ -389,11 +402,11 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		forvalues i=1/`n_eval' { // MAIN LOOP FOR PROFILE()
 			ereturn clear // to avoid picking up old results
 			local b = `from'+(`i'-1)*`stepsize'
-			if "`eq'"!="" {
+			if "`constrain'"!="" {
 				// Use constrained regression
 				if !missing("`debug'") & `i'==1 noi di as text " using constraint" _c
 				constraint define `cuse' `eq'`profile'=`b'
-				local thiscmd `cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset' `profileoptions'
+				local thiscmd = stritrim(`"`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset' `profileoptions' `re_part'"')
 			}
 			else {
 				if `i'==1 {
@@ -403,13 +416,13 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 				if "`cmd'"=="regress" {
 					if !missing("`debug'") & `i'==1 noi di as text " using modified outcome" _c
 					replace `offset' = `yvar' - `b'*`profilevar'
-					local thiscmd regress `offset' `varlist' `if' `in' `wt', `options' `constant' `profileoptions'
+					local thiscmd = stritrim(`"regress `offset' `varlist' `if' `in' `wt', `options' `constant' `profileoptions'"')
 				}
 				else {
 					if !missing("`debug'") & `i'==1 noi di as text " using offset" _c
 					replace `offset' = `b'*`profilevar' `plusoffset'
 					if "`cmd'"=="stcox" & missing("`varlist'") local estimate estimate
-					local thiscmd `cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant' `estimate' `profileoptions'
+					local thiscmd = stritrim(`"`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant' `estimate' `profileoptions' `re_part'"')
 				}
 			}
 			if mi("`debug'") cap `thiscmd'
@@ -499,10 +512,10 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 				while missing(`left_limit') & `i'<=`maxcost' {
 					local b = `from'-`i'*`stepsize'
 					// evaluate pll
-					if "`eq'"!="" {
+					if "`constrain'"!="" {
 						// Use constrained regression
 						constraint define `cuse' `eq'`profile'=`b'
-						`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset' `profileoptions'
+						`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset' `profileoptions' `re_part'
 					}
 					else {
 						if "`cmd'"=="regress" {
@@ -511,7 +524,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 						}
 						else {
 							replace `offset' = `b'*`profile' `plusoffset'
-							`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
+							`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant' `re_part'
 						}
 					}
 					local Ynew = cond(`use_deviance', -e(deviance)/2, e(ll))
@@ -548,10 +561,10 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 				while missing(`right_limit') & `i'<=`maxcost' {
 					local b = `to'+`i'*`stepsize'
 					// evaluate pll
-					if "`eq'"!="" {
+					if "`constrain'"!="" {
 						// Use constrained regression
 						constraint define `cuse' `eq'`profile'=`b'
-						`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset'
+						`cmd' `varlist' `if' `in' `wt', `options' constraint(`cuse') `constant' `useroffset' `re_part'
 					}
 					else {
 						if "`cmd'"=="regress" {
@@ -560,7 +573,7 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 						}
 						else {
 							replace `offset' = `b'*`profile' `plusoffset'
-							`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant'
+							`cmd' `varlist' `if' `in' `wt', `options' offset(`offset') `constant' `re_part'
 						}
 					}
 					local Ynew = cond(`use_deviance', -e(deviance)/2, e(ll))
@@ -611,16 +624,19 @@ else {	// --------------- begin non-linear profiling ---------------
 	local A = (`to'+`from')/2 // IW 
 	local stepsize = (`to'-`from')/(`n_eval'-1)
 	local varlist `varlist' `placeholder'
-	parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
+	parsat `varlist' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
 	local result `r(result)'
-	CheckCollin `result'
+
+	CheckCollin `result' // now redundant
 	if ("`s(result)'" == "") {
 		local A = `A' * 1.05 // adjust a bit
-		parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
+		parsat `varlist' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
 	}
+
 	if !missing("`debug'") di as input "Starting with parm = `A'"
-	if !missing("`debug'") di as input `"MLE: `cmd' `result' `if' `in' `wt', `options' `constant' `useroffset'"'
-	cap `cmd' `result' `if' `in' `wt', `options' `constant' `useroffset'
+	local thiscmd = stritrim(`"`cmd' `result' `if' `in' `wt', `options' `constant' `useroffset' `re_part'"')
+	if !missing("`debug'") di as input `"MLE: `thiscmd'"'
+	cap `noisily' `thiscmd'
 	local rc = _rc
 	if `rc' error `rc'
 
@@ -649,18 +665,23 @@ else {	// --------------- begin non-linear profiling ---------------
 		forvalues i=1/`n_eval' { // MAIN LOOP FOR FORMULA()
 			local A = `from'+(`i'-1)*`stepsize'
 			// Substitute A in `formula' and fit model
-			parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
+			parsat `varlist' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
 			// Search for collinearity in expression, e.g. caused by x and x^p with p = 1.
 			local result `r(result)'
-summ `xx'
-if r(sd)==0 noi di as error "formula gives SD=0 for parm=`A'"
-			CheckCollin `result'
+
+			CheckCollin `result' // now redundant
 			if "`s(result)'" == "" {
 				noi di as err "collinearity detected with parameter value = " `A'
 				noi di as err "you may need to exclude this value from the parameter range"
 				*exit 198
 			}
-			cap `noisily' `cmd' `result' `if' `in' `wt', `options' `constant' `useroffset'
+
+			local thiscmd = stritrim(`"`cmd' `result' `if' `in' `wt', `options' `constant' `useroffset' `re_part'"')
+			if !missing("`debug'") {
+				noi di as input _new(2) "Parm: `placeholder' = `A'"
+				noi di as input `"Command is: `thiscmd'"'
+			}
+			cap `noisily' `thiscmd'
 			if _rc {
 				noi di as err "model fit failed at parameter = " `A'
 				exit 198
@@ -745,8 +766,8 @@ if r(sd)==0 noi di as error "formula gives SD=0 for parm=`A'"
 				while missing(`left_limit') & `i'<=`maxcost' {
 					local A = `from'-`i'*`stepsize'
 					// evaluate pll
-					parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
-					cap `cmd' `r(result)' `if' `in' `wt', `options' `constant' `useroffset'
+					parsat `varlist' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
+					cap `cmd' `r(result)' `if' `in' `wt', `options' `constant' `useroffset' `re_part'
 					if _rc {
 						noi di as err "model fit failed at parameter = " `A'
 						exit 198
@@ -775,8 +796,8 @@ if r(sd)==0 noi di as error "formula gives SD=0 for parm=`A'"
 				while missing(`right_limit') & `i'<=`maxcost' {
 					local A = `to'+`i'*`stepsize'
 					// evaluate pll
-					parsat `"`varlist'"' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
-					cap `cmd' `r(result)' `if' `in' `wt', `options' `constant' `useroffset'
+					parsat `varlist' `if' `in', formula(`formula') var(`xx') value(`A') placeholder(`placeholder') step(`stepsize')
+					cap `cmd' `r(result)' `if' `in' `wt', `options' `constant' `useroffset' `re_part'
 					if _rc {
 						noi di as err "model fit failed at parameter = " `A'
 						exit 198
@@ -987,15 +1008,27 @@ local result: subinstr local anything "`placeholder'" " `var' ", all
 local f = subinstr(`"`formula'"', `"`placeholder'"' , "`value'", .)
 quietly replace `var' = `f' `if'
 
-// check if no variance
-quietly summ `var'
-if r(sd)==0 { // replace with first (numerical) derivative
+// check for collinearity
+CheckCollin `result'
+if "`s(result)'"=="" {
+	noi di as error "replacing with first (numerical) derivative"
 	local eps = `step'/1000
 	local vl = `value'-`eps'
 	local fl = subinstr(`"`formula'"', `"`placeholder'"' , "`vl'", .)
 	local vu = `value'+`eps'
 	local fu = subinstr(`"`formula'"', `"`placeholder'"' , "`vu'", .)
 	quietly replace `var' = ((`fu')-(`fl'))/(2*`eps') `if'	
+
+	CheckCollin `result'
+	if "`s(result)'"=="" {
+		noi di as error "replacing with second (numerical) derivative"
+		quietly replace `var' = ((`fu')-2*(`f')+(`fl'))/`eps'/`eps' `if'	
+		CheckCollin `result'
+		if "`s(result)'"=="" {
+			noi di as error "the second derivative is also collinear - proceed with caution"
+			noi di as error "you may need to exclude this value from the parameter range"
+		}
+	}
 }
 
 return local result `result'
@@ -1003,6 +1036,7 @@ end
 
 
 program define CheckCollin, sclass
+* returns s(result) = missing if collinear, varlist if not collinear
 version 9.0
 local l1 : word count `*'
 quietly _rmcoll `*'

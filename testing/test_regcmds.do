@@ -7,7 +7,7 @@ IW 3nov2025
 
 /* clogit */
 
-webuse lowbirth2
+webuse lowbirth2, clear
 clogit low lwt smoke ptd ht ui i.race, group(pairid)
 xi: pllf, profile(lwt): clogit low lwt smoke ptd ht ui i.race, group(pairid)
 
@@ -83,13 +83,12 @@ since stpm3 doesn't support offset() */
 
 /* mixed: FAILS, but meglm succeeds */
 webuse nlswork, clear
-mixed ln_w grade age c.age#c.age ttl_exp tenure c.tenure#c.tenure || id:
+* mixed ln_w grade age c.age#c.age ttl_exp tenure c.tenure#c.tenure || id:
 gen agesq=age^2
 gen tenuresq=tenure^2
-/*
-pllf, profile(grade): mixed ln_w grade age agesq ttl_exp tenure tenuresq || id:
-*/
-* fails:
-cap noi pllf, normcoll profile(grade): meglm ln_w grade age agesq ttl_exp tenure tenuresq || id:
-* succeeds:
-pllf, normcoll profile([ln_w]grade): meglm ln_w grade age agesq ttl_exp tenure tenuresq || id:
+* small n because this is quite slow
+pllf, n(11) profile(grade): meglm ln_w grade age agesq ttl_exp tenure tenuresq || id:
+local pse = r(pse)
+pllf, n(11) profile([ln_w]grade): meglm ln_w grade age agesq ttl_exp tenure tenuresq || id:
+di `pse', r(pse)
+assert reldif(`pse', r(pse)) < 1E-7

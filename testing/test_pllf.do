@@ -63,6 +63,8 @@ pllf, formula(exp(-#*x5)) placeholder(#) range(.05 .25): stcox x1 x4a x6 hormon
 di r(ll)
 assert abs(r(ll)-`pllf_ll')<1E-3
 
+* and the case where we need to differentiate
+pllf, trace formula(exp(-@*x5/100)) n(5) range(-20 20): stcox x1 x5 x4a x6 hormon
 
 * Syntax 1 again
 sysuse auto, clear

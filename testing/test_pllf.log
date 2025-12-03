@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- opened on:   3 Dec 2025, 09:07:02
+ opened on:   3 Dec 2025, 18:15:57
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.8 PR 04mar2023 / IW 24nov2025
+*! v1.3.9 PR 04mar2023 / IW 03dec2025
 
 . /*
 > Main test file for pllf
@@ -98,7 +98,7 @@ s0           |
        _cons |   1.817123   .1132867    16.04   0.000     1.595085    2.039161
 -------------+----------------------------------------------------------------
 s1           |
-       _cons |   .3962196   .0698136     5.68   0.000     .2593874    .5330518
+       _cons |   .3962196   .0698136     5.68   0.000     .2593875    .5330517
 -------------+----------------------------------------------------------------
 xb           |
           x1 |   .0013215   .0060384     0.22   0.827    -.0105135    .0131566
@@ -106,7 +106,7 @@ xb           |
          x5e |   -1.99701   .2254953    -8.86   0.000    -2.438973   -1.555048
           x6 |  -.0022624     .00054    -4.19   0.000    -.0033207    -.001204
       hormon |  -.3800499   .1280752    -2.97   0.003    -.6310726   -.1290271
-       _cons |  -12.74299   .8991567   -14.17   0.000    -14.50531   -10.98068
+       _cons |  -12.74299   .8991566   -14.17   0.000    -14.50531   -10.98068
 ------------------------------------------------------------------------------
 Deviance =  1225.124 (686 observations.)
 
@@ -129,7 +129,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . confirm var betavar pllvar _pllnorm
 
 . mac l _b1
-_b1:            .0013215433224147
+_b1:            .0013215433224128
 
 . di r(b)
 .00132154
@@ -299,6 +299,25 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . assert abs(r(ll)-`pllf_ll')<1E-3
 
 . 
+. * and the case where we need to differentiate
+. pllf, trace formula(exp(-@*x5/100)) n(5) range(-20 20): stcox x1 x5 x4a x6 hormon
+replacing with first (numerical) derivative
+replacing with second (numerical) derivative
+Parameter @=-20         PLL=-1725.3203
+Parameter @=-10         PLL=-1724.3581
+replacing with first (numerical) derivative
+replacing with second (numerical) derivative
+Parameter @=0           PLL=-1723.34
+Parameter @=10          PLL=-1723.8033
+Parameter @=20          PLL=-1725.1526
+
+-------------------------------------------------------------
+          _t |      Est.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+ Parameter @ |  1.872593    10.12296    -19.11088    20.57039
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
 . 
 . * Syntax 1 again
 . sysuse auto, clear
@@ -420,8 +439,8 @@ Log likelihood = -125.70174                             Pseudo R2     = 0.0089
 ------------------------------------------------------------------------------
 
 . pllf, profile(z) debug gropt(name(blogit,replace)) normal(lcol(red)): blogit d n z
-Debug: coefficient is z
-Finding MLE using: blogit d n z ,   
+Debug: parameter is z
+Finding MLE using: blogit d n z ,    
 
 Logistic regression for grouped data                    Number of obs =    200
                                                         LR chi2(1)    =   2.27
@@ -438,7 +457,7 @@ Log likelihood = -125.70174                             Pseudo R2     = 0.0089
 Profiling: using offset
 
 Parm: z = -1.168483257999263
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -453,7 +472,7 @@ Log likelihood = -128.39862                                Prob > chi2   =   .
 .
 
 Parm: z = -1.154067704977397
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -468,7 +487,7 @@ Log likelihood = -128.29243                                Prob > chi2   =   .
 .
 
 Parm: z = -1.139652151955531
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -483,7 +502,7 @@ Log likelihood = -128.18829                                Prob > chi2   =   .
 .
 
 Parm: z = -1.125236598933666
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -498,7 +517,7 @@ Log likelihood = -128.08621                                Prob > chi2   =   .
 .
 
 Parm: z = -1.1108210459118
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -513,7 +532,7 @@ Log likelihood = -127.98619                                Prob > chi2   =   .
 .
 
 Parm: z = -1.096405492889934
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -528,7 +547,7 @@ Log likelihood = -127.88825                                Prob > chi2   =   .
 .
 
 Parm: z = -1.081989939868068
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -543,7 +562,7 @@ Log likelihood = -127.79237                                Prob > chi2   =   .
 .
 
 Parm: z = -1.067574386846202
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -558,7 +577,7 @@ Log likelihood = -127.69858                                Prob > chi2   =   .
 .
 
 Parm: z = -1.053158833824337
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -573,7 +592,7 @@ Log likelihood = -127.60688                                Prob > chi2   =   .
 .
 
 Parm: z = -1.038743280802471
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -588,7 +607,7 @@ Log likelihood = -127.51726                                Prob > chi2   =   .
 .
 
 Parm: z = -1.024327727780605
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -603,7 +622,7 @@ Log likelihood = -127.42974                                Prob > chi2   =   .
 .
 
 Parm: z = -1.009912174758739
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -618,7 +637,7 @@ Log likelihood = -127.34433                                Prob > chi2   =   .
 .
 
 Parm: z = -.9954966217368734
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -633,7 +652,7 @@ Log likelihood = -127.26102                                Prob > chi2   =   .
 .
 
 Parm: z = -.9810810687150076
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -648,7 +667,7 @@ Log likelihood = -127.17982                                Prob > chi2   =   .
 .
 
 Parm: z = -.9666655156931419
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -663,7 +682,7 @@ Log likelihood = -127.10075                                Prob > chi2   =   .
 .
 
 Parm: z = -.952249962671276
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -678,7 +697,7 @@ Log likelihood = -127.02379                                Prob > chi2   =   .
 .
 
 Parm: z = -.9378344096494102
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -693,7 +712,7 @@ Log likelihood = -126.94896                                Prob > chi2   =   .
 .
 
 Parm: z = -.9234188566275444
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -708,7 +727,7 @@ Log likelihood = -126.87627                                Prob > chi2   =   .
 .
 
 Parm: z = -.9090033036056786
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -723,7 +742,7 @@ Log likelihood = -126.80571                                Prob > chi2   =   .
 .
 
 Parm: z = -.8945877505838128
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -738,7 +757,7 @@ Log likelihood = -126.73729                                Prob > chi2   =   .
 .
 
 Parm: z = -.880172197561947
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -753,7 +772,7 @@ Log likelihood = -126.67103                                Prob > chi2   =   .
 .
 
 Parm: z = -.8657566445400813
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -768,7 +787,7 @@ Log likelihood = -126.60691                                Prob > chi2   =   .
 .
 
 Parm: z = -.8513410915182154
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -783,7 +802,7 @@ Log likelihood = -126.54495                                Prob > chi2   =   .
 .
 
 Parm: z = -.8369255384963497
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -798,7 +817,7 @@ Log likelihood = -126.48515                                Prob > chi2   =   .
 .
 
 Parm: z = -.8225099854744837
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -813,7 +832,7 @@ Log likelihood = -126.42752                                Prob > chi2   =   .
 .
 
 Parm: z = -.808094432452618
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -828,7 +847,7 @@ Log likelihood = -126.37205                                Prob > chi2   =   .
 .
 
 Parm: z = -.7936788794307522
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -843,7 +862,7 @@ Log likelihood = -126.31876                                Prob > chi2   =   .
 .
 
 Parm: z = -.7792633264088864
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -858,7 +877,7 @@ Log likelihood = -126.26765                                Prob > chi2   =   .
 .
 
 Parm: z = -.7648477733870206
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -873,7 +892,7 @@ Log likelihood = -126.21872                                Prob > chi2   =   .
 .
 
 Parm: z = -.7504322203651548
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -888,7 +907,7 @@ Log likelihood = -126.17198                                Prob > chi2   =   .
 .
 
 Parm: z = -.7360166673432891
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -903,7 +922,7 @@ Log likelihood = -126.12743                                Prob > chi2   =   .
 .
 
 Parm: z = -.7216011143214232
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -918,7 +937,7 @@ Log likelihood = -126.08507                                Prob > chi2   =   .
 .
 
 Parm: z = -.7071855612995575
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -933,7 +952,7 @@ Log likelihood = -126.04491                                Prob > chi2   =   .
 .
 
 Parm: z = -.6927700082776915
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -948,7 +967,7 @@ Log likelihood = -126.00696                                Prob > chi2   =   .
 .
 
 Parm: z = -.6783544552558258
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -963,7 +982,7 @@ Log likelihood = -125.97121                                Prob > chi2   =   .
 .
 
 Parm: z = -.66393890223396
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -978,7 +997,7 @@ Log likelihood = -125.93767                                Prob > chi2   =   .
 .
 
 Parm: z = -.6495233492120942
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -993,7 +1012,7 @@ Log likelihood = -125.90634                                Prob > chi2   =   .
 .
 
 Parm: z = -.6351077961902284
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1008,7 +1027,7 @@ Log likelihood = -125.87723                                Prob > chi2   =   .
 .
 
 Parm: z = -.6206922431683626
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1023,7 +1042,7 @@ Log likelihood = -125.85034                                Prob > chi2   =   .
 .
 
 Parm: z = -.6062766901464968
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1038,7 +1057,7 @@ Log likelihood = -125.82567                                Prob > chi2   =   .
 .
 
 Parm: z = -.591861137124631
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1053,7 +1072,7 @@ Log likelihood = -125.80324                                Prob > chi2   =   .
 .
 
 Parm: z = -.5774455841027651
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1068,7 +1087,7 @@ Log likelihood = -125.78303                                Prob > chi2   =   .
 .
 
 Parm: z = -.5630300310808994
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1083,7 +1102,7 @@ Log likelihood = -125.76505                                Prob > chi2   =   .
 .
 
 Parm: z = -.5486144780590336
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1098,7 +1117,7 @@ Log likelihood = -125.74932                                Prob > chi2   =   .
 .
 
 Parm: z = -.5341989250371678
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1113,7 +1132,7 @@ Log likelihood = -125.73582                                Prob > chi2   =   .
 .
 
 Parm: z = -.519783372015302
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1128,7 +1147,7 @@ Log likelihood = -125.72456                                Prob > chi2   =   .
 .
 
 Parm: z = -.5053678189934362
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1143,7 +1162,7 @@ Log likelihood = -125.71555                                Prob > chi2   =   .
 .
 
 Parm: z = -.4909522659715704
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1158,7 +1177,7 @@ Log likelihood = -125.70879                                Prob > chi2   =   .
 .
 
 Parm: z = -.4765367129497046
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1173,7 +1192,7 @@ Log likelihood = -125.70428                                Prob > chi2   =   .
 .
 
 Parm: z = -.4621211599278388
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1188,7 +1207,7 @@ Log likelihood = -125.70203                                Prob > chi2   =   .
 .
 
 Parm: z = -.4477056069059729
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1203,7 +1222,7 @@ Log likelihood = -125.70203                                Prob > chi2   =   .
 .
 
 Parm: z = -.4332900538841072
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1218,7 +1237,7 @@ Log likelihood = -125.70429                                Prob > chi2   =   .
 .
 
 Parm: z = -.4188745008622414
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1233,7 +1252,7 @@ Log likelihood = -125.70881                                Prob > chi2   =   .
 .
 
 Parm: z = -.4044589478403756
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1248,7 +1267,7 @@ Log likelihood = -125.71559                                Prob > chi2   =   .
 .
 
 Parm: z = -.3900433948185098
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1263,7 +1282,7 @@ Log likelihood = -125.72464                                Prob > chi2   =   .
 .
 
 Parm: z = -.375627841796644
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1278,7 +1297,7 @@ Log likelihood = -125.73596                                Prob > chi2   =   .
 .
 
 Parm: z = -.3612122887747782
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1293,7 +1312,7 @@ Log likelihood = -125.74954                                Prob > chi2   =   .
 .
 
 Parm: z = -.3467967357529124
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1308,7 +1327,7 @@ Log likelihood = -125.76541                                Prob > chi2   =   .
 .
 
 Parm: z = -.3323811827310466
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1323,7 +1342,7 @@ Log likelihood = -125.78354                                Prob > chi2   =   .
 .
 
 Parm: z = -.3179656297091807
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1338,7 +1357,7 @@ Log likelihood = -125.80395                                Prob > chi2   =   .
 .
 
 Parm: z = -.303550076687315
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1353,7 +1372,7 @@ Log likelihood = -125.82664                                Prob > chi2   =   .
 .
 
 Parm: z = -.2891345236654492
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1368,7 +1387,7 @@ Log likelihood = -125.85161                                Prob > chi2   =   .
 .
 
 Parm: z = -.2747189706435834
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1383,7 +1402,7 @@ Log likelihood = -125.87885                                Prob > chi2   =   .
 .
 
 Parm: z = -.2603034176217176
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1398,7 +1417,7 @@ Log likelihood = -125.90839                                Prob > chi2   =   .
 .
 
 Parm: z = -.2458878645998518
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1413,7 +1432,7 @@ Log likelihood = -125.9402                                 Prob > chi2   =   .
 .
 
 Parm: z = -.231472311577986
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1428,7 +1447,7 @@ Log likelihood = -125.9743                                 Prob > chi2   =   .
 .
 
 Parm: z = -.2170567585561202
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1443,7 +1462,7 @@ Log likelihood = -126.01069                                Prob > chi2   =   .
 .
 
 Parm: z = -.2026412055342544
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1458,7 +1477,7 @@ Log likelihood = -126.04937                                Prob > chi2   =   .
 .
 
 Parm: z = -.1882256525123885
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1473,7 +1492,7 @@ Log likelihood = -126.09033                                Prob > chi2   =   .
 .
 
 Parm: z = -.1738100994905228
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1488,7 +1507,7 @@ Log likelihood = -126.13359                                Prob > chi2   =   .
 .
 
 Parm: z = -.159394546468657
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1503,7 +1522,7 @@ Log likelihood = -126.17914                                Prob > chi2   =   .
 .
 
 Parm: z = -.1449789934467911
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1518,7 +1537,7 @@ Log likelihood = -126.22698                                Prob > chi2   =   .
 .
 
 Parm: z = -.1305634404249254
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1533,7 +1552,7 @@ Log likelihood = -126.27711                                Prob > chi2   =   .
 .
 
 Parm: z = -.1161478874030595
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1548,7 +1567,7 @@ Log likelihood = -126.32954                                Prob > chi2   =   .
 .
 
 Parm: z = -.1017323343811938
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1563,7 +1582,7 @@ Log likelihood = -126.38426                                Prob > chi2   =   .
 .
 
 Parm: z = -.0873167813593281
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1578,7 +1597,7 @@ Log likelihood = -126.44128                                Prob > chi2   =   .
 .
 
 Parm: z = -.0729012283374622
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1593,7 +1612,7 @@ Log likelihood = -126.5006                                 Prob > chi2   =   .
 .
 
 Parm: z = -.0584856753155965
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1608,7 +1627,7 @@ Log likelihood = -126.56221                                Prob > chi2   =   .
 .
 
 Parm: z = -.0440701222937305
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1623,7 +1642,7 @@ Log likelihood = -126.62611                                Prob > chi2   =   .
 .
 
 Parm: z = -.0296545692718648
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1638,7 +1657,7 @@ Log likelihood = -126.69232                                Prob > chi2   =   .
 .
 
 Parm: z = -.0152390162499989
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1653,7 +1672,7 @@ Log likelihood = -126.76082                                Prob > chi2   =   .
 .
 
 Parm: z = -.0008234632281332
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1668,7 +1687,7 @@ Log likelihood = -126.83161                                Prob > chi2   =   .
 .
 
 Parm: z = .0135920897937327
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1683,7 +1702,7 @@ Log likelihood = -126.90471                                Prob > chi2   =   .
 .
 
 Parm: z = .0280076428155984
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1698,7 +1717,7 @@ Log likelihood = -126.9801                                 Prob > chi2   =   .
 .
 
 Parm: z = .0424231958374641
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1713,7 +1732,7 @@ Log likelihood = -127.05779                                Prob > chi2   =   .
 .
 
 Parm: z = .05683874885933
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1728,7 +1747,7 @@ Log likelihood = -127.13778                                Prob > chi2   =   .
 .
 
 Parm: z = .0712543018811957
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1743,7 +1762,7 @@ Log likelihood = -127.22006                                Prob > chi2   =   .
 .
 
 Parm: z = .0856698549030617
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1758,7 +1777,7 @@ Log likelihood = -127.30464                                Prob > chi2   =   .
 .
 
 Parm: z = .1000854079249274
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1773,7 +1792,7 @@ Log likelihood = -127.39152                                Prob > chi2   =   .
 .
 
 Parm: z = .1145009609467933
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1788,7 +1807,7 @@ Log likelihood = -127.48069                                Prob > chi2   =   .
 .
 
 Parm: z = .128916513968659
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1803,7 +1822,7 @@ Log likelihood = -127.57215                                Prob > chi2   =   .
 .
 
 Parm: z = .1433320669905249
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1818,7 +1837,7 @@ Log likelihood = -127.66591                                Prob > chi2   =   .
 .
 
 Parm: z = .1577476200123906
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1833,7 +1852,7 @@ Log likelihood = -127.76197                                Prob > chi2   =   .
 .
 
 Parm: z = .1721631730342563
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1848,7 +1867,7 @@ Log likelihood = -127.86031                                Prob > chi2   =   .
 .
 
 Parm: z = .1865787260561222
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1863,7 +1882,7 @@ Log likelihood = -127.96095                                Prob > chi2   =   .
 .
 
 Parm: z = .2009942790779879
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1878,7 +1897,7 @@ Log likelihood = -128.06388                                Prob > chi2   =   .
 .
 
 Parm: z = .2154098320998539
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1893,7 +1912,7 @@ Log likelihood = -128.16909                                Prob > chi2   =   .
 .
 
 Parm: z = .2298253851217196
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1908,7 +1927,7 @@ Log likelihood = -128.2766                                 Prob > chi2   =   .
 .
 
 Parm: z = .2442409381435855
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1923,7 +1942,7 @@ Log likelihood = -128.38639                                Prob > chi2   =   .
 .
 
 Parm: z = .2586564911654512
-Command is: blogit d n   ,  offset(__000004)
+Command is: blogit d n , offset(__000004)    
 
 Logistic regression for grouped data                       Number of obs = 200
                                                            Wald chi2(0)  =   .
@@ -1976,8 +1995,8 @@ Log likelihood   = -4.925506276                   BIC             =   1.64e-14
 ------------------------------------------------------------------------------
 
 . pllf, profile(z) debug: glm d z, family(binomial n)
-Debug: coefficient is z
-Finding MLE using: glm d z , family(binomial n)  
+Debug: parameter is z
+Finding MLE using: glm d z , family(binomial n)   
 
 Iteration 0:  Log likelihood = -4.9255063  
 Iteration 1:  Log likelihood = -4.9255063  
@@ -2005,7 +2024,7 @@ Log likelihood   = -4.925506276                   BIC             =   1.64e-14
 Profiling: using offset
 
 Parm: z = -1.168483257961754
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.6334151  
 Iteration 1:  Log likelihood = -7.6223802  
@@ -2033,7 +2052,7 @@ Log likelihood   = -7.622380054                   BIC             =     4.7006
 .
 
 Parm: z = -1.154067704939937
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.5263776  
 Iteration 1:  Log likelihood = -7.5161902  
@@ -2061,7 +2080,7 @@ Log likelihood   = -7.516190146                   BIC             =   4.488221
 .
 
 Parm: z = -1.139652151918121
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.4214407  
 Iteration 1:  Log likelihood = -7.4120515  
@@ -2089,7 +2108,7 @@ Log likelihood   = -7.412051457                   BIC             =   4.279943
 .
 
 Parm: z = -1.125236598896304
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.3186102  
 Iteration 1:  Log likelihood = -7.3099716  
@@ -2117,7 +2136,7 @@ Log likelihood   = -7.309971509                   BIC             =   4.075783
 .
 
 Parm: z = -1.110821045874488
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.2178882  
 Iteration 1:  Log likelihood = -7.2099544  
@@ -2145,7 +2164,7 @@ Log likelihood   = -7.209954354                   BIC             =   3.875749
 .
 
 Parm: z = -1.096405492852671
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.1192801  
 Iteration 1:  Log likelihood = -7.1120074  
@@ -2173,7 +2192,7 @@ Log likelihood   = -7.112007326                   BIC             =   3.679855
 .
 
 Parm: z = -1.081989939830854
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.0227881  
 Iteration 1:  Log likelihood = -7.0161345  
@@ -2201,7 +2220,7 @@ Log likelihood   = -7.016134425                   BIC             =   3.488109
 .
 
 Parm: z = -1.067574386809038
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.9284177  
 Iteration 1:  Log likelihood = -6.9223428  
@@ -2229,7 +2248,7 @@ Log likelihood   = -6.922342799                   BIC             =   3.300526
 .
 
 Parm: z = -1.053158833787221
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.8361716  
 Iteration 1:  Log likelihood = -6.8306372  
@@ -2257,7 +2276,7 @@ Log likelihood   = -6.830637146                   BIC             =   3.117115
 .
 
 Parm: z = -1.038743280765404
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.7460529  
 Iteration 1:  Log likelihood = -6.7410222  
@@ -2285,7 +2304,7 @@ Log likelihood   =  -6.74102217                   BIC             =   2.937885
 .
 
 Parm: z = -1.024327727743588
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.6580668  
 Iteration 1:  Log likelihood = -6.6535048  
@@ -2313,7 +2332,7 @@ Log likelihood   = -6.653504731                   BIC             =    2.76285
 .
 
 Parm: z = -1.009912174721771
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.5722156  
 Iteration 1:  Log likelihood = -6.5680887  
@@ -2341,7 +2360,7 @@ Log likelihood   = -6.568088695                   BIC             =   2.592018
 .
 
 Parm: z = -.9954966216999547
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.4885042  
 Iteration 1:  Log likelihood = -6.4847807  
@@ -2369,7 +2388,7 @@ Log likelihood   = -6.484780727                   BIC             =   2.425402
 .
 
 Parm: z = -.9810810686781382
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.4069352  
 Iteration 1:  Log likelihood =  -6.403585  
@@ -2397,7 +2416,7 @@ Log likelihood   = -6.403584968                   BIC             =    2.26301
 .
 
 Parm: z = -.9666655156563215
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.3275126  
 Iteration 1:  Log likelihood = -6.3245069  
@@ -2425,7 +2444,7 @@ Log likelihood   = -6.324506891                   BIC             =   2.104854
 .
 
 Parm: z = -.9522499626345049
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.2502399  
 Iteration 1:  Log likelihood = -6.2475516  
@@ -2453,7 +2472,7 @@ Log likelihood   = -6.247551557                   BIC             =   1.950943
 .
 
 Parm: z = -.9378344096126883
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.1751208  
 Iteration 1:  Log likelihood =  -6.172724  
@@ -2481,7 +2500,7 @@ Log likelihood   = -6.172723961                   BIC             =   1.801288
 .
 
 Parm: z = -.9234188565908716
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.1021589  
 Iteration 1:  Log likelihood = -6.1000293  
@@ -2509,7 +2528,7 @@ Log likelihood   = -6.100029332                   BIC             =   1.655899
 .
 
 Parm: z = -.9090033035690551
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.0313572  
 Iteration 1:  Log likelihood = -6.0294719  
@@ -2537,7 +2556,7 @@ Log likelihood   = -6.029471931                   BIC             =   1.514784
 .
 
 Parm: z = -.8945877505472385
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.9627194  
 Iteration 1:  Log likelihood = -5.9610569  
@@ -2565,7 +2584,7 @@ Log likelihood   = -5.961056865                   BIC             =   1.377954
 .
 
 Parm: z = -.880172197525422
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood =  -5.896249  
 Iteration 1:  Log likelihood = -5.8947889  
@@ -2593,7 +2612,7 @@ Log likelihood   = -5.894788867                   BIC             =   1.245418
 .
 
 Parm: z = -.8657566445036053
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.8319493  
 Iteration 1:  Log likelihood = -5.8306726  
@@ -2621,7 +2640,7 @@ Log likelihood   = -5.830672602                   BIC             =   1.117185
 .
 
 Parm: z = -.8513410914817887
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.7698238  
 Iteration 1:  Log likelihood = -5.7687127  
@@ -2649,7 +2668,7 @@ Log likelihood   =  -5.76871267                   BIC             =   .9932656
 .
 
 Parm: z = -.8369255384599721
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.7098761  
 Iteration 1:  Log likelihood = -5.7089138  
@@ -2677,7 +2696,7 @@ Log likelihood   = -5.708913845                   BIC             =    .873668
 .
 
 Parm: z = -.8225099854381555
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.6521089  
 Iteration 1:  Log likelihood = -5.6512801  
@@ -2705,7 +2724,7 @@ Log likelihood   = -5.651280097                   BIC             =   .7584005
 .
 
 Parm: z = -.8080944324163388
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.5965258  
 Iteration 1:  Log likelihood = -5.5958161  
@@ -2733,7 +2752,7 @@ Log likelihood   = -5.595816073                   BIC             =   .6474724
 .
 
 Parm: z = -.7936788793945223
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood =   -5.54313  
 Iteration 1:  Log likelihood = -5.5425261  
@@ -2761,7 +2780,7 @@ Log likelihood   = -5.542526099                   BIC             =   .5408925
 .
 
 Parm: z = -.7792633263727057
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.4919248  
 Iteration 1:  Log likelihood = -5.4914144  
@@ -2789,7 +2808,7 @@ Log likelihood   = -5.491414433                   BIC             =   .4386691
 .
 
 Parm: z = -.7648477733508892
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.4429134  
 Iteration 1:  Log likelihood = -5.4424853  
@@ -2817,7 +2836,7 @@ Log likelihood   = -5.442485263                   BIC             =   .3408108
 .
 
 Parm: z = -.7504322203290725
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood =  -5.396099  
 Iteration 1:  Log likelihood = -5.3957427  
@@ -2845,7 +2864,7 @@ Log likelihood   = -5.395742707                   BIC             =   .2473257
 .
 
 Parm: z = -.7360166673072559
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.3514849  
 Iteration 1:  Log likelihood =  -5.351191  
@@ -2873,7 +2892,7 @@ Log likelihood   = -5.351190992                   BIC             =   .1582222
 .
 
 Parm: z = -.7216011142854393
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.3090738  
 Iteration 1:  Log likelihood = -5.3088337  
@@ -2901,7 +2920,7 @@ Log likelihood   = -5.308833727                   BIC             =   .0735077
 .
 
 Parm: z = -.7071855612636226
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood =  -5.268869  
 Iteration 1:  Log likelihood =  -5.268675  
@@ -2929,7 +2948,7 @@ Log likelihood   = -5.268675007                   BIC             =  -.0068097
 .
 
 Parm: z = -.6927700082418061
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.2308736  
 Iteration 1:  Log likelihood = -5.2307187  
@@ -2957,7 +2976,7 @@ Log likelihood   = -5.230718666                   BIC             =  -.0827224
 .
 
 Parm: z = -.6783544552199895
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.1950905  
 Iteration 1:  Log likelihood = -5.1949685  
@@ -2985,7 +3004,7 @@ Log likelihood   = -5.194968469                   BIC             =  -.1542228
 .
 
 Parm: z = -.6639389021981729
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.1615228  
 Iteration 1:  Log likelihood = -5.1614281  
@@ -3013,7 +3032,7 @@ Log likelihood   = -5.161428105                   BIC             =  -.2213035
 .
 
 Parm: z = -.6495233491763563
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.1301735  
 Iteration 1:  Log likelihood = -5.1301013  
@@ -3041,7 +3060,7 @@ Log likelihood   = -5.130101319                   BIC             =  -.2839571
 .
 
 Parm: z = -.6351077961545397
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.1010454  
 Iteration 1:  Log likelihood = -5.1009914  
@@ -3069,7 +3088,7 @@ Log likelihood   = -5.100991398                   BIC             =  -.3421769
 .
 
 Parm: z = -.6206922431327231
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.0741415  
 Iteration 1:  Log likelihood = -5.0741019  
@@ -3097,7 +3116,7 @@ Log likelihood   = -5.074101948                   BIC             =  -.3959558
 .
 
 Parm: z = -.6062766901109065
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.0494645  
 Iteration 1:  Log likelihood = -5.0494364  
@@ -3125,7 +3144,7 @@ Log likelihood   =  -5.04943637                   BIC             =   -.445287
 .
 
 Parm: z = -.5918611370890899
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.0270174  
 Iteration 1:  Log likelihood =  -5.026998  
@@ -3153,7 +3172,7 @@ Log likelihood   = -5.026997989                   BIC             =  -.4901638
 .
 
 Parm: z = -.5774455840672733
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood =  -5.006803  
 Iteration 1:  Log likelihood = -5.0067901  
@@ -3181,7 +3200,7 @@ Log likelihood   = -5.006790058                   BIC             =  -.5305796
 .
 
 Parm: z = -.5630300310454567
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood =  -4.988824  
 Iteration 1:  Log likelihood = -4.9888158  
@@ -3209,7 +3228,7 @@ Log likelihood   = -4.988815754                   BIC             =  -.5665282
 .
 
 Parm: z = -.5486144780236401
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9730832  
 Iteration 1:  Log likelihood = -4.9730782  
@@ -3237,7 +3256,7 @@ Log likelihood   = -4.973078242                   BIC             =  -.5980033
 .
 
 Parm: z = -.5341989250018235
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9595832  
 Iteration 1:  Log likelihood = -4.9595804  
@@ -3265,7 +3284,7 @@ Log likelihood   = -4.959580419                   BIC             =  -.6249989
 .
 
 Parm: z = -.5197833719800069
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9483267  
 Iteration 1:  Log likelihood = -4.9483253  
@@ -3293,7 +3312,7 @@ Log likelihood   = -4.948325308                   BIC             =  -.6475091
 .
 
 Parm: z = -.5053678189581903
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9393164  
 Iteration 1:  Log likelihood = -4.9393158  
@@ -3321,7 +3340,7 @@ Log likelihood   = -4.939315789                   BIC             =  -.6655282
 .
 
 Parm: z = -.4909522659363736
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9325549  
 Iteration 1:  Log likelihood = -4.9325547  
@@ -3348,7 +3367,7 @@ Log likelihood   = -4.932554663                   BIC             =  -.6790504
 .
 
 Parm: z = -.4765367129145571
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9280447  
 Iteration 1:  Log likelihood = -4.9280447  
@@ -3375,7 +3394,7 @@ Log likelihood   = -4.928044665                   BIC             =  -.6880704
 .
 
 Parm: z = -.4621211598927405
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9257884  
 Iteration 1:  Log likelihood = -4.9257884  
@@ -3402,7 +3421,7 @@ Log likelihood   = -4.925788425                   BIC             =  -.6925829
 .
 
 Parm: z = -.4477056068709239
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9257885  
 Iteration 1:  Log likelihood = -4.9257885  
@@ -3429,7 +3448,7 @@ Log likelihood   =  -4.92578853                   BIC             =  -.6925827
 .
 
 Parm: z = -.4332900538491073
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9280475  
 Iteration 1:  Log likelihood = -4.9280475  
@@ -3456,7 +3475,7 @@ Log likelihood   =  -4.92804747                   BIC             =  -.6880648
 .
 
 Parm: z = -.4188745008272907
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9325677  
 Iteration 1:  Log likelihood = -4.9325677  
@@ -3483,7 +3502,7 @@ Log likelihood   = -4.932567676                   BIC             =  -.6790244
 .
 
 Parm: z = -.4044589478054741
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9393516  
 Iteration 1:  Log likelihood = -4.9393515  
@@ -3510,7 +3529,7 @@ Log likelihood   = -4.939351488                   BIC             =  -.6654568
 .
 
 Parm: z = -.3900433947836575
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9484016  
 Iteration 1:  Log likelihood = -4.9484012  
@@ -3537,7 +3556,7 @@ Log likelihood   = -4.948401153                   BIC             =  -.6473574
 .
 
 Parm: z = -.3756278417618409
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9597199  
 Iteration 1:  Log likelihood = -4.9597189  
@@ -3565,7 +3584,7 @@ Log likelihood   = -4.959718896                   BIC             =  -.6247219
 .
 
 Parm: z = -.3612122887400243
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9733089  
 Iteration 1:  Log likelihood = -4.9733068  
@@ -3593,7 +3612,7 @@ Log likelihood   = -4.973306812                   BIC             =  -.5975461
 .
 
 Parm: z = -.3467967357182077
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -4.9891709  
 Iteration 1:  Log likelihood = -4.9891669  
@@ -3621,7 +3640,7 @@ Log likelihood   = -4.989166935                   BIC             =  -.5658259
 .
 
 Parm: z = -.3323811826963911
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.0073079  
 Iteration 1:  Log likelihood = -5.0073012  
@@ -3649,7 +3668,7 @@ Log likelihood   = -5.007301181                   BIC             =  -.5295574
 .
 
 Parm: z = -.3179656296745745
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.0277223  
 Iteration 1:  Log likelihood = -5.0277115  
@@ -3677,7 +3696,7 @@ Log likelihood   = -5.027711501                   BIC             =  -.4887367
 .
 
 Parm: z = -.3035500766527579
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.0504162  
 Iteration 1:  Log likelihood = -5.0503997  
@@ -3705,7 +3724,7 @@ Log likelihood   = -5.050399659                   BIC             =  -.4433604
 .
 
 Parm: z = -.2891345236309413
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.0753917  
 Iteration 1:  Log likelihood = -5.0753673  
@@ -3733,7 +3752,7 @@ Log likelihood   = -5.075367321                   BIC             =  -.3934251
 .
 
 Parm: z = -.2747189706091246
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.1026508  
 Iteration 1:  Log likelihood = -5.1026162  
@@ -3761,7 +3780,7 @@ Log likelihood   = -5.102616232                   BIC             =  -.3389273
 .
 
 Parm: z = -.2603034175873081
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.1321957  
 Iteration 1:  Log likelihood = -5.1321479  
@@ -3789,7 +3808,7 @@ Log likelihood   = -5.132147906                   BIC             =  -.2798639
 .
 
 Parm: z = -.2458878645654915
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.1640283  
 Iteration 1:  Log likelihood = -5.1639638  
@@ -3817,7 +3836,7 @@ Log likelihood   = -5.163963791                   BIC             =  -.2162322
 .
 
 Parm: z = -.2314723115436749
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.1981505  
 Iteration 1:  Log likelihood = -5.1980653  
@@ -3845,7 +3864,7 @@ Log likelihood   = -5.198065321                   BIC             =  -.1480291
 .
 
 Parm: z = -.2170567585218584
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.2345643  
 Iteration 1:  Log likelihood = -5.2344539  
@@ -3873,7 +3892,7 @@ Log likelihood   = -5.234453861                   BIC             =   -.075252
 .
 
 Parm: z = -.2026412055000417
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.2732717  
 Iteration 1:  Log likelihood = -5.2731306  
@@ -3901,7 +3920,7 @@ Log likelihood   =  -5.27313058                   BIC             =   .0021014
 .
 
 Parm: z = -.1882256524782251
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.3142743  
 Iteration 1:  Log likelihood = -5.3140967  
@@ -3929,7 +3948,7 @@ Log likelihood   = -5.314096682                   BIC             =   .0840336
 .
 
 Parm: z = -.1738100994564085
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.3575742  
 Iteration 1:  Log likelihood = -5.3573533  
@@ -3957,7 +3976,7 @@ Log likelihood   = -5.357353298                   BIC             =   .1705469
 .
 
 Parm: z = -.1593945464345918
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.4031729  
 Iteration 1:  Log likelihood = -5.4029013  
@@ -3985,7 +4004,7 @@ Log likelihood   = -5.402901346                   BIC             =    .261643
 .
 
 Parm: z = -.1449789934127752
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.4510723  
 Iteration 1:  Log likelihood = -5.4507418  
@@ -4013,7 +4032,7 @@ Log likelihood   = -5.450741796                   BIC             =   .3573239
 .
 
 Parm: z = -.1305634403909588
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.5012741  
 Iteration 1:  Log likelihood = -5.5008755  
@@ -4041,7 +4060,7 @@ Log likelihood   = -5.500875549                   BIC             =   .4575914
 .
 
 Parm: z = -.1161478873691422
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.5537799  
 Iteration 1:  Log likelihood = -5.5533033  
@@ -4069,7 +4088,7 @@ Log likelihood   = -5.553303268                   BIC             =   .5624468
 .
 
 Parm: z = -.1017323343473255
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.6085913  
 Iteration 1:  Log likelihood = -5.6080257  
@@ -4097,7 +4116,7 @@ Log likelihood   = -5.608025718                   BIC             =   .6718917
 .
 
 Parm: z = -.0873167813255089
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood =   -5.66571  
 Iteration 1:  Log likelihood = -5.6650435  
@@ -4125,7 +4144,7 @@ Log likelihood   = -5.665043482                   BIC             =   .7859272
 .
 
 Parm: z = -.0729012283036923
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.7251374  
 Iteration 1:  Log likelihood = -5.7243571  
@@ -4153,7 +4172,7 @@ Log likelihood   = -5.724357085                   BIC             =   .9045544
 .
 
 Parm: z = -.0584856752818756
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.7868751  
 Iteration 1:  Log likelihood =  -5.785967  
@@ -4181,7 +4200,7 @@ Log likelihood   = -5.785966957                   BIC             =   1.027774
 .
 
 Parm: z = -.044070122260059
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.8509245  
 Iteration 1:  Log likelihood = -5.8498735  
@@ -4209,7 +4228,7 @@ Log likelihood   = -5.849873496                   BIC             =   1.155587
 .
 
 Parm: z = -.0296545692382424
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood =  -5.917287  
 Iteration 1:  Log likelihood =  -5.916077  
@@ -4237,7 +4256,7 @@ Log likelihood   = -5.916076956                   BIC             =   1.287994
 .
 
 Parm: z = -.015239016216426
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -5.9859641  
 Iteration 1:  Log likelihood = -5.9845776  
@@ -4265,7 +4284,7 @@ Log likelihood   = -5.984577571                   BIC             =   1.424995
 .
 
 Parm: z = -.0008234631946094
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood =  -6.056957  
 Iteration 1:  Log likelihood = -6.0553755  
@@ -4293,7 +4312,7 @@ Log likelihood   =  -6.05537545                   BIC             =   1.566591
 .
 
 Parm: z = .0135920898272073
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood =  -6.130267  
 Iteration 1:  Log likelihood = -6.1284706  
@@ -4321,7 +4340,7 @@ Log likelihood   =  -6.12847064                   BIC             =   1.712782
 .
 
 Parm: z = .0280076428490239
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.2058955  
 Iteration 1:  Log likelihood = -6.2038631  
@@ -4349,7 +4368,7 @@ Log likelihood   = -6.203863113                   BIC             =   1.863566
 .
 
 Parm: z = .0424231958708405
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.2838437  
 Iteration 1:  Log likelihood = -6.2815527  
@@ -4377,7 +4396,7 @@ Log likelihood   = -6.281552741                   BIC             =   2.018946
 .
 
 Parm: z = .0568387488926572
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.3641126  
 Iteration 1:  Log likelihood = -6.3615393  
@@ -4405,7 +4424,7 @@ Log likelihood   = -6.361539324                   BIC             =   2.178919
 .
 
 Parm: z = .0712543019144738
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.4467035  
 Iteration 1:  Log likelihood = -6.4438226  
@@ -4433,7 +4452,7 @@ Log likelihood   = -6.443822637                   BIC             =   2.343486
 .
 
 Parm: z = .0856698549362902
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.5316173  
 Iteration 1:  Log likelihood = -6.5284022  
@@ -4461,7 +4480,7 @@ Log likelihood   = -6.528402217                   BIC             =   2.512645
 .
 
 Parm: z = .1000854079581068
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.6188553  
 Iteration 1:  Log likelihood = -6.6152777  
@@ -4489,7 +4508,7 @@ Log likelihood   = -6.615277734                   BIC             =   2.686396
 .
 
 Parm: z = .1145009609799235
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.7084184  
 Iteration 1:  Log likelihood = -6.7044486  
@@ -4517,7 +4536,7 @@ Log likelihood   = -6.704448627                   BIC             =   2.864738
 .
 
 Parm: z = .1289165140017401
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.8003076  
 Iteration 1:  Log likelihood = -6.7959143  
@@ -4545,7 +4564,7 @@ Log likelihood   =   -6.7959143                   BIC             =   3.047669
 .
 
 Parm: z = .1433320670235567
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.8945236  
 Iteration 1:  Log likelihood = -6.8896741  
@@ -4573,7 +4592,7 @@ Log likelihood   = -6.889674025                   BIC             =   3.235188
 .
 
 Parm: z = .1577476200453733
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -6.9910677  
 Iteration 1:  Log likelihood = -6.9857272  
@@ -4601,7 +4620,7 @@ Log likelihood   = -6.985727192                   BIC             =   3.427295
 .
 
 Parm: z = .17216317306719
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.0899403  
 Iteration 1:  Log likelihood = -7.0840728  
@@ -4629,7 +4648,7 @@ Log likelihood   = -7.084072763                   BIC             =   3.623986
 .
 
 Parm: z = .1865787260890066
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.1911425  
 Iteration 1:  Log likelihood =   -7.18471  
@@ -4657,7 +4676,7 @@ Log likelihood   =  -7.18470992                   BIC             =    3.82526
 .
 
 Parm: z = .200994279110823
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood =  -7.294675  
 Iteration 1:  Log likelihood = -7.2876378  
@@ -4685,7 +4704,7 @@ Log likelihood   = -7.287637773                   BIC             =   4.031116
 .
 
 Parm: z = .2154098321326396
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.4005383  
 Iteration 1:  Log likelihood = -7.3928551  
@@ -4713,7 +4732,7 @@ Log likelihood   =  -7.39285503                   BIC             =    4.24155
 .
 
 Parm: z = .2298253851544563
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.5087334  
 Iteration 1:  Log likelihood = -7.5003608  
@@ -4741,7 +4760,7 @@ Log likelihood   = -7.500360754                   BIC             =   4.456562
 .
 
 Parm: z = .2442409381762729
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.6192606  
 Iteration 1:  Log likelihood = -7.6101536  
@@ -4769,7 +4788,7 @@ Log likelihood   = -7.610153484                   BIC             =   4.676147
 .
 
 Parm: z = .2586564911980895
-Command is: glm d   , family(binomial n) offset(__000004)
+Command is: glm d , family(binomial n) offset(__000004)    
 
 Iteration 0:  Log likelihood = -7.7321208  
 Iteration 1:  Log likelihood = -7.7222323  
@@ -4886,8 +4905,8 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . 
 . * profile the constant: two ways
 . pllf, trace n_eval(10) debug profile(_cons): poisson events group, exposure(pyears)
-Debug: coefficient is _cons
-Finding MLE using: poisson events group , exposure(pyears)
+Debug: parameter is _cons
+Finding MLE using: poisson events group , exposure(pyears) 
 
 Iteration 0:  Log likelihood = -5.1354684  
 Iteration 1:  Log likelihood = -5.1354681  
@@ -4908,7 +4927,7 @@ Log likelihood = -5.1354681                            Pseudo R2     = -0.0000
 Profiling: using offset
 
 Parm: _cons = -2.04226897740474
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -33.806113  
 Iteration 1:  Log likelihood = -7.6538377  
@@ -4931,7 +4950,7 @@ _cons=-2.042269   PLL=-7.5807054
 
 
 Parm: _cons = -1.95748280598834
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -32.880123  
 Iteration 1:  Log likelihood = -6.7278477  
@@ -4953,7 +4972,7 @@ _cons=-1.9574828  PLL=-6.6547154
 
 
 Parm: _cons = -1.872696634571941
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -32.157283  
 Iteration 1:  Log likelihood = -6.0050075  
@@ -4975,7 +4994,7 @@ _cons=-1.8726966  PLL=-5.9318752
 
 
 Parm: _cons = -1.787910463155542
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -31.655568  
 Iteration 1:  Log likelihood = -5.5032926  
@@ -4997,7 +5016,7 @@ _cons=-1.7879105  PLL=-5.4301603
 
 
 Parm: _cons = -1.703124291739142
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -31.394545  
 Iteration 1:  Log likelihood = -5.2422691  
@@ -5019,7 +5038,7 @@ _cons=-1.7031243  PLL=-5.1691369
 
 
 Parm: _cons = -1.618338120322743
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood =  -31.39551  
 Iteration 1:  Log likelihood = -5.2432345  
@@ -5041,7 +5060,7 @@ _cons=-1.6183381  PLL=-5.1701022
 
 
 Parm: _cons = -1.533551948906344
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -31.681646  
 Iteration 1:  Log likelihood = -5.5293706  
@@ -5063,7 +5082,7 @@ _cons=-1.5335519  PLL=-5.4562384
 
 
 Parm: _cons = -1.448765777489945
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -32.278186  
 Iteration 1:  Log likelihood = -6.1259106  
@@ -5085,7 +5104,7 @@ _cons=-1.4487658  PLL=-6.0527784
 
 
 Parm: _cons = -1.363979606073545
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -33.212596  
 Iteration 1:  Log likelihood = -7.0603204  
@@ -5107,7 +5126,7 @@ _cons=-1.3639796  PLL=-6.9871881
 
 
 Parm: _cons = -1.279193434657146
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -34.514772  
 Iteration 1:  Log likelihood =  -8.362496  
@@ -5142,8 +5161,8 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . gen one=1
 
 . pllf, trace n_eval(10) debug profile(one): poisson events group one, exposure(pyears) nocons
-Debug: coefficient is one
-Finding MLE using: poisson events group one , noconstant exposure(pyears)
+Debug: parameter is one
+Finding MLE using: poisson events group one , noconstant exposure(pyears) 
 
 Iteration 0:  Log likelihood = -84.716151  
 Iteration 1:  Log likelihood = -5.2554669  
@@ -5166,7 +5185,7 @@ Log likelihood = -5.1354681                             Prob > chi2   = 0.0000
 Profiling: using offset
 
 Parm: one = -2.042268978345897
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -33.806113  
 Iteration 1:  Log likelihood = -7.6538377  
@@ -5189,7 +5208,7 @@ one=-2.042269   PLL=-7.5807054
 
 
 Parm: one = -1.957482806895991
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -32.880123  
 Iteration 1:  Log likelihood = -6.7278477  
@@ -5211,7 +5230,7 @@ one=-1.9574828  PLL=-6.6547154
 
 
 Parm: one = -1.872696635446085
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -32.157283  
 Iteration 1:  Log likelihood = -6.0050075  
@@ -5233,7 +5252,7 @@ one=-1.8726966  PLL=-5.9318752
 
 
 Parm: one = -1.787910463996179
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -31.655568  
 Iteration 1:  Log likelihood = -5.5032926  
@@ -5255,7 +5274,7 @@ one=-1.7879105  PLL=-5.4301603
 
 
 Parm: one = -1.703124292546274
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -31.394545  
 Iteration 1:  Log likelihood = -5.2422691  
@@ -5277,7 +5296,7 @@ one=-1.7031243  PLL=-5.1691369
 
 
 Parm: one = -1.618338121096368
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood =  -31.39551  
 Iteration 1:  Log likelihood = -5.2432345  
@@ -5299,7 +5318,7 @@ one=-1.6183381  PLL=-5.1701022
 
 
 Parm: one = -1.533551949646462
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -31.681646  
 Iteration 1:  Log likelihood = -5.5293706  
@@ -5321,7 +5340,7 @@ one=-1.5335519  PLL=-5.4562384
 
 
 Parm: one = -1.448765778196556
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -32.278186  
 Iteration 1:  Log likelihood = -6.1259106  
@@ -5343,7 +5362,7 @@ one=-1.4487658  PLL=-6.0527784
 
 
 Parm: one = -1.36397960674665
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -33.212596  
 Iteration 1:  Log likelihood = -7.0603204  
@@ -5365,7 +5384,7 @@ one=-1.3639796  PLL=-6.9871881
 
 
 Parm: one = -1.279193435296744
-Command is: poisson events group   ,  offset(__000005) noconstant
+Command is: poisson events group , offset(__000005) noconstant   
 
 Iteration 0:  Log likelihood = -34.514772  
 Iteration 1:  Log likelihood =  -8.362496  
@@ -5406,7 +5425,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 (NI trial of MRI vs CT after testicular cancer. Margin: RD = +0.057. Joffe 2022.)
 
 . pllf, norm verbose profile(modality): binreg outcome modality [fw=n], rd
-Finding MLE using: binreg outcome modality [fweight= n], rd  
+Finding MLE using: binreg outcome modality [fweight= n], rd   
 
 Iteration 1:  Deviance =  100.0224
 Iteration 2:  Deviance =  100.0224
@@ -5526,5 +5545,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- closed on:   3 Dec 2025, 09:08:18
+ closed on:   3 Dec 2025, 18:17:03
 ----------------------------------------------------------------------------------------------------

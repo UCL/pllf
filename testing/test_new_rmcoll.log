@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_new_rmcoll.log
   log type:  text
- opened on:   3 Dec 2025, 09:12:13
+ opened on:   3 Dec 2025, 17:55:11
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.8 PR 04mar2023 / IW 24nov2025
+*! v1.3.9 PR 04mar2023 / IW 03dec2025
 
 . /*
 > Test for new removing collinearity code
@@ -68,8 +68,8 @@ Collinearity found in xvarlist:  Z Z
 note: Z omitted because of collinearity.
 Collinearity found in xvarlist:  Z Z
 dropcollinear option --> reduced xvarlist: Z
-Debug: coefficient is Z
-Finding MLE using: logit Y Z [fweight= n],   
+Debug: parameter is Z
+Finding MLE using: logit Y Z [fweight= n],    
 
 Iteration 0:  Log likelihood = -18.638374  
 Iteration 1:  Log likelihood =  -17.86376  
@@ -92,7 +92,7 @@ Log likelihood = -17.805953                             Pseudo R2     = 0.0447
 Profiling: using offset
 
 Parm: Z = -4.018089255117957
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.062109  
 Iteration 1:  Log likelihood = -19.497564  
@@ -113,7 +113,7 @@ Log likelihood = -19.437988                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.963829414410759
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.013404  
 Iteration 1:  Log likelihood = -19.448406  
@@ -134,7 +134,7 @@ Log likelihood = -19.388629                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.909569573703561
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.964852  
 Iteration 1:  Log likelihood =  -19.39949  
@@ -155,7 +155,7 @@ Log likelihood = -19.339535                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.855309732996363
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.916458  
 Iteration 1:  Log likelihood = -19.350829  
@@ -176,7 +176,7 @@ Log likelihood = -19.290723                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.801049892289166
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.868233  
 Iteration 1:  Log likelihood = -19.302436  
@@ -197,7 +197,7 @@ Log likelihood = -19.242207                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.746790051581968
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.820184  
 Iteration 1:  Log likelihood = -19.254325  
@@ -218,7 +218,7 @@ Log likelihood = -19.194002                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.69253021087477
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.772321  
 Iteration 1:  Log likelihood = -19.206511  
@@ -239,7 +239,7 @@ Log likelihood = -19.146124                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.638270370167572
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.724654  
 Iteration 1:  Log likelihood = -19.159009  
@@ -260,7 +260,7 @@ Log likelihood = -19.098591                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.584010529460374
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.677193  
 Iteration 1:  Log likelihood = -19.111836  
@@ -281,7 +281,7 @@ Log likelihood = -19.051421                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.529750688753177
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.629948  
 Iteration 1:  Log likelihood = -19.065008  
@@ -302,7 +302,7 @@ Log likelihood = -19.004633                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.475490848045979
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.582932  
 Iteration 1:  Log likelihood = -19.018543  
@@ -323,7 +323,7 @@ Log likelihood = -18.958246                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.421231007338781
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.536156  
 Iteration 1:  Log likelihood = -18.972461  
@@ -344,7 +344,7 @@ Log likelihood = -18.912281                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.366971166631583
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.489634  
 Iteration 1:  Log likelihood = -18.926781  
@@ -365,7 +365,7 @@ Log likelihood = -18.86676                                  Prob > chi2   =  .
 .
 
 Parm: Z = -3.312711325924385
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.443377  
 Iteration 1:  Log likelihood = -18.881523  
@@ -386,7 +386,7 @@ Log likelihood = -18.821706                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.258451485217188
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.397402  
 Iteration 1:  Log likelihood =  -18.83671  
@@ -407,7 +407,7 @@ Log likelihood = -18.777142                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.20419164450999
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.351721  
 Iteration 1:  Log likelihood = -18.792364  
@@ -428,7 +428,7 @@ Log likelihood = -18.733093                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.149931803802792
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.306352  
 Iteration 1:  Log likelihood =  -18.74851  
@@ -449,7 +449,7 @@ Log likelihood = -18.689585                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.095671963095594
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.261311  
 Iteration 1:  Log likelihood = -18.705173  
@@ -470,7 +470,7 @@ Log likelihood = -18.646646                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.041412122388397
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.216614  
 Iteration 1:  Log likelihood = -18.662378  
@@ -491,7 +491,7 @@ Log likelihood = -18.604304                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.987152281681198
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.172281  
 Iteration 1:  Log likelihood = -18.620155  
@@ -512,7 +512,7 @@ Log likelihood = -18.562588                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.932892440974001
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -19.12833  
 Iteration 1:  Log likelihood = -18.578532  
@@ -533,7 +533,7 @@ Log likelihood = -18.521528                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.878632600266803
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.084783  
 Iteration 1:  Log likelihood = -18.537539  
@@ -554,7 +554,7 @@ Log likelihood = -18.481159                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.824372759559605
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -19.04166  
 Iteration 1:  Log likelihood = -18.497209  
@@ -575,7 +575,7 @@ Log likelihood = -18.441512                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.770112918852408
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.998984  
 Iteration 1:  Log likelihood = -18.457575  
@@ -596,7 +596,7 @@ Log likelihood = -18.402622                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.715853078145209
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.956778  
 Iteration 1:  Log likelihood = -18.418672  
@@ -617,7 +617,7 @@ Log likelihood = -18.364527                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.661593237438012
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.915069  
 Iteration 1:  Log likelihood = -18.380537  
@@ -638,7 +638,7 @@ Log likelihood = -18.327263                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.607333396730814
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.873881  
 Iteration 1:  Log likelihood = -18.343208  
@@ -659,7 +659,7 @@ Log likelihood = -18.29087                                  Prob > chi2   =  .
 .
 
 Parm: Z = -2.553073556023616
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.833244  
 Iteration 1:  Log likelihood = -18.306725  
@@ -680,7 +680,7 @@ Log likelihood = -18.255388                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.498813715316419
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.793186  
 Iteration 1:  Log likelihood = -18.271129  
@@ -701,7 +701,7 @@ Log likelihood = -18.22086                                  Prob > chi2   =  .
 .
 
 Parm: Z = -2.444553874609221
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.753738  
 Iteration 1:  Log likelihood = -18.236465  
@@ -722,7 +722,7 @@ Log likelihood = -18.187328                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.390294033902023
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.714933  
 Iteration 1:  Log likelihood = -18.202779  
@@ -743,7 +743,7 @@ Log likelihood = -18.154839                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.336034193194825
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.676805  
 Iteration 1:  Log likelihood = -18.170117  
@@ -764,7 +764,7 @@ Log likelihood = -18.123439                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.281774352487627
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.639389  
 Iteration 1:  Log likelihood = -18.138529  
@@ -785,7 +785,7 @@ Log likelihood = -18.093175                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.22751451178043
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.602723  
 Iteration 1:  Log likelihood = -18.108066  
@@ -806,7 +806,7 @@ Log likelihood = -18.064098                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.173254671073232
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.566848  
 Iteration 1:  Log likelihood = -18.078782  
@@ -827,7 +827,7 @@ Log likelihood = -18.036259                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.118994830366034
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.531806  
 Iteration 1:  Log likelihood = -18.050732  
@@ -848,7 +848,7 @@ Log likelihood = -18.00971                                  Prob > chi2   =  .
 .
 
 Parm: Z = -2.064734989658836
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.49764  
 Iteration 1:  Log likelihood = -18.023973  
@@ -869,7 +869,7 @@ Log likelihood = -17.984506                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.010475148951638
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.464397  
 Iteration 1:  Log likelihood = -17.998565  
@@ -890,7 +890,7 @@ Log likelihood = -17.960703                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.95621530824444
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.432126  
 Iteration 1:  Log likelihood =  -17.97457  
@@ -911,7 +911,7 @@ Log likelihood = -17.938356                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.901955467537243
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.400879  
 Iteration 1:  Log likelihood = -17.952049  
@@ -932,7 +932,7 @@ Log likelihood = -17.917525                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.847695626830045
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.370709  
 Iteration 1:  Log likelihood =  -17.93107  
@@ -953,7 +953,7 @@ Log likelihood = -17.89827                                  Prob > chi2   =  .
 .
 
 Parm: Z = -1.793435786122847
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.341674  
 Iteration 1:  Log likelihood = -17.911699  
@@ -974,7 +974,7 @@ Log likelihood = -17.88065                                  Prob > chi2   =  .
 .
 
 Parm: Z = -1.739175945415649
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.313833  
 Iteration 1:  Log likelihood = -17.894004  
@@ -995,7 +995,7 @@ Log likelihood = -17.864728                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.684916104708452
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.28725  
 Iteration 1:  Log likelihood = -17.878056  
@@ -1016,7 +1016,7 @@ Log likelihood = -17.850568                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.630656264001254
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.26199  
 Iteration 1:  Log likelihood = -17.863928  
@@ -1037,7 +1037,7 @@ Log likelihood = -17.838233                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.576396423294056
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.238124  
 Iteration 1:  Log likelihood = -17.851691  
@@ -1058,7 +1058,7 @@ Log likelihood = -17.827788                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.522136582586858
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.215725  
 Iteration 1:  Log likelihood = -17.841421  
@@ -1079,7 +1079,7 @@ Log likelihood = -17.819299                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.46787674187966
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.194869  
 Iteration 1:  Log likelihood = -17.833194  
@@ -1100,7 +1100,7 @@ Log likelihood = -17.812833                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.413616901172463
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.175638  
 Iteration 1:  Log likelihood = -17.827084  
@@ -1121,7 +1121,7 @@ Log likelihood = -17.808455                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.359357060465265
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.158116  
 Iteration 1:  Log likelihood = -17.823169  
@@ -1142,7 +1142,7 @@ Log likelihood = -17.806234                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.305097219758067
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.142394  
 Iteration 1:  Log likelihood = -17.821525  
@@ -1163,7 +1163,7 @@ Log likelihood = -17.806237                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.250837379050869
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.128564  
 Iteration 1:  Log likelihood = -17.822229  
@@ -1184,7 +1184,7 @@ Log likelihood = -17.808531                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.196577538343671
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.116725  
 Iteration 1:  Log likelihood = -17.825357  
@@ -1205,7 +1205,7 @@ Log likelihood = -17.813184                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.142317697636474
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.106981  
 Iteration 1:  Log likelihood = -17.830984  
@@ -1226,7 +1226,7 @@ Log likelihood = -17.820263                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.088057856929276
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.09944  
 Iteration 1:  Log likelihood = -17.839185  
@@ -1247,7 +1247,7 @@ Log likelihood = -17.829834                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.033798016222078
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.094216  
 Iteration 1:  Log likelihood = -17.850033  
@@ -1268,7 +1268,7 @@ Log likelihood = -17.841964                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.9795381755148802
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.091429  
 Iteration 1:  Log likelihood = -17.863597  
@@ -1289,7 +1289,7 @@ Log likelihood = -17.856717                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.9252783348076825
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.091204  
 Iteration 1:  Log likelihood = -17.879948  
@@ -1310,7 +1310,7 @@ Log likelihood = -17.874157                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.8710184941004844
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.093673  
 Iteration 1:  Log likelihood =  -17.89915  
@@ -1330,7 +1330,7 @@ Log likelihood = -17.894348                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.8167586533932867
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.098972  
 Iteration 1:  Log likelihood = -17.921267  
@@ -1350,7 +1350,7 @@ Log likelihood = -17.91735                                  Prob > chi2   =  .
 .
 
 Parm: Z = -.762498812686089
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.107248  
 Iteration 1:  Log likelihood =  -17.94636  
@@ -1370,7 +1370,7 @@ Log likelihood = -17.943223                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.7082389719788913
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.118651  
 Iteration 1:  Log likelihood = -17.974483  
@@ -1390,7 +1390,7 @@ Log likelihood = -17.972025                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.6539791312716932
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.133339  
 Iteration 1:  Log likelihood = -18.005691  
@@ -1410,7 +1410,7 @@ Log likelihood = -18.003811                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.5997192905644955
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.151478  
 Iteration 1:  Log likelihood = -18.040032  
@@ -1430,7 +1430,7 @@ Log likelihood = -18.038635                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.5454594498572978
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.173242  
 Iteration 1:  Log likelihood =  -18.07755  
@@ -1450,7 +1450,7 @@ Log likelihood = -18.076547                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.4911996091501001
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.198813  
 Iteration 1:  Log likelihood = -18.118287  
@@ -1470,7 +1470,7 @@ Log likelihood = -18.117595                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.4369397684429024
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.228381  
 Iteration 1:  Log likelihood = -18.162279  
@@ -1490,7 +1490,7 @@ Log likelihood = -18.161825                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.3826799277357043
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.262143  
 Iteration 1:  Log likelihood = -18.209558  
@@ -1510,7 +1510,7 @@ Log likelihood = -18.209279                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.3284200870285066
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.300308  
 Iteration 1:  Log likelihood = -18.260153  
@@ -1530,7 +1530,7 @@ Log likelihood = -18.259995                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.2741602463213089
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.343091  
 Iteration 1:  Log likelihood =  -18.31409  
@@ -1550,7 +1550,7 @@ Log likelihood = -18.31401                                  Prob > chi2   =  .
 .
 
 Parm: Z = -.2199004056141112
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.390719  
 Iteration 1:  Log likelihood = -18.371389  
@@ -1570,7 +1570,7 @@ Log likelihood = -18.371354                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.165640564906913
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.443427  
 Iteration 1:  Log likelihood = -18.432068  
@@ -1590,7 +1590,7 @@ Log likelihood = -18.432057                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.1113807241997153
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.501462  
 Iteration 1:  Log likelihood = -18.496145  
@@ -1610,7 +1610,7 @@ Log likelihood = -18.496142                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.0571208834925176
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.565078  
 Iteration 1:  Log likelihood = -18.563631  
@@ -1629,7 +1629,7 @@ Log likelihood = -18.563631                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.0028610427853195
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.634544  
 Iteration 1:  Log likelihood =  -18.63454  
@@ -1648,7 +1648,7 @@ Log likelihood = -18.63454                                  Prob > chi2   =  .
 .
 
 Parm: Z = .0513987979218777
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.710135  
 Iteration 1:  Log likelihood = -18.708881  
@@ -1667,7 +1667,7 @@ Log likelihood = -18.708881                                 Prob > chi2   =  .
 .
 
 Parm: Z = .1056586386290759
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.79214  
 Iteration 1:  Log likelihood = -18.786666  
@@ -1687,7 +1687,7 @@ Log likelihood = -18.786663                                 Prob > chi2   =  .
 .
 
 Parm: Z = .159918479336274
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.88086  
 Iteration 1:  Log likelihood = -18.867903  
@@ -1707,7 +1707,7 @@ Log likelihood = -18.867891                                 Prob > chi2   =  .
 .
 
 Parm: Z = .2141783200434713
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.976604  
 Iteration 1:  Log likelihood = -18.952605  
@@ -1727,7 +1727,7 @@ Log likelihood = -18.952564                                 Prob > chi2   =  .
 .
 
 Parm: Z = .2684381607506694
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.079697  
 Iteration 1:  Log likelihood = -19.040783  
@@ -1747,7 +1747,7 @@ Log likelihood = -19.040679                                 Prob > chi2   =  .
 .
 
 Parm: Z = .3226980014578666
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.190471  
 Iteration 1:  Log likelihood = -19.132387  
@@ -1767,7 +1767,7 @@ Log likelihood = -19.132226                                 Prob > chi2   =  .
 .
 
 Parm: Z = .3769578421650648
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.309275  
 Iteration 1:  Log likelihood =  -19.22733  
@@ -1787,7 +1787,7 @@ Log likelihood = -19.227195                                 Prob > chi2   =  .
 .
 
 Parm: Z = .4312176828722629
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.436466  
 Iteration 1:  Log likelihood = -19.325661  
@@ -1807,7 +1807,7 @@ Log likelihood = -19.325569                                 Prob > chi2   =  .
 .
 
 Parm: Z = .4854775235794602
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.572415  
 Iteration 1:  Log likelihood = -19.427369  
@@ -1827,7 +1827,7 @@ Log likelihood = -19.427326                                 Prob > chi2   =  .
 .
 
 Parm: Z = .5397373642866583
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.717504  
 Iteration 1:  Log likelihood = -19.532451  
@@ -1847,7 +1847,7 @@ Log likelihood = -19.532444                                 Prob > chi2   =  .
 .
 
 Parm: Z = .5939972049938556
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.872127  
 Iteration 1:  Log likelihood = -19.640901  
@@ -1867,7 +1867,7 @@ Log likelihood = -19.640894                                 Prob > chi2   =  .
 .
 
 Parm: Z = .6482570457010537
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.036693  
 Iteration 1:  Log likelihood = -19.752722  
@@ -1887,7 +1887,7 @@ Log likelihood = -19.752645                                 Prob > chi2   =  .
 .
 
 Parm: Z = .7025168864082518
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.211618  
 Iteration 1:  Log likelihood = -19.867916  
@@ -1907,7 +1907,7 @@ Log likelihood = -19.867661                                 Prob > chi2   =  .
 .
 
 Parm: Z = .7567767271154491
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.397332  
 Iteration 1:  Log likelihood =  -19.98649  
@@ -1927,7 +1927,7 @@ Log likelihood = -19.985903                                 Prob > chi2   =  .
 .
 
 Parm: Z = .8110365678226472
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.594276  
 Iteration 1:  Log likelihood = -20.108454  
@@ -1947,7 +1947,7 @@ Log likelihood = -20.107331                                 Prob > chi2   =  .
 .
 
 Parm: Z = .8652964085298454
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.802903  
 Iteration 1:  Log likelihood = -20.233821  
@@ -1967,7 +1967,7 @@ Log likelihood = -20.231898                                 Prob > chi2   =  .
 .
 
 Parm: Z = .9195562492370426
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -21.023675  
 Iteration 1:  Log likelihood = -20.362605  
@@ -1987,7 +1987,7 @@ Log likelihood = -20.359557                                 Prob > chi2   =  .
 .
 
 Parm: Z = .9738160899442407
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -21.257065  
 Iteration 1:  Log likelihood = -20.494823  
@@ -2007,7 +2007,7 @@ Log likelihood = -20.490257                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.028075930651438
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -21.503555  
 Iteration 1:  Log likelihood = -20.630492  
@@ -2028,7 +2028,7 @@ Log likelihood = -20.623946                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.082335771358636
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -21.763635  
 Iteration 1:  Log likelihood = -20.768331  
@@ -2049,7 +2049,7 @@ Log likelihood = -20.760569                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.136595612065834
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -22.037805  
 Iteration 1:  Log likelihood =  -20.90682  
@@ -2070,7 +2070,7 @@ Log likelihood = -20.900066                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.190855452773032
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -22.326571  
 Iteration 1:  Log likelihood = -21.048071  
@@ -2091,7 +2091,7 @@ Log likelihood = -21.04238                                  Prob > chi2   =  .
 .
 
 Parm: Z = 1.24511529348023
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -22.630444  
 Iteration 1:  Log likelihood = -21.192062  
@@ -2111,7 +2111,7 @@ Log likelihood = -21.187449                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.299375134187427
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -22.949944  
 Iteration 1:  Log likelihood = -21.338774  
@@ -2131,7 +2131,7 @@ Log likelihood = -21.335211                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.353634974894625
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -23.285591  
 Iteration 1:  Log likelihood = -21.488183  
@@ -2190,8 +2190,8 @@ Profile variable Z not found in varlist
 note: Z2 omitted because of collinearity.
 Collinearity found in xvarlist:  Z Z2
 dropcollinear option --> reduced xvarlist: Z
-Debug: coefficient is Z
-Finding MLE using: logit Y Z [fweight= n],   
+Debug: parameter is Z
+Finding MLE using: logit Y Z [fweight= n],    
 
 Iteration 0:  Log likelihood = -18.638374  
 Iteration 1:  Log likelihood =  -17.86376  
@@ -2214,7 +2214,7 @@ Log likelihood = -17.805953                             Pseudo R2     = 0.0447
 Profiling: using offset
 
 Parm: Z = -4.018089255117957
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.062109  
 Iteration 1:  Log likelihood = -19.497564  
@@ -2235,7 +2235,7 @@ Log likelihood = -19.437988                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.963829414410759
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.013404  
 Iteration 1:  Log likelihood = -19.448406  
@@ -2256,7 +2256,7 @@ Log likelihood = -19.388629                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.909569573703561
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.964852  
 Iteration 1:  Log likelihood =  -19.39949  
@@ -2277,7 +2277,7 @@ Log likelihood = -19.339535                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.855309732996363
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.916458  
 Iteration 1:  Log likelihood = -19.350829  
@@ -2298,7 +2298,7 @@ Log likelihood = -19.290723                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.801049892289166
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.868233  
 Iteration 1:  Log likelihood = -19.302436  
@@ -2319,7 +2319,7 @@ Log likelihood = -19.242207                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.746790051581968
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.820184  
 Iteration 1:  Log likelihood = -19.254325  
@@ -2340,7 +2340,7 @@ Log likelihood = -19.194002                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.69253021087477
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.772321  
 Iteration 1:  Log likelihood = -19.206511  
@@ -2361,7 +2361,7 @@ Log likelihood = -19.146124                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.638270370167572
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.724654  
 Iteration 1:  Log likelihood = -19.159009  
@@ -2382,7 +2382,7 @@ Log likelihood = -19.098591                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.584010529460374
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.677193  
 Iteration 1:  Log likelihood = -19.111836  
@@ -2403,7 +2403,7 @@ Log likelihood = -19.051421                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.529750688753177
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.629948  
 Iteration 1:  Log likelihood = -19.065008  
@@ -2424,7 +2424,7 @@ Log likelihood = -19.004633                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.475490848045979
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.582932  
 Iteration 1:  Log likelihood = -19.018543  
@@ -2445,7 +2445,7 @@ Log likelihood = -18.958246                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.421231007338781
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.536156  
 Iteration 1:  Log likelihood = -18.972461  
@@ -2466,7 +2466,7 @@ Log likelihood = -18.912281                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.366971166631583
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.489634  
 Iteration 1:  Log likelihood = -18.926781  
@@ -2487,7 +2487,7 @@ Log likelihood = -18.86676                                  Prob > chi2   =  .
 .
 
 Parm: Z = -3.312711325924385
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.443377  
 Iteration 1:  Log likelihood = -18.881523  
@@ -2508,7 +2508,7 @@ Log likelihood = -18.821706                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.258451485217188
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.397402  
 Iteration 1:  Log likelihood =  -18.83671  
@@ -2529,7 +2529,7 @@ Log likelihood = -18.777142                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.20419164450999
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.351721  
 Iteration 1:  Log likelihood = -18.792364  
@@ -2550,7 +2550,7 @@ Log likelihood = -18.733093                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.149931803802792
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.306352  
 Iteration 1:  Log likelihood =  -18.74851  
@@ -2571,7 +2571,7 @@ Log likelihood = -18.689585                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.095671963095594
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.261311  
 Iteration 1:  Log likelihood = -18.705173  
@@ -2592,7 +2592,7 @@ Log likelihood = -18.646646                                 Prob > chi2   =  .
 .
 
 Parm: Z = -3.041412122388397
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.216614  
 Iteration 1:  Log likelihood = -18.662378  
@@ -2613,7 +2613,7 @@ Log likelihood = -18.604304                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.987152281681198
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.172281  
 Iteration 1:  Log likelihood = -18.620155  
@@ -2634,7 +2634,7 @@ Log likelihood = -18.562588                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.932892440974001
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -19.12833  
 Iteration 1:  Log likelihood = -18.578532  
@@ -2655,7 +2655,7 @@ Log likelihood = -18.521528                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.878632600266803
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.084783  
 Iteration 1:  Log likelihood = -18.537539  
@@ -2676,7 +2676,7 @@ Log likelihood = -18.481159                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.824372759559605
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -19.04166  
 Iteration 1:  Log likelihood = -18.497209  
@@ -2697,7 +2697,7 @@ Log likelihood = -18.441512                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.770112918852408
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.998984  
 Iteration 1:  Log likelihood = -18.457575  
@@ -2718,7 +2718,7 @@ Log likelihood = -18.402622                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.715853078145209
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.956778  
 Iteration 1:  Log likelihood = -18.418672  
@@ -2739,7 +2739,7 @@ Log likelihood = -18.364527                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.661593237438012
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.915069  
 Iteration 1:  Log likelihood = -18.380537  
@@ -2760,7 +2760,7 @@ Log likelihood = -18.327263                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.607333396730814
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.873881  
 Iteration 1:  Log likelihood = -18.343208  
@@ -2781,7 +2781,7 @@ Log likelihood = -18.29087                                  Prob > chi2   =  .
 .
 
 Parm: Z = -2.553073556023616
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.833244  
 Iteration 1:  Log likelihood = -18.306725  
@@ -2802,7 +2802,7 @@ Log likelihood = -18.255388                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.498813715316419
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.793186  
 Iteration 1:  Log likelihood = -18.271129  
@@ -2823,7 +2823,7 @@ Log likelihood = -18.22086                                  Prob > chi2   =  .
 .
 
 Parm: Z = -2.444553874609221
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.753738  
 Iteration 1:  Log likelihood = -18.236465  
@@ -2844,7 +2844,7 @@ Log likelihood = -18.187328                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.390294033902023
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.714933  
 Iteration 1:  Log likelihood = -18.202779  
@@ -2865,7 +2865,7 @@ Log likelihood = -18.154839                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.336034193194825
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.676805  
 Iteration 1:  Log likelihood = -18.170117  
@@ -2886,7 +2886,7 @@ Log likelihood = -18.123439                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.281774352487627
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.639389  
 Iteration 1:  Log likelihood = -18.138529  
@@ -2907,7 +2907,7 @@ Log likelihood = -18.093175                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.22751451178043
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.602723  
 Iteration 1:  Log likelihood = -18.108066  
@@ -2928,7 +2928,7 @@ Log likelihood = -18.064098                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.173254671073232
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.566848  
 Iteration 1:  Log likelihood = -18.078782  
@@ -2949,7 +2949,7 @@ Log likelihood = -18.036259                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.118994830366034
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.531806  
 Iteration 1:  Log likelihood = -18.050732  
@@ -2970,7 +2970,7 @@ Log likelihood = -18.00971                                  Prob > chi2   =  .
 .
 
 Parm: Z = -2.064734989658836
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.49764  
 Iteration 1:  Log likelihood = -18.023973  
@@ -2991,7 +2991,7 @@ Log likelihood = -17.984506                                 Prob > chi2   =  .
 .
 
 Parm: Z = -2.010475148951638
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.464397  
 Iteration 1:  Log likelihood = -17.998565  
@@ -3012,7 +3012,7 @@ Log likelihood = -17.960703                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.95621530824444
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.432126  
 Iteration 1:  Log likelihood =  -17.97457  
@@ -3033,7 +3033,7 @@ Log likelihood = -17.938356                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.901955467537243
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.400879  
 Iteration 1:  Log likelihood = -17.952049  
@@ -3054,7 +3054,7 @@ Log likelihood = -17.917525                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.847695626830045
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.370709  
 Iteration 1:  Log likelihood =  -17.93107  
@@ -3075,7 +3075,7 @@ Log likelihood = -17.89827                                  Prob > chi2   =  .
 .
 
 Parm: Z = -1.793435786122847
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.341674  
 Iteration 1:  Log likelihood = -17.911699  
@@ -3096,7 +3096,7 @@ Log likelihood = -17.88065                                  Prob > chi2   =  .
 .
 
 Parm: Z = -1.739175945415649
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.313833  
 Iteration 1:  Log likelihood = -17.894004  
@@ -3117,7 +3117,7 @@ Log likelihood = -17.864728                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.684916104708452
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.28725  
 Iteration 1:  Log likelihood = -17.878056  
@@ -3138,7 +3138,7 @@ Log likelihood = -17.850568                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.630656264001254
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.26199  
 Iteration 1:  Log likelihood = -17.863928  
@@ -3159,7 +3159,7 @@ Log likelihood = -17.838233                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.576396423294056
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.238124  
 Iteration 1:  Log likelihood = -17.851691  
@@ -3180,7 +3180,7 @@ Log likelihood = -17.827788                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.522136582586858
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.215725  
 Iteration 1:  Log likelihood = -17.841421  
@@ -3201,7 +3201,7 @@ Log likelihood = -17.819299                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.46787674187966
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.194869  
 Iteration 1:  Log likelihood = -17.833194  
@@ -3222,7 +3222,7 @@ Log likelihood = -17.812833                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.413616901172463
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.175638  
 Iteration 1:  Log likelihood = -17.827084  
@@ -3243,7 +3243,7 @@ Log likelihood = -17.808455                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.359357060465265
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.158116  
 Iteration 1:  Log likelihood = -17.823169  
@@ -3264,7 +3264,7 @@ Log likelihood = -17.806234                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.305097219758067
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.142394  
 Iteration 1:  Log likelihood = -17.821525  
@@ -3285,7 +3285,7 @@ Log likelihood = -17.806237                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.250837379050869
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.128564  
 Iteration 1:  Log likelihood = -17.822229  
@@ -3306,7 +3306,7 @@ Log likelihood = -17.808531                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.196577538343671
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.116725  
 Iteration 1:  Log likelihood = -17.825357  
@@ -3327,7 +3327,7 @@ Log likelihood = -17.813184                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.142317697636474
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.106981  
 Iteration 1:  Log likelihood = -17.830984  
@@ -3348,7 +3348,7 @@ Log likelihood = -17.820263                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.088057856929276
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.09944  
 Iteration 1:  Log likelihood = -17.839185  
@@ -3369,7 +3369,7 @@ Log likelihood = -17.829834                                 Prob > chi2   =  .
 .
 
 Parm: Z = -1.033798016222078
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.094216  
 Iteration 1:  Log likelihood = -17.850033  
@@ -3390,7 +3390,7 @@ Log likelihood = -17.841964                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.9795381755148802
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.091429  
 Iteration 1:  Log likelihood = -17.863597  
@@ -3411,7 +3411,7 @@ Log likelihood = -17.856717                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.9252783348076825
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.091204  
 Iteration 1:  Log likelihood = -17.879948  
@@ -3432,7 +3432,7 @@ Log likelihood = -17.874157                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.8710184941004844
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.093673  
 Iteration 1:  Log likelihood =  -17.89915  
@@ -3452,7 +3452,7 @@ Log likelihood = -17.894348                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.8167586533932867
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.098972  
 Iteration 1:  Log likelihood = -17.921267  
@@ -3472,7 +3472,7 @@ Log likelihood = -17.91735                                  Prob > chi2   =  .
 .
 
 Parm: Z = -.762498812686089
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.107248  
 Iteration 1:  Log likelihood =  -17.94636  
@@ -3492,7 +3492,7 @@ Log likelihood = -17.943223                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.7082389719788913
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.118651  
 Iteration 1:  Log likelihood = -17.974483  
@@ -3512,7 +3512,7 @@ Log likelihood = -17.972025                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.6539791312716932
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.133339  
 Iteration 1:  Log likelihood = -18.005691  
@@ -3532,7 +3532,7 @@ Log likelihood = -18.003811                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.5997192905644955
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.151478  
 Iteration 1:  Log likelihood = -18.040032  
@@ -3552,7 +3552,7 @@ Log likelihood = -18.038635                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.5454594498572978
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.173242  
 Iteration 1:  Log likelihood =  -18.07755  
@@ -3572,7 +3572,7 @@ Log likelihood = -18.076547                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.4911996091501001
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.198813  
 Iteration 1:  Log likelihood = -18.118287  
@@ -3592,7 +3592,7 @@ Log likelihood = -18.117595                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.4369397684429024
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.228381  
 Iteration 1:  Log likelihood = -18.162279  
@@ -3612,7 +3612,7 @@ Log likelihood = -18.161825                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.3826799277357043
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.262143  
 Iteration 1:  Log likelihood = -18.209558  
@@ -3632,7 +3632,7 @@ Log likelihood = -18.209279                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.3284200870285066
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.300308  
 Iteration 1:  Log likelihood = -18.260153  
@@ -3652,7 +3652,7 @@ Log likelihood = -18.259995                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.2741602463213089
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.343091  
 Iteration 1:  Log likelihood =  -18.31409  
@@ -3672,7 +3672,7 @@ Log likelihood = -18.31401                                  Prob > chi2   =  .
 .
 
 Parm: Z = -.2199004056141112
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.390719  
 Iteration 1:  Log likelihood = -18.371389  
@@ -3692,7 +3692,7 @@ Log likelihood = -18.371354                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.165640564906913
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.443427  
 Iteration 1:  Log likelihood = -18.432068  
@@ -3712,7 +3712,7 @@ Log likelihood = -18.432057                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.1113807241997153
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.501462  
 Iteration 1:  Log likelihood = -18.496145  
@@ -3732,7 +3732,7 @@ Log likelihood = -18.496142                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.0571208834925176
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.565078  
 Iteration 1:  Log likelihood = -18.563631  
@@ -3751,7 +3751,7 @@ Log likelihood = -18.563631                                 Prob > chi2   =  .
 .
 
 Parm: Z = -.0028610427853195
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.634544  
 Iteration 1:  Log likelihood =  -18.63454  
@@ -3770,7 +3770,7 @@ Log likelihood = -18.63454                                  Prob > chi2   =  .
 .
 
 Parm: Z = .0513987979218777
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.710135  
 Iteration 1:  Log likelihood = -18.708881  
@@ -3789,7 +3789,7 @@ Log likelihood = -18.708881                                 Prob > chi2   =  .
 .
 
 Parm: Z = .1056586386290759
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.79214  
 Iteration 1:  Log likelihood = -18.786666  
@@ -3809,7 +3809,7 @@ Log likelihood = -18.786663                                 Prob > chi2   =  .
 .
 
 Parm: Z = .159918479336274
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood =  -18.88086  
 Iteration 1:  Log likelihood = -18.867903  
@@ -3829,7 +3829,7 @@ Log likelihood = -18.867891                                 Prob > chi2   =  .
 .
 
 Parm: Z = .2141783200434713
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -18.976604  
 Iteration 1:  Log likelihood = -18.952605  
@@ -3849,7 +3849,7 @@ Log likelihood = -18.952564                                 Prob > chi2   =  .
 .
 
 Parm: Z = .2684381607506694
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.079697  
 Iteration 1:  Log likelihood = -19.040783  
@@ -3869,7 +3869,7 @@ Log likelihood = -19.040679                                 Prob > chi2   =  .
 .
 
 Parm: Z = .3226980014578666
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.190471  
 Iteration 1:  Log likelihood = -19.132387  
@@ -3889,7 +3889,7 @@ Log likelihood = -19.132226                                 Prob > chi2   =  .
 .
 
 Parm: Z = .3769578421650648
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.309275  
 Iteration 1:  Log likelihood =  -19.22733  
@@ -3909,7 +3909,7 @@ Log likelihood = -19.227195                                 Prob > chi2   =  .
 .
 
 Parm: Z = .4312176828722629
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.436466  
 Iteration 1:  Log likelihood = -19.325661  
@@ -3929,7 +3929,7 @@ Log likelihood = -19.325569                                 Prob > chi2   =  .
 .
 
 Parm: Z = .4854775235794602
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.572415  
 Iteration 1:  Log likelihood = -19.427369  
@@ -3949,7 +3949,7 @@ Log likelihood = -19.427326                                 Prob > chi2   =  .
 .
 
 Parm: Z = .5397373642866583
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.717504  
 Iteration 1:  Log likelihood = -19.532451  
@@ -3969,7 +3969,7 @@ Log likelihood = -19.532444                                 Prob > chi2   =  .
 .
 
 Parm: Z = .5939972049938556
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -19.872127  
 Iteration 1:  Log likelihood = -19.640901  
@@ -3989,7 +3989,7 @@ Log likelihood = -19.640894                                 Prob > chi2   =  .
 .
 
 Parm: Z = .6482570457010537
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.036693  
 Iteration 1:  Log likelihood = -19.752722  
@@ -4009,7 +4009,7 @@ Log likelihood = -19.752645                                 Prob > chi2   =  .
 .
 
 Parm: Z = .7025168864082518
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.211618  
 Iteration 1:  Log likelihood = -19.867916  
@@ -4029,7 +4029,7 @@ Log likelihood = -19.867661                                 Prob > chi2   =  .
 .
 
 Parm: Z = .7567767271154491
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.397332  
 Iteration 1:  Log likelihood =  -19.98649  
@@ -4049,7 +4049,7 @@ Log likelihood = -19.985903                                 Prob > chi2   =  .
 .
 
 Parm: Z = .8110365678226472
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.594276  
 Iteration 1:  Log likelihood = -20.108454  
@@ -4069,7 +4069,7 @@ Log likelihood = -20.107331                                 Prob > chi2   =  .
 .
 
 Parm: Z = .8652964085298454
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -20.802903  
 Iteration 1:  Log likelihood = -20.233821  
@@ -4089,7 +4089,7 @@ Log likelihood = -20.231898                                 Prob > chi2   =  .
 .
 
 Parm: Z = .9195562492370426
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -21.023675  
 Iteration 1:  Log likelihood = -20.362605  
@@ -4109,7 +4109,7 @@ Log likelihood = -20.359557                                 Prob > chi2   =  .
 .
 
 Parm: Z = .9738160899442407
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -21.257065  
 Iteration 1:  Log likelihood = -20.494823  
@@ -4129,7 +4129,7 @@ Log likelihood = -20.490257                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.028075930651438
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -21.503555  
 Iteration 1:  Log likelihood = -20.630492  
@@ -4150,7 +4150,7 @@ Log likelihood = -20.623946                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.082335771358636
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -21.763635  
 Iteration 1:  Log likelihood = -20.768331  
@@ -4171,7 +4171,7 @@ Log likelihood = -20.760569                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.136595612065834
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -22.037805  
 Iteration 1:  Log likelihood =  -20.90682  
@@ -4192,7 +4192,7 @@ Log likelihood = -20.900066                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.190855452773032
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -22.326571  
 Iteration 1:  Log likelihood = -21.048071  
@@ -4213,7 +4213,7 @@ Log likelihood = -21.04238                                  Prob > chi2   =  .
 .
 
 Parm: Z = 1.24511529348023
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -22.630444  
 Iteration 1:  Log likelihood = -21.192062  
@@ -4233,7 +4233,7 @@ Log likelihood = -21.187449                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.299375134187427
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -22.949944  
 Iteration 1:  Log likelihood = -21.338774  
@@ -4253,7 +4253,7 @@ Log likelihood = -21.335211                                 Prob > chi2   =  .
 .
 
 Parm: Z = 1.353634974894625
-Command is: logit Y   [fweight= n],  offset(__000004)
+Command is: logit Y [fweight= n], offset(__000004)    
 
 Iteration 0:  Log likelihood = -23.285591  
 Iteration 1:  Log likelihood = -21.488183  
@@ -4290,5 +4290,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_new_rmcoll.log
   log type:  text
- closed on:   3 Dec 2025, 09:12:23
+ closed on:   3 Dec 2025, 17:55:22
 ----------------------------------------------------------------------------------------------------

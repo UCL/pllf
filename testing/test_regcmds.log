@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_regcmds.log
   log type:  text
- opened on:   3 Dec 2025, 09:08:18
+ opened on:   3 Dec 2025, 18:05:09
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.8 PR 04mar2023 / IW 24nov2025
+*! v1.3.9 PR 04mar2023 / IW 03dec2025
 
 . /*
 > test_regcmds.do
@@ -16,7 +16,7 @@ c:\ian\git\pllf\pllf.ado
 . 
 . /* clogit */
 . 
-. webuse lowbirth2
+. webuse lowbirth2, clear
 (Applied Logistic Regression, Hosmer & Lemeshow)
 
 . clogit low lwt smoke ptd ht ui i.race, group(pairid)
@@ -421,7 +421,7 @@ lnalpha      |
 
 . xi: pllf, verbose profile(age_mos): gnbreg deaths age_mos, lnalpha(i.cohort) offset(logexp)
 i.cohort          _Icohort_1-3        (naturally coded; _Icohort_1 omitted)
-Finding MLE using: gnbreg deaths age_mos , lnalpha(_Icohort_*) offset(logexp)
+Finding MLE using: gnbreg deaths age_mos , lnalpha(_Icohort_*) offset(logexp) 
 
 Fitting constant-only model:
 
@@ -741,7 +741,7 @@ Log likelihood = -668.91043                       Prob > chi2     =     0.0036
           _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
 -------------+----------------------------------------------------------------
 s0           |
-       _cons |   1.802873   .1635112    11.03   0.000     1.482396    2.123349
+       _cons |   1.802873   .1635112    11.03   0.000     1.482397    2.123349
 -------------+----------------------------------------------------------------
 s1           |
        _cons |   .4834827   .1341058     3.61   0.000     .2206402    .7463252
@@ -812,83 +812,48 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . webuse nlswork, clear
 (National Longitudinal Survey of Young Women, 14-24 years old in 1968)
 
-. mixed ln_w grade age c.age#c.age ttl_exp tenure c.tenure#c.tenure || id:
-
-Performing EM optimization ...
-
-Performing gradient-based optimization: 
-Iteration 0:  Log likelihood = -9148.9073  
-Iteration 1:  Log likelihood = -9148.9073  
-
-Computing standard errors ...
-
-Mixed-effects ML regression                         Number of obs    =  28,099
-Group variable: idcode                              Number of groups =   4,697
-                                                    Obs per group:
-                                                                 min =       1
-                                                                 avg =     6.0
-                                                                 max =      15
-                                                    Wald chi2(6)     = 8367.29
-Log likelihood = -9148.9073                         Prob > chi2      =  0.0000
-
------------------------------------------------------------------------------------
-          ln_wage | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
-------------------+----------------------------------------------------------------
-            grade |   .0707903   .0017957    39.42   0.000     .0672709    .0743098
-              age |   .0318439   .0027201    11.71   0.000     .0265125    .0371752
-                  |
-      c.age#c.age |  -.0006513    .000045   -14.48   0.000    -.0007394   -.0005632
-                  |
-          ttl_exp |   .0352285   .0011382    30.95   0.000     .0329977    .0374593
-           tenure |   .0371336   .0015715    23.63   0.000     .0340536    .0402136
-                  |
-c.tenure#c.tenure |  -.0018382   .0001013   -18.15   0.000    -.0020367   -.0016397
-                  |
-            _cons |   .1472124   .0447252     3.29   0.001     .0595528    .2348721
------------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
-  Random-effects parameters  |   Estimate   Std. err.     [95% conf. interval]
------------------------------+------------------------------------------------
-idcode: Identity             |
-                  var(_cons) |   .0715802   .0019392      .0678786    .0754836
------------------------------+------------------------------------------------
-               var(Residual) |   .0853937     .00079      .0838593    .0869561
-------------------------------------------------------------------------------
-LR test vs. linear model: chibar2(01) = 8802.19       Prob >= chibar2 = 0.0000
-
+. * mixed ln_w grade age c.age#c.age ttl_exp tenure c.tenure#c.tenure || id:
 . gen agesq=age^2
 (24 missing values generated)
 
 . gen tenuresq=tenure^2
 (433 missing values generated)
 
-. /*
-> pllf, profile(grade): mixed ln_w grade age agesq ttl_exp tenure tenuresq || id:
-> */
-. * fails:
-. cap noi pllf, normcoll profile(grade): meglm ln_w grade age agesq ttl_exp tenure tenuresq || id:
-Profiling:pllf error: syntax error when fixing parameter value using:
-meglm ln_w age agesq ttl_exp tenure tenuresq || id:   ,  offset(__000004)
+. * small n because this is quite slow
+. pllf, n(11) profile(grade): meglm ln_w grade age agesq ttl_exp tenure tenuresq || id:
+Profiling:...........
 
-. * succeeds:
-. pllf, normcoll profile([ln_w]grade): meglm ln_w grade age agesq ttl_exp tenure tenuresq || id:
-Profiling:..........................................................................................
-> ..........
+
+-------------------------------------------------------------
+     ln_wage |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+       grade |  .0707903    .0017894     .0672827     .074297
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. local pse = r(pse)
+
+. pllf, n(11) profile([ln_w]grade): meglm ln_w grade age agesq ttl_exp tenure tenuresq || id:
+Profiling:...........
 
 
 -------------------------------------------------------------
      ln_wage |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
 [ln_wage]    |
-       grade |  .0707903     .001796     .0672698    .0743099
+       grade |  .0707903    .0017894     .0672827     .074297
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+
+. di `pse', r(pse)
+.0017894 .0017894
+
+. assert reldif(`pse', r(pse)) < 1E-7
 
 . 
 end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_regcmds.log
   log type:  text
- closed on:   3 Dec 2025, 09:12:13
+ closed on:   3 Dec 2025, 18:07:23
 ----------------------------------------------------------------------------------------------------

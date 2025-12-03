@@ -50,6 +50,7 @@ Code structure:
 program define pllf, rclass sortpreserve	
 version 11.0
 
+
 // SEPARATE PLLF/PREFIX PART FROM STATA COMMAND
 
 mata: _parse_colon("hascolon", "statacmd")
@@ -58,6 +59,7 @@ if !`hascolon' {
 	di as error "    pllf<, options>: <regcmd>"
 	exit 198
 }
+
 
 // PARSE PLLF OPTIONS FROM FIRST ARGUMENT
 
@@ -114,9 +116,10 @@ if !missing("`normal2'") {
 	local normalopts `normal2' 
 }
 
-*** END OF PARSING PLLF OPTIONS
+// END OF PARSING PLLF OPTIONS
 
-*** PARSE REGRESSION COMMAND
+
+// PARSE REGRESSION COMMAND
 
 gettoken cmd statacmd: statacmd
 
@@ -129,15 +132,22 @@ if substr("`cmd'", -1, .) == "," {
 	Currently supported commands are listed in help file and tested in test_regcmds.do
 */
 
-else if ("`cmd'"=="fit") | ("`cmd'"=="reg") | (substr("`cmd'",1,4)=="regr") local cmd regress
-if "`cmd'"=="reg3" {
+if ("`cmd'"=="fit") | ("`cmd'"=="reg") | (substr("`cmd'",1,4)=="regr") local cmd regress
+else if "`cmd'"=="reg3" {
 	di as error "Sorry, reg3 is not supported"
 	exit 498
 }
-if "`cmd'"=="mixed" {
+else if "`cmd'"=="mixed" {
 	di as error "Sorry, mixed is not supported. Try meglm with the same syntax"
 	exit 498
 }
+
+/* 3/12/2025
+NOW SPLIT STATACMD AT "||" INTO STATACMD AND STATACMDRE 
+SHOULD WE PARSE ON VARLIST NOW?
+OR STICK WITH ANYTHING BUT ISSUE A WARNING IF NOT VARLIST?
+COULD ALLOW FVVARLIST? NOT WITH UNAB
+*/
 
 local 0 `statacmd'
 syntax [anything] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) exposure(varname) NOCONStant *]
@@ -200,9 +210,10 @@ if missing("`rmcoll'") & !missing("`anything'") { // -normcoll- not specified
 }
 else local varlist `anything' // may include punctuation
 
-*** END OF PARSING REGRESSION COMMAND
+// END OF PARSING REGRESSION COMMAND
 
-*** MIXED PARSING
+
+// MIXED PARSING
 
 if "`formula'"!="" {
 	if "`profile'"!="" {
@@ -269,9 +280,11 @@ else {
 	exit 198
 }
 
-*** END OF MIXED PARSING
+// END OF MIXED PARSING
 
-*** START OF CODE FOR LINEAR PROFILING - PROFILE() OPTION
+
+// START OF CODE FOR LINEAR PROFILING - PROFILE() OPTION
+
 if "`profile'" != "" { // ------------ begin linear profiling --------
 	// Fit model and get level% ci. Program terminates if invalid cmd attempted.
 	if "`cmd'"=="stpm" local eq [xb]
@@ -586,8 +599,11 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 }
 cap constraint drop `cuse'
 
-*** END OF CODE FOR LINEAR PROFILING
-*** START OF CODE FOR NON-LINEAR PROFILING - FORMULA() OPTION
+// END OF CODE FOR LINEAR PROFILING
+
+
+// START OF CODE FOR NON-LINEAR PROFILING - FORMULA() OPTION
+
 else {	// --------------- begin non-linear profiling ---------------
 	tempvar xx
 	qui gen `xx' = .
@@ -798,9 +814,10 @@ if r(sd)==0 noi di as error "formula gives SD=0 for parm=`A'"
 	}
 	local use_deviance 0
 }
-*** END OF CODE FOR NON-LINEAR PROFILING
+// END OF CODE FOR NON-LINEAR PROFILING
 
-*** FINAL CODE COMMON TO BOTH PROFILE AND FORMULA
+
+// FINAL CODE COMMON TO BOTH PROFILE AND FORMULA
 
 if !missing("`list'") l `X' `Y' if !missing(`X')
 
@@ -922,7 +939,8 @@ di as txt "{hline 13}{c BT}{hline 47}"
 di as txt "Note: Std. Err. is pseudo standard error, derived from PLL CI"
 if !mi("`star'") di as txt "* defining log likelihood = -0.5*e(deviance)"
 
-*** RETURN RESULTS
+
+// RETURN RESULTS
 
 // MLE of beta
 return scalar b = `b0'
@@ -955,7 +973,7 @@ ereturn clear
 
 end
 
-
+// END OF MAIN PROGRAM PLLF
 
 
 program define parsat, rclass
@@ -982,8 +1000,6 @@ if r(sd)==0 { // replace with first (numerical) derivative
 
 return local result `result'
 end
-
-
 
 
 program define CheckCollin, sclass

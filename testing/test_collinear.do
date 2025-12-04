@@ -1,6 +1,6 @@
 /*
 Test that the code handles collinearity
-test_new_rmcoll.do
+test_collinear.do
 IW 23jul2025
 */
 

@@ -1,5 +1,5 @@
 {smcl}
-{* 24nov2025}{...}
+{* 4dec2025}{...}
 {viewerjumpto "Description" "pllf##description"}{...}
 {viewerjumpto "Options" "pllf##options"}{...}
 {viewerjumpto "Remarks" "pllf##remarks"}{...}
@@ -35,7 +35,7 @@ which is given by a formula involving observed variable(s) and one unknown param
 {synoptline}
 {syntab :{it:Syntax 1}}
 {synopt :{opt pro:file(xvarname)}}PLL is required for the coefficient of variable {it:xvarname}, or{p_end}
-{synopt :{opt pro:file([eqname]paramname)}}PLL is required for parameter
+{synopt :{opt pro:file}{cmd:(}[{cmd:[}{it:eqname}{cmd:]}]{it:paramname})}}PLL is required for parameter
 {it:paramname} or {opt [}{it:eqname}{opt ]}{it:paramname}{p_end}
 
 {syntab :{it:Syntax 2}}
@@ -92,10 +92,9 @@ by maximum likelihood may be used. This includes
 {help streg},
 {help stpm},
 {help stpm2}, and probably others.
-However, {help mixed} may not be used (this is because neither offset nor constraint is allowed,
-even though the help file says constraint is allowed). {help meglm} can be used 
-as an alternative in syntax 1, provided the [eqname] is specified.
-
+{help mixed} may not be used, but {help meglm} can be used 
+as an alternative in syntax 1, provided {opt [}{it:eqname}{opt ]} is specified.
+({help mixed} fails because it supports neither offset nor constraint).
 
 {pstd}
 All weight types supported by {it:regression_cmd} are allowed; see help
@@ -113,7 +112,7 @@ the likelihood function exists.
 
 {pstd}
 Plentiful general material on the PLLF is available on the Internet.
-This article was inspired by {help pllf##VenzonMoolgavkar1988:Venzon and Moolgavkar (1988)}.
+This work was inspired by {help pllf##VenzonMoolgavkar1988:Venzon and Moolgavkar (1988)}.
 
 {pstd}
 {opt pllf} has two basic syntaxes, depending on which of the options
@@ -335,13 +334,22 @@ but not {cmd:e(ll)}.
 
 {pstd}
 In syntax 2, there may be a particular parameter value that yields 
-a non-varying covariate. For example, with {cmd:formula(x^@)}, 
+a covariate that is collinear with the other covariates. For example, 
+with {cmd:formula(x^@)}, 
 the value @=0 yields a covariate 
-whose value is 1 for all observations. {cmd:pllf} detects this case 
+whose value is 1 for all observations. If variable x
+is also in the model, then 
+the value @=1 yields a covariate 
+which is collinear (in fact identical to) 
+the variable x.
+{cmd:pllf} detects both these cases
 and replaces the formula, for this parameter value only, 
 with its first derivative with respect to the 
-parameter. In the example, this is like using {cmd:ln(x)} 
-(see {help fracpoly}). 
+parameter. If collinearity remains then the second derivative 
+is taken. In the rare event that collinearity still remains,
+the likelihood
+for that value will be wrong, though higher order derivatives 
+could in principle be used.
 
 
 {title:Limitations}{marker limitations}

@@ -94,9 +94,7 @@ by maximum likelihood may be used. This includes
 {help stpm2}, and probably others.
 However, {help mixed} may not be used (this is because neither offset nor constraint is allowed,
 even though the help file says constraint is allowed). {help meglm} can be used 
-as an alternative in syntax 1, provided the [eqname] is specified: 
-at present the normcoll option is also required. 
-[*** WHAT ABOUT SYNTAX 2 AND FIXING RMCOLL?]
+as an alternative in syntax 1, provided the [eqname] is specified.
 
 
 {pstd}

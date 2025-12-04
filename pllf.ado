@@ -202,7 +202,8 @@ if "`offset'"!="" {
 
 if "`weight'" != "" local wt [`weight'`exp']
 
-if missing("`rmcoll'") & !missing("`varlist'") { // -normcoll- not specified 
+* Check for collinearity
+if missing("`rmcoll'") & !missing("`varlist'") { 
 	unab varlist : `varlist'
 	* detect collinearity in xvars
 	if inlist("`cmd'", "streg", "stcox", "stpm", "stpm2") {

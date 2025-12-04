@@ -2,7 +2,7 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- opened on:   3 Dec 2025, 18:15:57
+ opened on:   4 Dec 2025, 17:06:47
 version 19.5
 c:\ian\git\pllf\pllf.ado
 *! v1.3.9 PR 04mar2023 / IW 03dec2025
@@ -98,7 +98,7 @@ s0           |
        _cons |   1.817123   .1132867    16.04   0.000     1.595085    2.039161
 -------------+----------------------------------------------------------------
 s1           |
-       _cons |   .3962196   .0698136     5.68   0.000     .2593875    .5330517
+       _cons |   .3962196   .0698136     5.68   0.000     .2593874    .5330517
 -------------+----------------------------------------------------------------
 xb           |
           x1 |   .0013215   .0060384     0.22   0.827    -.0105135    .0131566
@@ -129,7 +129,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 . confirm var betavar pllvar _pllnorm
 
 . mac l _b1
-_b1:            .0013215433224128
+_b1:            .0013215433224139
 
 . di r(b)
 .00132154
@@ -5545,5 +5545,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- closed on:   3 Dec 2025, 18:17:03
+ closed on:   4 Dec 2025, 17:08:16
 ----------------------------------------------------------------------------------------------------

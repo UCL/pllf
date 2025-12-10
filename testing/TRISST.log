@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\TRISST.log
   log type:  text
- opened on:   4 Dec 2025, 17:11:13
+ opened on:  10 Dec 2025, 16:36:39
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.9 PR 04mar2023 / IW 03dec2025
+*! v1.3.10 PR 04mar2023 / IW 10dec2025
 
 . /*
 > various ways to analyse TRISST
@@ -81,8 +81,7 @@ Miettinen-Nurminen   -0.041         0.001
 . 
 . * binreg succeeds:
 . pllf, list profile(modality): binreg outcome modality [fw=n], rd
-note: valid log likelihood not returned in e(ll);
-if available, trying e(deviance) instead
+Note: using e(deviance)
 Profiling:..........................................................................................
 > ..........
 
@@ -218,6 +217,7 @@ Profiling:......................................................................
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 * defining log likelihood = -0.5*e(deviance)
+Graph command stored as F9
 
 . 
 . * glm fails for parm<=-0.03 ...
@@ -359,6 +359,7 @@ Profiling:???????????????????????...............................................
     modality | -.0178926    .0075418    -.0296871   -.0001239
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . pllf, list profile([outcome]modality): glm outcome modality [fw=n], family(binomial) link(identity
 > ) iter(50)
@@ -498,12 +499,12 @@ Profiling:???????????????????????...............................................
     modality | -.0178926    .0075418    -.0296871   -.0001239
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . * ... unless you use irls ...
 . pllf, list profile(modality): glm outcome modality [fw=n], family(binomial) link(identity) irls
-note: valid log likelihood not returned in e(ll);
-if available, trying e(deviance) instead
+Note: using e(deviance)
 Profiling:..........................................................................................
 > ..........
 
@@ -639,6 +640,7 @@ Profiling:......................................................................
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 * defining log likelihood = -0.5*e(deviance)
+Graph command stored as F9
 
 . 
 . * ... or set starting values
@@ -778,11 +780,12 @@ Profiling:......................................................................
     modality | -.0178926    .0099405    -.0390899   -.0001239
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\TRISST.log
   log type:  text
- closed on:   4 Dec 2025, 17:12:32
+ closed on:  10 Dec 2025, 16:38:05
 ----------------------------------------------------------------------------------------------------

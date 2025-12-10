@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- opened on:   4 Dec 2025, 17:06:47
+ opened on:  10 Dec 2025, 16:32:15
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.9 PR 04mar2023 / IW 03dec2025
+*! v1.3.10 PR 04mar2023 / IW 10dec2025
 
 . /*
 > Main test file for pllf
@@ -14,6 +14,7 @@ c:\ian\git\pllf\pllf.ado
 > Revised for the colon command 28may2025
 > Added tests of normal() and collinearity handling 1aug2025
 > Update for renaming shownormal to normal, 1sep2025
+> Test all graph options, 10dec2025
 > */
 . 
 . * from help file
@@ -69,6 +70,7 @@ profile lo~d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
          x5e | -1.994528    .2259832    -2.435385   -1.549547
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . assert `b5' == r(b)
 
@@ -98,7 +100,7 @@ s0           |
        _cons |   1.817123   .1132867    16.04   0.000     1.595085    2.039161
 -------------+----------------------------------------------------------------
 s1           |
-       _cons |   .3962196   .0698136     5.68   0.000     .2593874    .5330517
+       _cons |   .3962196   .0698136     5.68   0.000     .2593875    .5330517
 -------------+----------------------------------------------------------------
 xb           |
           x1 |   .0013215   .0060384     0.22   0.827    -.0105135    .0131566
@@ -106,7 +108,7 @@ xb           |
          x5e |   -1.99701   .2254953    -8.86   0.000    -2.438973   -1.555048
           x6 |  -.0022624     .00054    -4.19   0.000    -.0033207    -.001204
       hormon |  -.3800499   .1280752    -2.97   0.003    -.6310726   -.1290271
-       _cons |  -12.74299   .8991566   -14.17   0.000    -14.50531   -10.98068
+       _cons |  -12.74299   .8991565   -14.17   0.000    -14.50531   -10.98068
 ------------------------------------------------------------------------------
 Deviance =  1225.124 (686 observations.)
 
@@ -125,11 +127,12 @@ profile lo~d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
           x1 |  .0013215    .0060392    -.0105103     .013163
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . confirm var betavar pllvar _pllnorm
 
 . mac l _b1
-_b1:            .0013215433224139
+_b1:            .0013215433224163
 
 . di r(b)
 .00132154
@@ -155,6 +158,7 @@ Profiling:....................
          x5e | -1.839526    .2212442    -2.270781    -1.40352
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . local ulci = r(l_ulci)
 
@@ -169,6 +173,7 @@ Profiling:....................
          x5e | -1.839526    .2212442    -2.270781   -1.403519
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . assert reldif(`ulci', r(l_ulci))<1E-7
 
@@ -195,6 +200,7 @@ Profiling:....................
          x5e | -1.839526    .2212442    -2.270781    -1.40352
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . assert reldif(`ulci', r(l_ulci))<1E-7
 
@@ -210,6 +216,7 @@ Profiling:..................................................
        _cons |  .3416282    .0483097     .2448839    .4342542
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . pllf, profile([ln_p]x4b) deviance difference n_eval(20): streg x1 x4a x5e x6 hormon, distribution(
@@ -224,6 +231,7 @@ Profiling:....................
          x4b |  .0108322    .0134789    -.0162806    .0365557
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . 
@@ -238,6 +246,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
  Parameter @ |  .1369005    .0471161     .0694188    .2541106
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . local pllf_ll = r(ll)
 
@@ -292,6 +301,7 @@ Log likelihood = -1724.4945                             Prob > chi2   = 0.0000
  Parameter # |  .1369005    .0471161     .0694188    .2541106
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . di r(ll)
 -1724.4945
@@ -317,6 +327,7 @@ Parameter @=20          PLL=-1725.1526
  Parameter @ |  1.872593    10.12296    -19.11088    20.57039
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . * Syntax 1 again
@@ -337,6 +348,7 @@ Profiling:......................................................................
          one |  15.85898    2.490363     10.88681    20.83115
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . local asym=r(asym)
 
@@ -352,6 +364,7 @@ Profiling:......................................................................
        _cons |  15.85898    2.490363     10.88681    20.83115
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . assert reldif( `asym', r(asym)) < 1E-7
 
@@ -395,6 +408,7 @@ Lower confidence limit not yet found: searching.................................
            z |         .           .            .   -.3892172
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . pllf, profile(z) range(-5 0) eform: logit d z [fw=n]
 Warning: after MLE, _se[z] is zero
@@ -410,6 +424,7 @@ Lower confidence limit not yet found: searching.................................
            z |         .           .            .    .6775871
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . 
@@ -1966,6 +1981,7 @@ profile lo~d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
            z | -.4549134    .3041546    -1.055611    .1366534
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . * understands blogit has 2 "yvars"
 . 
@@ -4824,8 +4840,60 @@ Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -0.8%") xlin
            z | -.4549134    .3041546    -1.055611    .1366534
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
+. * various graph options
+. pllf, profile(z) mleline: glm d z, family(binomial n)
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+           d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z | -.4549134    .3041546    -1.055611    .1366534
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
+
+. pllf, profile(z) cilines(lcol(red)) levline(lcol(blue)) mleline: glm d z, family(binomial n)
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+           d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z | -.4549134    .3041546    -1.055611    .1366534
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
+
+. pllf, profile(z) cilines(off) levline(off): glm d z, family(binomial n)
+Profiling:..........................................................................................
+> ..........
+
+
+-------------------------------------------------------------
+           d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z | -.4549134    .3041546    -1.055611    .1366534
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
+
+. pllf, profile(z) nograph nodots: glm d z, family(binomial n)
+Profiling:
+
+
+-------------------------------------------------------------
+           d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+-------------+-----------------------------------------------
+           z | -.4549134    .3041546    -1.055611    .1366534
+-------------------------------------------------------------
+Note: Std. Err. is pseudo standard error, derived from PLL CI
+
 . 
 . * poisson with exposure()
 . clear
@@ -4866,6 +4934,7 @@ Profiling:......................................................................
        group |  1.10e-08    .2828049    -.5712639    .5373108
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . pllf, profile(group) range(-1 1): poisson events group, exposure(pyears)
 Profiling:..........................................................................................
@@ -4878,6 +4947,7 @@ Profiling:......................................................................
        group |  1.10e-08    .2827977     -.571238    .5373086
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . local asym=r(asym)
 
@@ -4896,6 +4966,7 @@ Profiling:......................................................................
        group |  1.10e-08    .2827977    -.5712379    .5373087
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . di r(asym)
 -3.0606888
@@ -5155,6 +5226,7 @@ Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -5.1%") xlin
        _cons | -1.660731    .1619309    -1.994244   -1.359486
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . local asym=r(asym)
 
@@ -5413,6 +5485,7 @@ Drawing graph: graph twoway (line _pll _beta) ,  title("Asymmetry = -5.1%") xlin
          one | -1.660731    .1619309    -1.994244   -1.359486
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . assert reldif( `asym', r(asym)) < 1E-7
 
@@ -5448,8 +5521,7 @@ Link function    : g(u) = u                       [Identity]
     modality |  -.0178926    .009349    -1.91   0.056    -.0362163    .0004311
        _cons |   .0238806   .0083416     2.86   0.004     .0075313    .0402299
 ------------------------------------------------------------------------------
-note: valid log likelihood not returned in e(ll);
-if available, trying e(deviance) instead
+Note: using e(deviance)
 Profiling:..........................................................................................
 > ..........
 
@@ -5461,6 +5533,7 @@ profile lo~* |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 * defining log likelihood = -0.5*e(deviance)
+Graph command stored as F9
 
 . 
 . 
@@ -5523,6 +5596,7 @@ profile lo~d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 _Ix2Xx4a_2_1 | -.5167128    .5245353     -1.59685    .4592907
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . * the one-step way
@@ -5539,11 +5613,12 @@ profile lo~d |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 _Ix2Xx4a_2_1 | -.5167128    .5245353     -1.59685    .4592907
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- closed on:   4 Dec 2025, 17:08:16
+ closed on:  10 Dec 2025, 16:33:53
 ----------------------------------------------------------------------------------------------------

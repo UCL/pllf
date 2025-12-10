@@ -5,6 +5,7 @@ Added commands from help file 12may2025
 Revised for the colon command 28may2025
 Added tests of normal() and collinearity handling 1aug2025
 Update for renaming shownormal to normal, 1sep2025
+Test all graph options, 10dec2025
 */
 
 * from help file
@@ -102,6 +103,11 @@ pllf, profile(z) debug gropt(name(blogit,replace)) normal(lcol(red)): blogit d n
 glm d z, family(binomial n) 
 pllf, profile(z) debug: glm d z, family(binomial n)
 
+* various graph options
+pllf, profile(z) mleline: glm d z, family(binomial n)
+pllf, profile(z) cilines(lcol(red)) levline(lcol(blue)) mleline: glm d z, family(binomial n)
+pllf, profile(z) cilines(off) levline(off): glm d z, family(binomial n)
+pllf, profile(z) nograph nodots: glm d z, family(binomial n)
 
 * poisson with exposure()
 clear

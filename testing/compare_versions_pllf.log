@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\compare_versions_pllf.log
   log type:  text
- opened on:   4 Dec 2025, 17:13:29
+ opened on:  10 Dec 2025, 16:38:54
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.9 PR 04mar2023 / IW 03dec2025
+*! v1.3.10 PR 04mar2023 / IW 10dec2025
 
 . /* 
 > CHECK OLD AND NEW VERSIONS AGREE
@@ -132,7 +132,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . which pllf
 c:\ian\git\pllf\pllf.ado
-*! v1.3.9 PR 04mar2023 / IW 03dec2025
+*! v1.3.10 PR 04mar2023 / IW 10dec2025
 
 . pda
 
@@ -149,6 +149,7 @@ Profiling:......................................................................
          x5e | -1.994528    .2259832    -2.435385   -1.549547
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . assert beta1==beta2
@@ -161,5 +162,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\compare_versions_pllf.log
   log type:  text
- closed on:   4 Dec 2025, 17:13:42
+ closed on:  10 Dec 2025, 16:39:00
 ----------------------------------------------------------------------------------------------------

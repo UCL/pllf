@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\pllf_examples.log
   log type:  text
- opened on:   4 Dec 2025, 17:12:32
+ opened on:  10 Dec 2025, 16:38:05
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.9 PR 04mar2023 / IW 03dec2025
+*! v1.3.10 PR 04mar2023 / IW 10dec2025
 
 . clear
 
@@ -51,6 +51,7 @@ Profiling:......................................................................
        group |  1.10e-08    .2828049    -.5712639    .5373108
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . * Load TRISST trial data (Joffe et al, 2022). The data 
@@ -63,8 +64,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 (NI trial of MRI vs CT after testicular cancer. Margin: RD = +0.057. Joffe 2022.)
 
 . pllf, profile(modality) normal: binreg outcome modality [fw=n], rd
-note: valid log likelihood not returned in e(ll);
-if available, trying e(deviance) instead
+Note: using e(deviance)
 Profiling:..........................................................................................
 > ..........
 
@@ -76,6 +76,7 @@ profile lo~* |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
 * defining log likelihood = -0.5*e(deviance)
+Graph command stored as F9
 
 . 
 . * Load breast cancer data
@@ -117,6 +118,7 @@ Profiling:......................................................................
          x5e | -1.994528    .2259832    -2.435385   -1.549547
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . * Explore profile likelihood for coefficient of x1
@@ -132,6 +134,7 @@ Profiling:......................................................................
           x1 |  .0013215    .0060392    -.0105103     .013163
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . * Explore profile likelihood for the constant
@@ -146,6 +149,7 @@ Profiling:..................................................
        _cons | -1.536981    .4257861     -2.38719   -.7181392
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . * Explore profile likelihood for Weibull shape parameter
@@ -161,6 +165,7 @@ Profiling:..................................................
        _cons |  .3416282    .0483097     .2448839    .4342542
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . * Explore profile likelihood for predictor of Weibull shape parameter
@@ -177,6 +182,7 @@ Profiling:....................
          x4b | -.0167018     .066479    -.1529494    .1076434
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . * Syntax 2
@@ -193,6 +199,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
  Parameter @ |  .1369005    .0471161     .0694188    .2541106
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . pllf, placeholder(X) formula(exp(-X*x5)) range(.05 .25): stcox x1 x4a x6 hormon
 ....................................................................................................
@@ -204,6 +211,7 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
  Parameter X |  .1369005    .0471161     .0694188    .2541106
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . 
@@ -211,5 +219,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\pllf_examples.log
   log type:  text
- closed on:   4 Dec 2025, 17:13:28
+ closed on:  10 Dec 2025, 16:38:54
 ----------------------------------------------------------------------------------------------------

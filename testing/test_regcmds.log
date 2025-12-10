@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_regcmds.log
   log type:  text
- opened on:   4 Dec 2025, 17:08:16
+ opened on:  10 Dec 2025, 16:33:53
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.9 PR 04mar2023 / IW 03dec2025
+*! v1.3.10 PR 04mar2023 / IW 10dec2025
 
 . /*
 > test_regcmds.do
@@ -58,6 +58,7 @@ Profiling:......................................................................
          lwt | -.0183757    .0102691     -.040137    .0001169
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . /* cnreg -> intreg */
@@ -118,6 +119,7 @@ Profiling:......................................................................
          age |  .7914438    .4443071    -.0788669    1.662785
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . /* glm, logistic, logit, probit */
@@ -173,6 +175,7 @@ Profiling:......................................................................
          age | -.0271003    .0366206    -.1002123    .0433377
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . xi: pllf, profile(age): logistic low age lwt i.race smoke ptl ht ui
 i.race            _Irace_1-3          (naturally coded; _Irace_1 omitted)
@@ -186,6 +189,7 @@ Profiling:......................................................................
          age | -.0271003    .0366206    -.1002123    .0433377
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . xi: pllf, profile(age): probit low age lwt i.race smoke ptl ht ui
 i.race            _Irace_1-3          (naturally coded; _Irace_1 omitted)
@@ -199,6 +203,7 @@ Profiling:......................................................................
          age | -.0175445    .0216593    -.0607221    .0241808
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . /* heckman */
@@ -252,6 +257,7 @@ Profiling:......................................................................
    education |  .9899537     .053304     .8860219     1.09497
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . /* mlogit */
@@ -312,6 +318,7 @@ Profiling:......................................................................
          age |  -.011745     .006203    -.0239853    .0003298
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . /* nbreg, gnbreg */
@@ -377,6 +384,7 @@ Profiling:......................................................................
   _Icohort_2 | -.2676187    .7795252    -1.795496    1.260186
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . gnbreg deaths age_mos, lnalpha(i.cohort) offset(logexp)
 
@@ -469,6 +477,7 @@ Profiling:......................................................................
      age_mos | -.0516657    .0054312    -.0616058   -.0403159
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . /* ologit, oprobit */
@@ -512,6 +521,7 @@ Profiling:......................................................................
      foreign |  2.896807    .7954622     1.411127    4.529282
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . pllf, profile(foreign): oprobit rep77 foreign length mpg
 Profiling:..........................................................................................
@@ -524,6 +534,7 @@ Profiling:......................................................................
      foreign |  1.704861    .4250729     .8828381    2.549093
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . /* poisson */
@@ -569,6 +580,7 @@ Profiling:......................................................................
       smokes |  .3545356    .1074845     .1491828    .5705143
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . /* regress */
@@ -604,6 +616,7 @@ Profiling:......................................................................
       weight | -.0065879    .0006325    -.0078491   -.0053267
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . /* reg3: NOT SUPPORTED */
@@ -673,6 +686,7 @@ Profiling:......................................................................
       hormon | -.3638988    .1251974    -.6129645   -.1221999
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . streg hormon, dist(weibull) nohr
 
@@ -722,6 +736,7 @@ Profiling:......................................................................
       hormon | -.3932402    .1249807     -.641874   -.1519586
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . stpm hormon, scale(hazard) df(4) 
 
@@ -741,7 +756,7 @@ Log likelihood = -668.91043                       Prob > chi2     =     0.0036
           _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
 -------------+----------------------------------------------------------------
 s0           |
-       _cons |   1.802873   .1635112    11.03   0.000     1.482397    2.123349
+       _cons |   1.802873   .1635112    11.03   0.000     1.482396    2.123349
 -------------+----------------------------------------------------------------
 s1           |
        _cons |   .4834827   .1341058     3.61   0.000     .2206402    .7463252
@@ -769,6 +784,7 @@ Profiling:......................................................................
       hormon | -.3640818    .1250687    -.6128875   -.1226272
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . stpm2 hormon, scale(hazard) df(4)
 
@@ -802,6 +818,7 @@ Profiling:......................................................................
       hormon | -.3640818    .1250687    -.6128875   -.1226272
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . 
 . /* stpm3: not supported by pllf at present
@@ -830,6 +847,7 @@ Profiling:...........
        grade |  .0707903    .0017894     .0672827     .074297
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . local pse = r(pse)
 
@@ -844,6 +862,7 @@ Profiling:...........
        grade |  .0707903    .0017894     .0672827     .074297
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . di `pse', r(pse)
 .0017894 .0017894
@@ -855,5 +874,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_regcmds.log
   log type:  text
- closed on:   4 Dec 2025, 17:10:57
+ closed on:  10 Dec 2025, 16:36:27
 ----------------------------------------------------------------------------------------------------

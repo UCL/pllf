@@ -1,15 +1,15 @@
 ----------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  c:\ian\git\pllf\testing\test_new_rmcoll.log
+       log:  c:\ian\git\pllf\testing\test_collinear.log
   log type:  text
- opened on:   4 Dec 2025, 17:10:57
+ opened on:  10 Dec 2025, 16:36:27
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.9 PR 04mar2023 / IW 03dec2025
+*! v1.3.10 PR 04mar2023 / IW 10dec2025
 
 . /*
 > Test that the code handles collinearity
-> test_new_rmcoll.do
+> test_collinear.do
 > IW 23jul2025
 > */
 . 
@@ -51,6 +51,7 @@ Lower confidence limit not yet found: searching......
            Z | -1.332227     1.26688    -4.330427    .6356513
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . local ref = r(l_llci)
 
@@ -79,6 +80,7 @@ Lower confidence limit not yet found: searching......
            Z | -1.332227     1.26688    -4.330427    .6356513
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . assert `ref' == r(l_llci)
 
@@ -120,13 +122,14 @@ Lower confidence limit not yet found: searching......
            Z | -1.332227     1.26688    -4.330427    .6356513
 -------------------------------------------------------------
 Note: Std. Err. is pseudo standard error, derived from PLL CI
+Graph command stored as F9
 
 . assert `ref' == r(l_llci)
 
 . 
 end of do-file
       name:  <unnamed>
-       log:  c:\ian\git\pllf\testing\test_new_rmcoll.log
+       log:  c:\ian\git\pllf\testing\test_collinear.log
   log type:  text
- closed on:   4 Dec 2025, 17:11:13
+ closed on:  10 Dec 2025, 16:36:39
 ----------------------------------------------------------------------------------------------------

@@ -1,5 +1,8 @@
 /*
-*! v1.3.9 PR 04mar2023 / IW 03dec2025
+*! v1.3.10 PR 04mar2023 / IW 10dec2025
+	graph command always stored in F9
+	new cilines(off) levline(off)
+v1.3.9 PR 04mar2023 / IW 03dec2025
 	correctly handle -me- commands by splitting command from "||" into `re_part'
 	parsat tests for collinearity and if found differentiates 
 		- max twice
@@ -129,6 +132,10 @@ else local noisily quietly
 if !missing("`normal2'") {
 	local normal normal 
 	local normalopts `normal2' 
+}
+
+if "`levline'"=="off" & "`mleline'"!="" {
+	di as text "Note: levline is off, so mleline option is ignored"
 }
 
 // END OF PARSING PLLF OPTIONS
@@ -336,14 +343,13 @@ if "`profile'" != "" { // ------------ begin linear profiling --------
 		local ll0  = e(ll)
 		local use_deviance 0
 		if missing(`ll0') {
-			noi di as txt "note: valid log likelihood not returned in e(ll);"
-			noi di as txt "if available, trying e(deviance) instead"
 			local ll0 = -e(deviance)/2
 			if missing(`ll0') {
-				di as err "valid deviance not returned in e(deviance)"
+				noi di as error "Command does not return e(ll) or e(deviance)"
 				exit 198
 			}
 			else {
+				noi di as txt "Note: using e(deviance)"
 				local use_deviance 1
 			}
 		}
@@ -909,8 +915,12 @@ if "`graph'"!="nograph" {
 		if !_rc local gropt xscale(log) xlabel(`betalabel') `gropt'
 		if _rc==199 di as text as smcl "To improve xlabels, please use {stata ssc install niceloglabels}"
 	}
-	if ("`lll'`rrr'"!="")					///
+	if ("`lll'`rrr'"!="") & ("`cilines'"!="off") {
 		local xl xline(`lll' `rrr', lstyle(ci) `cilines')
+	}
+	if ("`levline'"!="off")	{
+		local yl yline(`limit', lstyle(refline) `levline')
+	}
 	if `use_deviance' {
 		local note note("`star'Defining log likelihood = -0.5*e(deviance)")
 	}
@@ -920,10 +930,10 @@ if "`graph'"!="nograph" {
 		local gropt ytitle(`ytitle') `gropt'
 	}
 	local graphcmd graph twoway (line `gen2' `gen1') `normgraph', `gropt' `title' ///
-	    `xl' yline(`limit', lstyle(refline) `levline')
+	    `xl' `yl'
 	if !missing("`debug'") di as input `"Drawing graph: `graphcmd'"'
+	global F9 `graphcmd'
 	if !missing("`pause'") {
-		global F9 `graphcmd'
 		pause
 	}
 	`graphcmd'
@@ -960,6 +970,7 @@ di _col(14) "{c |}" as res ///
 di as txt "{hline 13}{c BT}{hline 47}"
 di as txt "Note: Std. Err. is pseudo standard error, derived from PLL CI"
 if !mi("`star'") di as txt "* defining log likelihood = -0.5*e(deviance)"
+if "`graph'"!="nograph" di as txt "Graph command stored as F9"
 
 
 // RETURN RESULTS

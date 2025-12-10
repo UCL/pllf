@@ -1,5 +1,5 @@
 {smcl}
-{* 4dec2025}{...}
+{* 10dec2025}{...}
 {viewerjumpto "Description" "pllf##description"}{...}
 {viewerjumpto "Options" "pllf##options"}{...}
 {viewerjumpto "Remarks" "pllf##remarks"}{...}
@@ -35,7 +35,7 @@ which is given by a formula involving observed variable(s) and one unknown param
 {synoptline}
 {syntab :{it:Syntax 1}}
 {synopt :{opt pro:file(xvarname)}}PLL is required for the coefficient of variable {it:xvarname}, or{p_end}
-{synopt :{opt pro:file}{cmd:(}[{cmd:[}{it:eqname}{cmd:]}]{it:paramname})}}PLL is required for parameter
+{synopt :{opt pro:file}{cmd:(}[{cmd:[}{it:eqname}{cmd:]}]{it:paramname}{cmd:)}}PLL is required for parameter
 {it:paramname} or {opt [}{it:eqname}{opt ]}{it:paramname}{p_end}
 
 {syntab :{it:Syntax 2}}
@@ -62,9 +62,9 @@ if {cmd:normal()} is specified, also the Normal approximation to the PLL{p_end}
 {synopt :{opt ver:bose}}displays extended output including results of initial maximum likelihood fitting{p_end}
 
 {syntab :{it:Graph options: both syntaxes}}
-{synopt :{opt cilin:es(cline_options)}}specifies rendition of confidence interval{p_end}
+{synopt :{opt cilin:es(cline_options)}}specifies options for the rendition of the vertical lines at the ends of confidence interval{p_end}
 {synopt :{opt gropt(cline_opts twoway_opts)}}supplies graph options to enhance PLL plot{p_end}
-{synopt :{opt levlin:e(cline_options)}}specifies rendition of horizontal line{p_end}
+{synopt :{opt levlin:e(cline_options)}}specifies options for the rendition of the horizontal line at the confidence interval{p_end}
 {synopt :{opt mlel:ine}}adds a horizontal line at the MLE{p_end}
 {synopt :{opt nograph}}suppresses the line plot of the results{p_end}
 {synopt :{opt norm:al}[{opt (line_options)}]}adds a Normal approximation to the PLL plot.{p_end}
@@ -80,6 +80,7 @@ by maximum likelihood may be used. This includes
 {help intreg},
 {help logistic},
 {help logit},
+{help meglm},
 {help mlogit},
 {help nbreg},
 {help gnbreg},
@@ -92,9 +93,8 @@ by maximum likelihood may be used. This includes
 {help streg},
 {help stpm},
 {help stpm2}, and probably others.
-{help mixed} may not be used, but {help meglm} can be used 
-as an alternative in syntax 1, provided {opt [}{it:eqname}{opt ]} is specified.
-({help mixed} fails because it supports neither offset nor constraint).
+{help mixed} may not be used because it supports neither {cmd:offset} nor {cmd:constraint}, 
+but {help meglm} can be used as an alternative in syntax 1.
 
 {pstd}
 All weight types supported by {it:regression_cmd} are allowed; see help
@@ -261,7 +261,7 @@ displayed at each evaluation of the PLL.
 {p 2}{bf:Graph options: both syntaxes}
 
 {phang}
-{opt cilines(cline_options)} specifies the rendition of the vertical
+{opt cilines(cline_options)} specifies options for the rendition of the vertical
 lines representing the bounds of the profile-likelihood-based confidence
 interval (CI).  See {help cline_options:{it:cline_options}}.
 
@@ -278,12 +278,14 @@ these options, see {help cline_options:{it:cline_options}} and
 {help twoway_options:{it:twoway_options}}.
 
 {phang}
-{opt levline(cline_options)} specifies the rendition of the horizontal
-line showing the profile-likelihood at the confidence level for the the
-profile-likelihood-based CI.  See {help cline_options:{it:cline_options}}.
+{opt levline(cline_options)} specifies options for the rendition of the horizontal
+line drawn at the confidence level for the PLL-based CI. These options
+are also used for the horizontal line at the MLE, if {opt mleline} is specified.  See 
+{help cline_options:{it:cline_options}}.
 
 {phang}
-{opt mleline} adds a horizontal line at the MLE.
+{opt mleline} adds a horizontal line at the MLE. This line has the same appearance
+as the horizontal line at the confidence level.
 
 {phang}
 {opt nograph} suppresses the line plot of the results.

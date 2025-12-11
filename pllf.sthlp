@@ -14,7 +14,6 @@ help for {hi:pllf}{right:Patrick Royston, Ian White}
 
 {title:Profile log likelihood function}
 
-
 {phang}
 Syntax 1: fit a regression command and compute the profile log likelihood (PLL) function for one of its parameters
 
@@ -52,22 +51,22 @@ one variable in the dataset and one unknown parameter{p_end}
 {synopt :{opt range(#1 #2)}}evaluates PLL over {it:#1} <= parameter <= {it:#2}{p_end}
 
 {syntab :{it:Output options: both syntaxes}}
-{synopt :{opt dev:iance}}requests minus 2 times PLL function{p_end}
+{synopt :{opt dev:iance}}computes minus 2 times PLL function{p_end}
 {synopt :{opt diff:erence}}computes PLL minus maximised log likelihood{p_end}
-{synopt :{opt eform}[{opt (string)}]}reports results on the exponentiated scale (with name {it:string}){p_end}
+{synopt :{opt eform}[{opt (string)}]}reports results on the exponentiated scale (optionally with name {it:string}){p_end}
 {synopt :{opt gen(newvarlist)}}names the new variables to hold the parameter and the PLL; 
-if {cmd:normal()} is specified, also the Normal approximation to the PLL{p_end}
+if {cmd:normal} is specified, also the Normal approximation to the PLL{p_end}
 {synopt :{opt nodot:s}}suppresses (supposedly entertaining) dots{p_end}
 {synopt :{opt tr:ace}}displays the result of each log-likelihood evaluation{p_end}
 {synopt :{opt ver:bose}}displays extended output including results of initial maximum likelihood fitting{p_end}
 
 {syntab :{it:Graph options: both syntaxes}}
 {synopt :{opt cilin:es(cline_options)}}specifies options for the rendition of the vertical lines at the ends of confidence interval{p_end}
-{synopt :{opt gropt(cline_opts twoway_opts)}}supplies graph options to enhance PLL plot{p_end}
+{synopt :{opt gropt(cline_opts twoway_opts)}}supplies graph options to enhance the PLL graph{p_end}
 {synopt :{opt levlin:e(cline_options)}}specifies options for the rendition of the horizontal line at the confidence interval{p_end}
-{synopt :{opt mlel:ine}}adds a horizontal line at the MLE{p_end}
-{synopt :{opt nograph}}suppresses the line plot of the results{p_end}
-{synopt :{opt norm:al}[{opt (line_options)}]}adds a Normal approximation to the PLL plot.{p_end}
+{synopt :{opt mlel:ine}}adds a horizontal line at the maximum likelihood estimate{p_end}
+{synopt :{opt nograph}}suppresses the graph of the results{p_end}
+{synopt :{opt norm:al}[{opt (line_options)}]}adds a Normal approximation to the PLL graph.{p_end}
 {synoptline}
 
 
@@ -103,7 +102,6 @@ All weight types supported by {it:regression_cmd} are allowed; see help
 
 {title:Description}{marker description}
 
-
 {pstd}
 {opt pllf} computes and plots the profile log likelihood function for a
 single predictor in a regression model. The term "profile" implies
@@ -125,7 +123,7 @@ profile log likelihood (PLL) function for the regression coefficient
 of a covariate defined by {cmd:profile(}{it:xvarname}{cmd:)} or a
 parameter defined by {cmd:profile(}[{cmd:[}{it:eqname}{cmd:]}]{it:paramname}{cmd:)}
 within a model specified by {it:regression_cmd}.
-{opt pllf} also reports
+{opt pllf} reports
 PLL-based confidence limits, computed by a simple grid search.
 {it:xvarname} must be a covariate in {it:regression_cmd}. 
 
@@ -134,9 +132,14 @@ With syntax 2, {opt formula()} and {cmd:range()}
 must be specified and {opt profile()} is 
 not allowed. {opt pllf} computes the PLL function for a non-linear parameter denoted
 (by default) by {cmd:@}. {cmd:formula()} is symbolically added to the regression model 
-{it:regression_cmd}. {opt pllf} reports the MLE and PLL-based confidence limits,
+{it:regression_cmd}. {opt pllf} reports the maximum likelihood estimate 
+and PLL-based confidence limits,
 computed by a simple grid search. Normal-based confidence limits
 are not computed. 
+
+{pstd}
+Note that the maximum likelihood estimate and normal-approximation confidence interval 
+can be computed by standard methods for syntax 1 but not for syntax 2.
 
 {pstd}
 With both syntaxes, the results
@@ -184,11 +187,11 @@ Example: {cmd:formula(exp(-@*x5))}.
 {opt range(#1 #2)} with syntax 2 is not optional.
 It evaluates the PLL function over {it:#1} <= {cmd:@} <= {it:#2},
 where {cmd:@} is the non-linear parameter of interest. {opt pllf}
-also seeks the MLE of {cmd:@}, but if the values of {it:#1 #2} are
+also seeks the maximum likelihood estimate of {cmd:@}, but if the values of {it:#1 #2} are
 ill-chosen or the PLL function behaves 'badly',
-it may fail to find the MLE, or give an inaccurate estimate.
-The most satisfactory situation is when the MLE lies between {it:#1}
-and {it:#2}, and this may be judged from the plot of the PLL function.
+it may fail to find the maximum likelihood estimate, or give an inaccurate estimate.
+The most satisfactory situation is when the maximum likelihood estimate lies between {it:#1}
+and {it:#2}, and this may be judged from the graph of the PLL function.
 In many cases, particularly with large sample sizes,
 the PLL function is approximately quadratic with a single maximum.
 
@@ -214,7 +217,7 @@ of the PLL, when searching for the PLL-based confidence limits. You
 should rarely if ever need this option. The program is prevented
 by {cmd:maxcost()} from cycling "for ever" when trying to find
 confidence limits in pathological cases (see
-{opt difference}). Default {it:#} is {cmd:n()}/2.
+{opt difference}). Default {it:#} is {cmd:n_eval()}/2.
 
 {phang}
 {opt n_eval(#)} evaluates the PLL function at {it:#} equally spaced parameter 
@@ -226,7 +229,7 @@ values. Default is 100.
 {p 2}{bf:Output options: both syntaxes}
 
 {phang}
-{opt deviance} requests minus 2 times the PLL function, 
+{opt deviance} computes minus 2 times the PLL function, 
 i.e. the profile deviance function. If {cmd:difference}
 is also specified, {cmd:deviance} produces the profile deviance
 difference, i.e. minus 2 times the PLL difference.
@@ -239,11 +242,11 @@ Pathological cases denote likelihood functions with multiple maxima
 or no maximum.
 
 {phang}{opt eform}[{opt (string)}] reports results for the exponential of the 
-coefficient. If {it:string} is specified then this is used as the parameter name.
+parameter. If {it:string} is specified then this is used as the parameter name.
 
 {phang}
 {opt gen(beta_var pll_var [pllnorm_var])} names the new variables created as
-{it:beta_var} to contain the values of the regression coefficient
+{it:beta_var} to contain the values of the parameter
 over which the PLL is evaluated, and {it:pll_var} to contain the PLL values, and 
 (if {cmd:normal()} is specified) also {it:pllnorm_var} to contain the Normal 
 approximation to the PLL values.
@@ -267,32 +270,32 @@ interval (CI).  See {help cline_options:{it:cline_options}}.
 
 {phang}
 {opt gropt(cline_options twoway_options)} supplies graph 
-options to enhance the plot of the PLL (or a transformation of it)
-against beta. The default graph is a line plot ({help twoway line})
+options to enhance the graph of the PLL (or a transformation of it)
+against beta. The default graph is a line graph ({help twoway line})
 showing the PLL-based confidence interval for beta as vertical lines
 parallel to the Y-axis and the corresponding PLL value (or a
 transformation of it) as a horizontal line parallel to the X-axis.
 Appropriate linear transformation of the PLL is applied when the
-{cmd:deviance} and/or {cmd:difference} options are specified.  For a more on
+{cmd:deviance} and/or {cmd:difference} options are specified.  For more on
 these options, see {help cline_options:{it:cline_options}} and 
 {help twoway_options:{it:twoway_options}}.
 
 {phang}
 {opt levline(cline_options)} specifies options for the rendition of the horizontal
 line drawn at the confidence level for the PLL-based CI. These options
-are also used for the horizontal line at the MLE, if {opt mleline} is specified.  See 
+are also used for the horizontal line at the maximum likelihood estimate, if {opt mleline} is specified.  See 
 {help cline_options:{it:cline_options}}.
 
 {phang}
-{opt mleline} adds a horizontal line at the MLE. This line has the same appearance
+{opt mleline} adds a horizontal line at the maximum likelihood estimate. This line has the same appearance
 as the horizontal line at the confidence level.
 
 {phang}
-{opt nograph} suppresses the line plot of the results.
+{opt nograph} suppresses the graph of the results.
 
 {phang}
 {opt normal}[{opt (line_options)}] adds a Normal approximation to the 
-plot of the PLL. {it:line_options} are options valid for {help line}.
+graph of the PLL. {it:line_options} are options valid for {help line}.
 
 
 {title:Remarks}{marker remarks}
@@ -306,7 +309,7 @@ PLL function from that of a quadratic indicates non-normality in the
 distribution of the parameter estimate of interest.
 
 {pstd}
-Note that sometimes, the MLE cannot be found at some values of the parameter
+Note that sometimes, the maximum likelihood estimate cannot be found at some values of the parameter
 being profiled. In those cases, the maximization continues by default for
 many iterations (see {help set iter}), 
 and that can take a very long time. If the program appears
@@ -318,8 +321,8 @@ option).
 The pseudo standard error of the parameter beta is computed as
 upper PLL confidence limit minus lower PLL confidence limit,
 divided by twice t, where t is the appropriate quantile
-of the t or normal distribution used in calculating normal
-based confidence limits. When the sampling distribution of
+of the t or normal distribution used in calculating normal-based 
+confidence limits. When the sampling distribution of
 the parameter of interest is close to normal, the usual standard
 error and the PLL-based standard error will be approximately equal.
 
@@ -453,14 +456,14 @@ the extra model term exp(-{it:beta}*x5), and the corresponding log likelihood va
 
 {synoptset 23 tabbed}{...}
 {synopt:{cmd:r(nobs)}}      number of observations in the estimation sample{p_end}
-{synopt:{cmd:r(b)}}         MLE of parameter{p_end}
+{synopt:{cmd:r(b)}}         maximum likelihood estimate of parameter{p_end}
 {synopt:{cmd:r(se)}}        usual standard error of parameter (syntax 1 only){p_end}
 {synopt:{cmd:r(pse)}}       pseudo standard error of parameter{p_end}
 {synopt:{cmd:r(n_llci)}}    lower normal-based confidence limit for parameter (syntax 1 only){p_end}
 {synopt:{cmd:r(n_ulci)}}    upper normal-based confidence limit for parameter (syntax 1 only){p_end}
 {synopt:{cmd:r(l_llci)}}    lower PLL-based confidence limit for parameter{p_end}
 {synopt:{cmd:r(l_ulci)}}    upper PLL-based confidence limit for parameter{p_end}
-{synopt:{cmd:r(ll)}}        maximised log likelihood{p_end}
+{synopt:{cmd:r(ll)}}        maximised log likelihood (may be infered from deviance)p_end}
 {synopt:{cmd:r(ll_limit)}}  value of log likelihood for likelihood based CI calculation{p_end}
 {synopt:{cmd:r(cost)}}      "cost" of evaluating PLL-based confidence limits{p_end}
 {synopt:{cmd:r(asym)}}      estimated asymmetry of PLL function{p_end}

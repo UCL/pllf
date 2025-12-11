@@ -6,6 +6,7 @@ Revised for the colon command 28may2025
 Added tests of normal() and collinearity handling 1aug2025
 Update for renaming shownormal to normal, 1sep2025
 Test all graph options, 10dec2025
+Check returns, 11dec2025
 */
 
 * from help file
@@ -66,6 +67,13 @@ assert abs(r(ll)-`pllf_ll')<1E-3
 
 * and the case where we need to differentiate
 pllf, trace formula(exp(-@*x5/100)) n(5) range(-20 20): stcox x1 x5 x4a x6 hormon
+* check returns 
+foreach ret in nobs b pse l_llci l_ulci ll ll_limit cost asym {
+	assert r(`ret')!=.
+}
+foreach ret in se n_llci n_ulci {
+	assert r(`ret')==.
+}
 
 * Syntax 1 again
 sysuse auto, clear
@@ -74,7 +82,10 @@ pllf, profile(one): reg mpg foreign rep78 one, noconstant
 local asym=r(asym)
 pllf, profile(_cons): reg mpg foreign rep78
 assert reldif( `asym', r(asym)) < 1E-7
-
+* check returns 
+foreach ret in nobs b pse l_llci l_ulci ll ll_limit cost asym se n_llci n_ulci {
+	assert r(`ret')!=.
+}
 
 * perfect prediction
 clear

@@ -926,8 +926,8 @@ if "`graph'"!="nograph" {
 	}
 	if !mi("`normal'") {
 		local normgraph (line `gen3' `gen1', lpattern(dash) `normalopts')
-		local ytitle : variable label `gen2'
-		local gropt ytitle(`ytitle') `gropt'
+		local ytitle2 : variable label `gen2'
+		local gropt ytitle(`ytitle2') `gropt'
 	}
 	local graphcmd graph twoway (line `gen2' `gen1') `normgraph', `gropt' `title' ///
 	    `xl' `yl'

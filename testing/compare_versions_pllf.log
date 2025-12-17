@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\compare_versions_pllf.log
   log type:  text
- opened on:  10 Dec 2025, 16:38:54
+ opened on:  17 Dec 2025, 17:15:49
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.10 PR 04mar2023 / IW 10dec2025
+*! v1.3.10 PR 04mar2023 / IW 11dec2025
 
 . /* 
 > CHECK OLD AND NEW VERSIONS AGREE
@@ -21,10 +21,10 @@ c:\ian\git\pllf\pllf.ado
 c:\ian\ado\plus\p\pllf.ado
 *! version 1.0.1 PR 17jul2007
 
-. pda
+. prog drop _all
 
 . 
-. webuse brcancer, clear
+. use ../brcancer, clear
 (German breast cancer data)
 
 . stset rectime, fail(censrec)
@@ -132,9 +132,9 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 
 . which pllf
 c:\ian\git\pllf\pllf.ado
-*! v1.3.10 PR 04mar2023 / IW 10dec2025
+*! v1.3.10 PR 04mar2023 / IW 11dec2025
 
-. pda
+. prog drop _all
 
 . 
 . pllf, profile(x5e) range(-3 -1) mleline gen(beta2 pll2) gropt(name(pll2, replace)): stcox x1 x4a x
@@ -162,5 +162,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\compare_versions_pllf.log
   log type:  text
- closed on:  10 Dec 2025, 16:39:00
+ closed on:  17 Dec 2025, 17:15:59
 ----------------------------------------------------------------------------------------------------

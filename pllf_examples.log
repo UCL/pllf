@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\pllf_examples.log
   log type:  text
- opened on:  10 Dec 2025, 16:38:05
+ opened on:  17 Dec 2025, 17:15:12
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.10 PR 04mar2023 / IW 10dec2025
+*! v1.3.10 PR 04mar2023 / IW 11dec2025
 
 . clear
 
@@ -70,7 +70,7 @@ Profiling:......................................................................
 
 
 -------------------------------------------------------------
-profile lo~* |     Coef.   Std. Err.     [95% PLL Conf. Int.]
+     outcome |     Coef.   Std. Err.     [95% PLL Conf. Int.]
 -------------+-----------------------------------------------
     modality | -.0178926    .0099405    -.0390899   -.0001239
 -------------------------------------------------------------
@@ -81,7 +81,7 @@ Graph command stored as F9
 . 
 . * Load breast cancer data
 . 
-. webuse brcancer, clear
+. use brcancer, clear
 (German breast cancer data)
 
 . stset rectime, failure(censrec) scale(365.24)
@@ -219,5 +219,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\pllf_examples.log
   log type:  text
- closed on:  10 Dec 2025, 16:38:54
+ closed on:  17 Dec 2025, 17:15:49
 ----------------------------------------------------------------------------------------------------

@@ -2,15 +2,16 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_regcmds.log
   log type:  text
- opened on:  10 Dec 2025, 16:33:53
+ opened on:  17 Dec 2025, 17:12:13
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.10 PR 04mar2023 / IW 10dec2025
+*! v1.3.10 PR 04mar2023 / IW 11dec2025
 
 . /*
 > test_regcmds.do
 > Test all the regression commands listed
-> by running the first example from each help file
+>         by running the first example from each help file
+> Requires internet access
 > IW 3nov2025
 > */
 . 
@@ -207,7 +208,7 @@ Graph command stored as F9
 
 . 
 . /* heckman */
-. webuse womenwk
+. webuse womenwk, clear
 
 . heckman wage educ age, select(married children educ age)
 
@@ -261,7 +262,7 @@ Graph command stored as F9
 
 . 
 . /* mlogit */
-. webuse sysdsn1
+. webuse sysdsn1, clear
 (Health insurance data)
 
 . mlogit insure age male nonwhite i.site
@@ -874,5 +875,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_regcmds.log
   log type:  text
- closed on:  10 Dec 2025, 16:36:27
+ closed on:  17 Dec 2025, 17:14:02
 ----------------------------------------------------------------------------------------------------

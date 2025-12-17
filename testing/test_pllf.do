@@ -52,6 +52,9 @@ pllf, profile([ln_p]_cons) n_eval(50): streg x1 x4a x5e x6 hormon, distribution(
 
 pllf, profile([ln_p]x4b) deviance difference n_eval(20): streg x1 x4a x5e x6 hormon, distribution(weibull) ancillary(x4b) 
 
+* error handling
+cap pllf, profile(x5e) range(-3 -1) normal: stcoxxx x1 x4a x5e x6 hormon, nohr
+assert _rc==199
 
 * Syntax 2
 pllf, formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a x6 hormon

@@ -1,5 +1,7 @@
 /*
-*! v1.3.10 PR 04mar2023 / IW 11dec2025
+*! v1.3.11 PR 04mar2023 / IW 17dec2025
+	better error message if command name is wrong
+v1.3.10 PR 04mar2023 / IW 11dec2025
 	graph command always stored in F9
 	new cilines(off) levline(off)
 v1.3.9 PR 04mar2023 / IW 03dec2025
@@ -162,6 +164,13 @@ else if "`cmd'"=="reg3" {
 else if "`cmd'"=="mixed" {
 	di as error "Sorry, mixed is not supported. Try meglm with the same syntax"
 	exit 498
+}
+else {
+	cap unabcmd `cmd'
+	if _rc {
+		di as error "command `cmd' is unrecognised"
+		exit 199
+	}
 }
 
 /* 3/12/2025

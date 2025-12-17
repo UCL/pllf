@@ -23,7 +23,7 @@ pllf, profile(modality) normal: binreg outcome modality [fw=n], rd
 
 * Load breast cancer data
 
-webuse brcancer, clear
+use brcancer, clear
 stset rectime, failure(censrec) scale(365.24)
 
 * Explore profile likelihood for coefficient of x5e

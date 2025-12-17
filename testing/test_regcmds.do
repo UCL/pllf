@@ -26,12 +26,12 @@ xi: pllf, profile(age): logistic low age lwt i.race smoke ptl ht ui
 xi: pllf, profile(age): probit low age lwt i.race smoke ptl ht ui
 
 /* heckman */
-webuse womenwk
+webuse womenwk, clear
 heckman wage educ age, select(married children educ age)
 pllf, profile(educ): heckman wage educ age, select(married children educ age)
 
 /* mlogit */
-webuse sysdsn1
+webuse sysdsn1, clear
 mlogit insure age male nonwhite i.site
 xi: pllf, profile([Prepaid]age): mlogit insure age male nonwhite i.site
 

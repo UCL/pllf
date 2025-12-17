@@ -57,7 +57,7 @@ Code structure:
 	compute pseudo SE, draw graph, print results, return results (~100 lines)
 */
 program define pllf, rclass sortpreserve	
-version 11.0
+version 12.0
 
 
 // SEPARATE PLLF/PREFIX PART FROM STATA COMMAND

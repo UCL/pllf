@@ -8,9 +8,9 @@ IW 23jul2025
 
 cap adopath - $path
 which pllf
-pda
+prog drop _all
 
-webuse brcancer, clear
+use ../brcancer, clear
 stset rectime, fail(censrec)
 stcox x1 x4a x5e x6 hormon, nohr
 pllf stcox x1 x4a x5e x6 hormon, nohr profile(x5e) range(-3 -1) gen(beta1 pll1) gropt(name(pll1, replace))
@@ -20,7 +20,7 @@ pllf stcox x1 x4a x5e x6 hormon, nohr profile(x5e) range(-3 -1) gen(beta1 pll1) 
 
 adopath ++ $path
 which pllf
-pda
+prog drop _all
 
 pllf, profile(x5e) range(-3 -1) mleline gen(beta2 pll2) gropt(name(pll2, replace)): stcox x1 x4a x5e x6 hormon, nohr
 

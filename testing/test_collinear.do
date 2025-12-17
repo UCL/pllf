@@ -4,7 +4,7 @@ test_collinear.do
 IW 23jul2025
 */
 
-pda
+prog drop _all
 
 clear
 input Z Y n

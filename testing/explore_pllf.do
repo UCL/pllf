@@ -7,7 +7,7 @@ IW 8nov2024
 I could use this with a 2nd study with symmetrical LL, e.g. 3/10 vs 3/10.
 I could show these 3 data sets give the same result when 2-stage analysed using normal approximation, but not when correctly analysed
 */
-pda
+prog drop _all
 
 clear
 input z d1 py1 d2 py2 d3 py3

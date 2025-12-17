@@ -1,7 +1,8 @@
 /*
 test_regcmds.do
 Test all the regression commands listed
-by running the first example from each help file
+	by running the first example from each help file
+Requires internet access
 IW 3nov2025
 */
 

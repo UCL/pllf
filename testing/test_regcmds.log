@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_regcmds.log
   log type:  text
- opened on:  17 Dec 2025, 17:12:13
+ opened on:  17 Dec 2025, 18:34:51
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.10 PR 04mar2023 / IW 11dec2025
+*! v1.3.11 PR 04mar2023 / IW 17dec2025
 
 . /*
 > test_regcmds.do
@@ -757,7 +757,7 @@ Log likelihood = -668.91043                       Prob > chi2     =     0.0036
           _t | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
 -------------+----------------------------------------------------------------
 s0           |
-       _cons |   1.802873   .1635112    11.03   0.000     1.482396    2.123349
+       _cons |   1.802873   .1635112    11.03   0.000     1.482397    2.123349
 -------------+----------------------------------------------------------------
 s1           |
        _cons |   .4834827   .1341058     3.61   0.000     .2206402    .7463252
@@ -875,5 +875,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_regcmds.log
   log type:  text
- closed on:  17 Dec 2025, 17:14:02
+ closed on:  17 Dec 2025, 18:37:11
 ----------------------------------------------------------------------------------------------------

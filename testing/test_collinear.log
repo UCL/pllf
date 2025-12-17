@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_collinear.log
   log type:  text
- opened on:  17 Dec 2025, 17:14:02
+ opened on:  17 Dec 2025, 18:37:11
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.10 PR 04mar2023 / IW 11dec2025
+*! v1.3.11 PR 04mar2023 / IW 17dec2025
 
 . /*
 > Test that the code handles collinearity
@@ -131,5 +131,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_collinear.log
   log type:  text
- closed on:  17 Dec 2025, 17:14:10
+ closed on:  17 Dec 2025, 18:37:20
 ----------------------------------------------------------------------------------------------------

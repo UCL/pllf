@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- opened on:  17 Dec 2025, 17:11:07
+ opened on:  17 Dec 2025, 18:33:31
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.10 PR 04mar2023 / IW 11dec2025
+*! v1.3.11 PR 04mar2023 / IW 17dec2025
 
 . /*
 > Main test file for pllf
@@ -133,7 +133,7 @@ Graph command stored as F9
 . confirm var betavar pllvar _pllnorm
 
 . mac l _b1
-_b1:            .0013215433224169
+_b1:            .0013215433224139
 
 . di r(b)
 .00132154
@@ -235,6 +235,11 @@ Note: Std. Err. is pseudo standard error, derived from PLL CI
 Graph command stored as F9
 
 . 
+. * error handling
+. cap pllf, profile(x5e) range(-3 -1) normal: stcoxxx x1 x4a x5e x6 hormon, nohr
+
+. assert _rc==199
+
 . 
 . * Syntax 2
 . pllf, formula(exp(-@*x5)) range(.05 .25): stcox x1 x4a x6 hormon
@@ -5634,5 +5639,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\testing\test_pllf.log
   log type:  text
- closed on:  17 Dec 2025, 17:12:13
+ closed on:  17 Dec 2025, 18:34:51
 ----------------------------------------------------------------------------------------------------

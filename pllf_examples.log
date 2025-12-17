@@ -2,10 +2,10 @@
       name:  <unnamed>
        log:  c:\ian\git\pllf\pllf_examples.log
   log type:  text
- opened on:  17 Dec 2025, 17:15:12
+ opened on:  17 Dec 2025, 18:38:21
 version 19.5
 c:\ian\git\pllf\pllf.ado
-*! v1.3.10 PR 04mar2023 / IW 11dec2025
+*! v1.3.11 PR 04mar2023 / IW 17dec2025
 
 . clear
 
@@ -219,5 +219,5 @@ end of do-file
       name:  <unnamed>
        log:  c:\ian\git\pllf\pllf_examples.log
   log type:  text
- closed on:  17 Dec 2025, 17:15:49
+ closed on:  17 Dec 2025, 18:39:01
 ----------------------------------------------------------------------------------------------------

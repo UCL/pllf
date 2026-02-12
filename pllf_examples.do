@@ -1,3 +1,12 @@
+/*
+This file contains Stata code to run the examples in the pllf help file
+IW 12feb2026
+*/
+
+* Syntax 1
+
+* Input two-group data with event outcome
+
 clear
 input group pyears events
       0 200 38

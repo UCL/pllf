@@ -1,5 +1,9 @@
 /*
-*! v1.3.11 PR 04mar2023 / IW 17dec2025
+v2.0 PR 04mar2023 / IW 12feb2026
+	return r(pllf_version) and upversion for SJ submission
+v1.3.12 PR 04mar2023 / IW 23jan2026
+	allow abbreviation exp()
+v1.3.11 PR 04mar2023 / IW 17dec2025
 	better error message if command name is wrong
 v1.3.10 PR 04mar2023 / IW 11dec2025
 	graph command always stored in F9
@@ -60,6 +64,8 @@ Code structure:
 */
 program define pllf, rclass sortpreserve	
 version 12.0
+
+return hidden local pllf_version "2.0"
 
 
 // SEPARATE PLLF/PREFIX PART FROM STATA COMMAND
@@ -183,7 +189,7 @@ if substr("`cmd'",1,2)=="me" {
 }	
 
 local 0 `statacmd'
-syntax [varlist] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) exposure(varname) NOCONStant *]
+syntax [varlist] [if] [in] [using] [fweight pweight aweight iweight], [irr or hr coef NOHR offset(varname) EXPosure(varname) NOCONStant *]
 if "`cmd'"=="logistic" & !missing("`coef'") local or or
 if "`cmd'"=="stcox"  & !missing("`nohr'") local hr hr
 if !missing("`irr'`or'`hr'") {

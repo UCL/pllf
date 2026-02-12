@@ -1,12 +1,18 @@
 ----------------------------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  c:\ian\git\pllf\pllf_examples.log
+       log:  C:\ian\git\pllf\pllf_examples.log
   log type:  text
- opened on:  17 Dec 2025, 18:38:21
-version 19.5
-c:\ian\git\pllf\pllf.ado
-*! v1.3.11 PR 04mar2023 / IW 17dec2025
+ opened on:  12 Feb 2026, 14:59:32
 
+. /*
+> This file contains Stata code to run the examples in the pllf help file
+> IW 12feb2026
+> */
+. 
+. * Syntax 1
+. 
+. * Input two-group data with event outcome
+. 
 . clear
 
 . input group pyears events
@@ -217,7 +223,7 @@ Graph command stored as F9
 . 
 end of do-file
       name:  <unnamed>
-       log:  c:\ian\git\pllf\pllf_examples.log
+       log:  C:\ian\git\pllf\pllf_examples.log
   log type:  text
- closed on:  17 Dec 2025, 18:39:01
+ closed on:  12 Feb 2026, 15:00:04
 ----------------------------------------------------------------------------------------------------

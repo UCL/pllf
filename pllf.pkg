@@ -1,8 +1,8 @@
 v 3
 d pllf: Profile log likelihood function
 d Program by Patrick Royston and Ian White
-d Version 1.3.10
-d Distribution-Date: 11dec2025
+d Version 2.0
+d Distribution-Date: 12feb2026
 
 f pllf.ado
 f pllf.sthlp
